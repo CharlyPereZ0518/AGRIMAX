@@ -3,9 +3,9 @@ import psycopg2
 # Diccionario con los datos de conexión
 configuracion_bd = {
     'host': 'localhost',
-    'database': 'agrimax',
+    'database': 'AGRIMAX',
     'user': 'postgres',
-    'password': '12345'
+    'password': '2812'
 }
 
 # Función que retorna la conexión

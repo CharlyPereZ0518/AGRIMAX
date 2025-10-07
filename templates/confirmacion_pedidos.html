@@ -149,20 +149,24 @@
             <textarea class="form-textarea" placeholder="Escriba aquí..."></textarea>
         </div>
         <div class="button-group">
-            <button type="button" class="btn btn-previous" onclick="showSection('forma-pago-section')">ANTERIOR</button>
-            <button type="button" class="btn btn-finish" onclick="mostrarMensajeCompra()">
-    FINALIZAR COMPRA
-</button>
-        </div>
-    </section>
+    <button type="button" class="btn btn-previous" onclick="showSection('forma-pago-section')">ANTERIOR</button>
+    <form id="form-mercadopago" method="POST" action="{{ url_for('mercadopago.mercadopago_pago') }}" style="display:inline;">
+        <input type="hidden" name="carrito_json" id="carrito_json">
+        <button type="button" class="btn btn-finish" onclick="enviarAMercadoPago()">
+            PROCEDER A PAGAR
+        </button>
+    </form>
+</div>
 <script>
-    function mostrarMensajeCompra() {
-        document.getElementById('mensajeCompra').style.display = 'block';
-        setTimeout(() => {
-            document.getElementById('mensajeCompra').style.display = 'none';
-            window.location.href = '/menu_principal';
-        }, 1000);
-    }
+function enviarAMercadoPago() {
+    let carrito = JSON.parse(localStorage.getItem('cart') || '[]');
+    let carritoTransformado = carrito.map(item => ({
+        producto_id: item.id,
+        cantidad: item.quantity
+    }));
+    document.getElementById('carrito_json').value = JSON.stringify(carritoTransformado);
+    document.getElementById('form-mercadopago').submit();
+}
 </script>
     <script>
         function showSection(sectionId) {
