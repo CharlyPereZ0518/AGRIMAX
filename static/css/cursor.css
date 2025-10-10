@@ -1,0 +1,48 @@
+/* === Cursor grande === */
+body.cursor-large {
+  cursor: url('/static/extra_large_arrow.cur'), auto;
+}
+
+/* === Modo lector sin contraste === */
+body.modo-lector {
+  font-size: 1.25em;
+  line-height: 1.8;
+  letter-spacing: 0.5px;
+}
+
+/* === Botones y enlaces (sin borde ni fondo oscuro) === */
+body.modo-lector .btn,
+body.modo-lector a {
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+/* === Inputs y selects (sin fondo oscuro) === */
+body.modo-lector input,
+body.modo-lector select,
+body.modo-lector textarea {
+  font-size: 1em;
+  padding: 10px;
+}
+
+/* === Tarjetas y contenedores (sin fondo oscuro) === */
+body.modo-lector .card,
+body.modo-lector .config-content {
+  border: none;
+  padding: 15px;
+}
+
+/* === Menú lateral (sin fondo oscuro) === */
+body.modo-lector .config-sidebar,
+body.modo-lector .config-menu li,
+body.modo-lector .config-menu li.active {
+  background-color: white;
+  color: inherit;
+}
+
+/* === Feedback y alertas (sin fondo oscuro) === */
+body.modo-lector .feedback {
+  background-color: white;
+  color: inherit;
+  border: none;
+}
