@@ -5,14 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="AGRIMAX - Plataforma para productos agrícolas.">
     <title>Perfil del Cliente - AGRIMAX</title>
+    <link rel="stylesheet" href="/static/css/cursor.css">
     <link rel="stylesheet" href="/static/css/perfil_cliente.css">
     <link rel="stylesheet" href="/static/css/boton_hamburguesaP.css">
     <link rel="stylesheet" href="/static/css/footer.css">
     <script src="/static/js/perfil_cliente.js" defer></script>
     <script src="/static/js/boton_hamburguesaP.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="/static/js/lector.js" defer></script>
 </head>
-<body>
+<body class="{% if usuario %}{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }}{% endif %}">
     {% if not session.get('usuario_id') %}
     <script>
         window.location.href = "{{ url_for('login') }}";
@@ -35,6 +37,15 @@
     <div id="sidebar" class="sidebar">
         <ul class="sidebar-menu">
             <li><a href="{{ url_for('menu_clientes.menu_principal') }}">MENÚ PRINCIPAL</a></li>
+            <li>
+                <button class="dropdown-btn">CATEGORÍAS <i class="fas fa-caret-down"></i></button>
+                <ul class="dropdown-container">
+                    <li><a href="{{ url_for('verduras.verduras') }}">Verduras</a></li>
+                    <li><a href="{{ url_for('frutas.frutas') }}">Frutas</a></li>
+                    <li><a href="{{ url_for('legumbres.legumbres') }}">Granos</a></li>
+                    <li><a href="{{ url_for('hortalizas.hortalizas') }}">Hortalizas</a></li>
+                </ul>
+            </li>
             <li><a href="{{ url_for('configuracion.configuracion') }}">CONFIGURACIÓN</a></li>
             <li><a href="{{ url_for('logout.logout') }}" class="logout-btn">CERRAR SESIÓN</a></li>
         </ul>

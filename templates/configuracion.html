@@ -10,15 +10,17 @@
     <script src="/static/js/configuracion.js"></script>
     <script src="/static/js/boton_hamburguesa.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/cursor.css">
+    <script src="/static/js/lector.js" defer></script>
 </head>
-<body>
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }}">
     {% if not session.get('usuario_id') %}
     <script>
         window.location.href = "{{ url_for('login') }}";
     </script>
     {% endif %}
    <header class="header">
-    <div class="logo" onclick="location.href='/menu_principal'">AGRIMAX</div>
+    <div class="logo" onclick="location.href='/menu'">AGRIMAX</div>
     <button id="menuBtn" class="menu-btn">☰</button>
     <button id="notificacionesBtn" class="notificaciones-btn" onclick="location.href='{{ url_for('notificaciones.notificaciones') }}'">
         🔔
@@ -27,7 +29,10 @@
 
     <div id="sidebar" class="sidebar">
         <ul class="sidebar-menu">
+            <li><a href="{{ url_for('menu_provedor.menu') }}">MENU PRINCIPAL</a></li>
             <li><a href="{{ url_for('usuarios.perfil', usuario_id=session['usuario_id']) }}">PERFIL</a></li>
+            <li><a href="{{ url_for('nuevo_producto.nuevo') }}">SUBIR PRODUCTOS</a></li>
+            <li><a href="{{ url_for('graficas.graficas_agri') }}">ESTADÍSTICAS</a></li>
             <li><a href="{{ url_for('configuracion.configuracion') }}">CONFIGURACIÓN</a></li>
             <li><a href="{{ url_for('logout.logout') }}" class="logout-btn">CERRAR SESIÓN</a></li>
         </ul>
@@ -49,6 +54,9 @@
                 </li>
                 <li data-section="notificaciones">
                     <i class="fas fa-bell"></i> Notificaciones
+                </li>
+                <li data-section="accesibilidad">
+                    <i class="fas fa-universal-access"></i> Accesibilidad
                 </li>
             </ul>
         </div>
@@ -177,6 +185,38 @@
                     </div>
                 </form>
             </div>
+
+             <div class="config-section" id="accesibilidad">
+    <h2 class="section-title">Accesibilidad</h2>
+    <form method="POST" action="{{ url_for('configuracion.configuracion') }}">
+        <input type="hidden" name="seccion" value="accesibilidad">
+        <div class="card">
+            <h3 class="card-title">Preferencias de Accesibilidad</h3>
+
+            <div class="form-group">
+                <label for="cursor-size">Tamaño del cursor:</label>
+                <select name="cursor_size" id="cursor-size" class="form-control">
+                    <option value="default" {% if usuario.cursor_size == 'default' %}selected{% endif %}>Normal</option>
+                    <option value="large" {% if usuario.cursor_size == 'large' %}selected{% endif %}>Grande</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="modo-lector">Modo lector de pantalla:</label>
+                <select name="modo_lector" id="modo-lector" class="form-control">
+                    <option value="off" {% if usuario.modo_lector == 'off' %}selected{% endif %}>Desactivado</option>
+                    <option value="on" {% if usuario.modo_lector == 'on' %}selected{% endif %}>Activado</option>
+                </select>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-primary">Guardar preferencias</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+
         </div>
     </div>
 </body>

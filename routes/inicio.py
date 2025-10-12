@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request
+from flask import Blueprint, render_template, request, session
 from bd import conectar_bd
 
 inicio_bp= Blueprint("inicio",__name__)

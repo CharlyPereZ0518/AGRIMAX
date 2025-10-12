@@ -7,8 +7,11 @@
     <link rel="stylesheet" href="/static/css/boton_hamburguesa.css">
     <link rel="stylesheet" href="/static/css/redes.css">
     <script src="/static/js/boton_hamburguesa.js" defer></script>
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/cursor.css">
+    <script src="/static/js/lector.js" defer></script>
 </head>
-<body>
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }}">
     <header class="header">
         <div class="logo" onclick="location.href='/menu_principal'">AGRIMAX</div>
         <button id="menuBtn" class="menu-btn">☰</button>
