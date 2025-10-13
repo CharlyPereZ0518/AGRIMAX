@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="/static/css/cursor.css">
     <script src="/static/js/lector.js" defer></script>
 </head>
-<body>
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }}">
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
             <a class="navbar-brand" href="/admin/dashboard">Admin Dashboard</a>

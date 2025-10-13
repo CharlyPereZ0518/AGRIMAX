@@ -48,11 +48,12 @@ def configuracion():
 
             cursor.close()
             conexion.close()
-
             if tipo_usuario == "Cliente":
                 return render_template('configuracion_clientes.html', usuario=usuario)
             elif tipo_usuario == "Proveedor":
                 return render_template('configuracion.html', usuario=usuario)
+            elif tipo_usuario == "Administrador":
+                return render_template('admin_configuracion.html', usuario=usuario)
             else:
                 flash("Tipo de usuario desconocido.", "error")
                 return redirect(url_for('inicio.inicio'))
