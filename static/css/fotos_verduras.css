@@ -53,3 +53,8 @@ body {
     cursor: pointer;
     font-weight: bold;
 }
+
+.modo-grises {
+  filter: grayscale(100%) !important;
+  transition: filter 0.5s ease;
+}

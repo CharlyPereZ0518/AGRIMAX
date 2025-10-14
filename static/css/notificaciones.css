@@ -142,3 +142,8 @@ button:hover {
         text-align: center;
     }
 }
+
+.modo-grises {
+  filter: grayscale(100%) !important;
+  transition: filter 0.5s ease;
+}

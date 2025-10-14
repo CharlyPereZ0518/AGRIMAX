@@ -69,3 +69,8 @@ body {
     color: #8b4c12;
     font-weight: bold;
 }
+
+.modo-grises {
+  filter: grayscale(100%) !important;
+  transition: filter 0.5s ease;
+}

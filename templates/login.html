@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGRIMAX - Inicio de Sesión</title>
     <link rel="stylesheet" href="/static/css/login.css">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+ 
 </head>
 
 <body>
@@ -55,6 +55,12 @@
         <br>
         <p class="register">¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
     </div>
+    <script>
+  if (localStorage.getItem('modoGrises') === 'true') {
+    document.body.classList.add('modo-grises');
+  }
+</script>
+
 </body>
 
 </html>

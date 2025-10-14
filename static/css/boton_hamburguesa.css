@@ -18,6 +18,11 @@
     border-radius: 5px;
     margin-right: auto; /* Mueve el logo al lado izquierdo */
 }
+.modo-grises {
+  filter: grayscale(100%) !important;
+  transition: filter 0.5s ease;
+}
+
 
 .nav {
     display: flex;

@@ -233,3 +233,8 @@ h1 {
     font-size: 2.5rem;
     color: black;
 } 
+
+.modo-grises {
+  filter: grayscale(100%) !important;
+  transition: filter 0.5s ease;
+}
