@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="/static/css/footer.css">
     <script src="/static/js/perfil.js" defer></script>
     <script src="/static/js/boton_hamburguesa.js" defer></script>
+    <link rel="stylesheet" href="/static/css/modo_oscuro.css">
+    <script src="/static/js/modo_oscuro.js"></script>
 </head>
 
 <body>
@@ -36,30 +38,25 @@
         </ul>
     </div>
 
-<div id="overlay" class="overlay"></div>
+    <div id="overlay" class="overlay"></div>
     <div class="banner">
-        <img src="/static/imagenes/portada.jpg" alt="Portada">
+        <img src="/static/imagenes/portada.jpg" alt="Portada de perfil" class="banner-image">
+        <div class="profile">
+            <div class="profile-info">
+                 <img src="{{ url_for('static', filename=perfil['foto'].replace('static/', '')) if perfil['foto'] else url_for('static', filename='imagenes/default-profile.jpg') }}" 
+                    alt="Foto de Perfil"
+                    class="profile-image"
+                    onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagenes/default-profile.jpg') }}'">
+            </div>
+            <div class="buttons">
+                <button onclick="location.href='{{ url_for('configuracion.configuracion') }}'">EDITAR PERFIL</button>
+            </div>
+        </div>
     </div>
-    <!-- Portada estilo Facebook -->
-    <div class="perfil-header">
-    <div class="foto-container">
-        <img class="foto-perfil"
-             src="{{ url_for('static', filename=perfil['foto'].replace('static/', '')) if perfil['foto'] else url_for('static', filename='imagenes/default-profile.jpg') }}"
-             alt="Foto de Perfil"
-             onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagenes/default-profile.jpg') }}'">
-    </div>
-
-    <div class="datos-perfil">
-        <h2>{{ perfil['nombre'] }}</h2>
-        <p><strong>Correo:</strong> {{ perfil['correo'] }}</p>
-        <p><strong>Tipo de Usuario:</strong> {{ perfil['tipo'] }}</p>
-        <p><strong>Biografía:</strong> {{ perfil['biografia'] }}</p>
-    </div>
-
-    <div class="boton-editar">
-        <button onclick="location.href='{{ url_for('configuracion.configuracion') }}'">EDITAR PERFIL</button>
-    </div>
-</div>
+<h2>{{ perfil[0] }}</h2>
+                <p><strong>Correo:</strong> {{ perfil[1] }}</p>
+                <p><strong>Tipo de Usuario:</strong> {{ perfil[2] }}</p>
+                <p><strong>Biografía:</strong> {{ perfil[4] if perfil[4] else 'No hay biografía disponible' }}</p>
 
     <footer>
         <div class="footer-content">
@@ -75,4 +72,3 @@
     };
 </script>
 </html>
-    

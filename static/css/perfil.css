@@ -20,80 +20,72 @@ body {
 }
 
 /* Banner */
-.banner{
+.banner {
     position: relative;
-    z-index: 1;
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
 }
 
-.banner img{
+.banner img {
     width: 100%;
-    height: 300px;
+    height: 100%;
     object-fit: cover;
-    display: block;
 }
-/* Portada estilo Facebook */
-.perfil-header {
-    position: relative;
+
+/* Perfil */
+.profile {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     display: flex;
-    align-items: flex-start;
     justify-content: space-between;
+    align-items: center;
     width: 90%;
     max-width: 1200px;
-    margin: -80px auto 40px;
-    padding: 20px;
-    background-color: rgba(255, 255, 255, 0.3);
-    border-radius: 10px;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    z-index: 2;
+    color: white;
+    z-index: 10;
 }
 
-.foto-container {
-    flex-shrink: 0;
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
 }
 
-.foto-perfil {
-    width: 140px;
-    height: 140px;
+.profile-info img {
+    width: 120px;
+    height: 120px;
     border-radius: 50%;
     border: 5px solid white;
     object-fit: cover;
 }
 
-.datos-perfil {
-    flex-grow: 1;
-    margin-left: 20px;
+.profile-info h2 {
+    margin: 10px 0 5px;
+    font-size: 20px;
 }
 
-.datos-perfil h2 {
-    font-size: 24px;
-    color: var(--primary-color);
-    margin-bottom: 10px;
+.buttons {
+    display: flex;
+    gap: 15px;
 }
 
-.datos-perfil p {
-    font-size: 16px;
-    margin: 4px 0;
-    color: #333;
-}
-
-.boton-editar {
-    align-self: flex-start;
-}
-
-.boton-editar button {
-    background-color: var(--secondary-color);
+.buttons button {
+    background: var(--secondary-color);
     color: white;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
     cursor: pointer;
+    border-radius: 5px;
     font-size: 14px;
     transition: background 0.3s ease;
-    margin-top: 70px;
 }
 
-.boton-editar button:hover {
-    background-color: #e08a25;
+.buttons button:hover {
+    background: #e08a25;
 }
 
 

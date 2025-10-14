@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/static/css/configuracion.css">
     <link rel="stylesheet" href="/static/css/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/modo_oscuro.css">
+    <script src="/static/js/modo_oscuro.js"></script>
 </head>
 <body>
     {% if not session.get('usuario_id') %}
@@ -60,6 +62,9 @@
                 <li data-section="notificaciones">
                     <i class="fas fa-bell"></i> Notificaciones
                 </li>
+                <li data-section="accesibilidad">
+    <i class="fas fa-universal-access"></i> accesibilidad
+</li>
             </ul>
         </div>
 
@@ -82,10 +87,13 @@
                         <h3 class="card-title">Información Personal</h3>
                         <div class="form-row">
                             <div class="form-group">
-                                <label class="form-label">Nombre Completo</label>
+                                <label class="form-label">Nombre</label>
                                 <input type="text" class="form-control" name="nombre" value="{{ usuario.nombre }}" required>
                             </div>
-                            
+                            <div class="form-group">
+                                <label class="form-label">Apellido</label>
+                                <input type="text" class="form-control" name="apellido" value="{{ usuario.apellido if usuario.apellido else '' }}">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Biografía</label>
@@ -113,50 +121,50 @@
             </div>
 
             <div class="config-section" id="seguridad">
-    <h2 class="section-title">Seguridad</h2>
-    <form method="POST" action="{{ url_for('configuracion.configuracion') }}">
-        <input type="hidden" name="seccion" value="contrasena">
-        <div class="card">
-            <h3 class="card-title">Cambiar Contraseña</h3>
-            <div class="form-group">
-                <label class="form-label">Contraseña actual</label>
-                <input type="password" class="form-control" name="actual" required>
+                <h2 class="section-title">Seguridad</h2>
+                <form method="POST" action="{{ url_for('configuracion.configuracion') }}">
+                    <input type="hidden" name="seccion" value="seguridad">
+                    <div class="card">
+                        <h3 class="card-title">Cambiar Contraseña</h3>
+                        <div class="form-group">
+                            <label class="form-label">Contraseña actual</label>
+                            <input type="password" class="form-control" name="contraseña_actual" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nueva contraseña</label>
+                            <input type="password" class="form-control" name="nueva_contraseña" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Confirmar nueva contraseña</label>
+                            <input type="password" class="form-control" name="confirmar_contraseña" required>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">Actualizar contraseña</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label class="form-label">Nueva contraseña</label>
-                <input type="password" class="form-control" name="nueva" required>
-            </div>
-            <div class="form-group">
-                <label class="form-label">Confirmar nueva contraseña</label>
-                <input type="password" class="form-control" name="confirmar" required>
-            </div>
-        </div>
-        <div class="btn-group">
-            <button type="submit" class="btn btn-primary">Actualizar contraseña</button>
-        </div>
-    </form>
-</div>
             
             <div class="config-section" id="correo">
-    <h2 class="section-title">Correo Electrónico</h2>
-    <form method="POST" action="{{ url_for('configuracion.configuracion') }}">
-        <input type="hidden" name="seccion" value="correo">
-        <div class="card">
-            <h3 class="card-title">Actualizar Correo Electrónico</h3>
-            <div class="form-group">
-                <label class="form-label">Correo actual</label>
-                <input type="email" class="form-control" value="{{ usuario.correo }}" disabled>
+                <h2 class="section-title">Correo Electrónico</h2>
+                <form method="POST" action="{{ url_for('configuracion.configuracion') }}">
+                    <input type="hidden" name="seccion" value="correo">
+                    <div class="card">
+                        <h3 class="card-title">Actualizar Correo Electrónico</h3>
+                        <div class="form-group">
+                            <label class="form-label">Correo actual</label>
+                            <input type="email" class="form-control" value="{{ usuario.correo }}" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nuevo correo</label>
+                            <input type="email" class="form-control" name="nuevo_correo" placeholder="Ingrese su nuevo correo" required>
+                        </div>
+                    </div>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary">Actualizar correo</button>
+                    </div>
+                </form>
             </div>
-            <div class="form-group">
-                <label class="form-label">Nuevo correo</label>
-                <input type="email" class="form-control" name="nuevo_correo" placeholder="Ingrese su nuevo correo" required>
-            </div>
-        </div>
-        <div class="btn-group">
-            <button type="submit" class="btn btn-primary">Actualizar correo</button>
-        </div>
-    </form>
-</div>
 
             <div class="config-section" id="notificaciones">
                 <h2 class="section-title">Notificaciones</h2>
@@ -184,11 +192,28 @@
                     </div>
                 </form>
             </div>
+
+            <!-- 🚀 NUEVA SECCIÓN AÑADIDA: Accesibilidad -->
+          <div class="config-section" id="accesibilidad">
+    <h2 class="section-title">Accesibilidad</h2>
+    <div class="card">
+        <h3 class="card-title">Modo Oscuro</h3>
+        <div class="center-switch">
+            <label class="switch">
+                <input type="checkbox" id="toggle-dark">
+                <span class="slider round"></span>
+            </label>
+            <span id="darkmode-label">Desactivado</span>
+        </div>
+    </div>
+</div>
+            <!-- 🚀 FIN DE LA SECCIÓN AÑADIDA -->
         </div>
     </div>
 
     <script src="/static/js/boton_hamburguesaP.js"></script>
     <script src="/static/js/configuracion.js"></script>
+    
 </body>
     <footer>
         <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>

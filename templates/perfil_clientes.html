@@ -11,6 +11,8 @@
     <script src="/static/js/perfil_cliente.js" defer></script>
     <script src="/static/js/boton_hamburguesaP.js" defer></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="/static/css/modo_oscuro.css">
+    <script src="/static/js/modo_oscuro.js"></script>
 </head>
 <body>
     {% if not session.get('usuario_id') %}
@@ -41,52 +43,63 @@
     </div>
 
     <div id="overlay" class="overlay"></div>
+
     <div class="banner">
-        <img src="/static/imagenes/portada.jpg" alt="Portada">
-    </div>
-    <!-- Portada estilo Facebook -->
-    <div class="perfil-header">
-    <div class="foto-container">
-        <img class="foto-perfil"
-             src="{{ url_for('static', filename=perfil['foto'].replace('static/', '')) if perfil['foto'] else url_for('static', filename='imagenes/default-profile.jpg') }}"
-             alt="Foto de Perfil"
-             onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagenes/default-profile.jpg') }}'">
+        <img src="/static/imagenes/portada.jpg" alt="Portada" class="banner-image">
+        <div class="profile">
+            <div class="profile-info">
+                <img src="{{ url_for('static', filename=perfil['foto'].replace('static/', '')) if perfil['foto'] else url_for('static', filename='imagenes/default-profile.jpg') }}"
+                     alt="Foto de Perfil"
+                     class="profile-image"
+                     onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagenes/default-profile.jpg') }}'">
+                <h2>{{ perfil['nombre'] }}</h2>
+                <p><strong>Correo:</strong> {{ perfil['correo'] }}</p>
+                <p><strong>Tipo de Usuario:</strong> {{ perfil['tipo'] }}</p>
+                <p><strong>Biografía:</strong> {{ perfil['biografia'] }}</p>
+            </div>
+            <div class="buttons">
+                <button onclick="location.href='{{ url_for('configuracion.configuracion') }}'">EDITAR PERFIL</button>
+            </div>
+        </div>
     </div>
 
-    <div class="datos-perfil">
-        <h2>{{ perfil['nombre'] }}</h2>
-        <p><strong>Correo:</strong> {{ perfil['correo'] }}</p>
-        <p><strong>Tipo de Usuario:</strong> {{ perfil['tipo'] }}</p>
-        <p><strong>Biografía:</strong> {{ perfil['biografia'] }}</p>
-    </div>
-
-    <div class="boton-editar">
-        <button onclick="location.href='{{ url_for('configuracion.configuracion') }}'">EDITAR PERFIL</button>
-    </div>
-</div>
-
-    <!-- Historial tipo muro -->
-    <div class="historial-feed">
+    <div class="historial-wrapper">
+    <div class="historial-compras">
         <h2>Historial de Compras</h2>
         {% if compras %}
-            {% for compra in compras %}
-            <div class="compra-card">
-                <img src="{{ url_for('static', filename=compra['ruta_imagen'].replace('static/', '')) if compra['ruta_imagen'] else url_for('static', filename='imagenes/default-product.jpg') }}"
-                     alt="Imagen del Producto"
-                     class="product-image"
-                     onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagenes/default-product.jpg') }}'">
-                <div class="compra-detalles">
-                    <h3>{{ compra['producto'] }}</h3>
-                    <p><strong>Proveedor:</strong> {{ compra['proveedor'] }}</p>
-                    <p><strong>Cantidad:</strong> {{ compra['cantidad'] }}</p>
-                    <p><strong>Precio Unitario:</strong> ${{ compra['precio_unitario'] }}</p>
-                    <p><strong>Subtotal:</strong> ${{ compra['subtotal'] }}</p>
-                    <p><strong>Fecha:</strong> {{ compra['fecha'] }}</p>
-                </div>
-            </div>
-            {% endfor %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Imagen</th>
+                    <th>Producto</th>
+                    <th>Proveedor</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Subtotal</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for compra in compras %}
+                <tr>
+                    <td>
+                        <img src="{{ url_for('static', filename=compra['ruta_imagen'].replace('static/', '')) if compra['ruta_imagen'] else url_for('static', filename='imagenes/default-product.jpg') }}"
+                             alt="Imagen del Producto"
+                             class="product-image"
+                             onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagenes/default-product.jpg') }}'">
+                    </td>
+                    <td>{{ compra['producto'] }}</td>
+                    <td>{{ compra['proveedor'] }}</td>
+                    <td>{{ compra['cantidad'] }}</td>
+                    <td>${{ compra['precio_unitario'] }}</td>
+                    <td>${{ compra['subtotal'] }}</td>
+                    <td>{{ compra['fecha'] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% else %}
-            <p>No has realizado compras aún.</p>
+        <p>No has realizado compras aún.</p>
         {% endif %}
     </div>
 

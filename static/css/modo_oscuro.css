@@ -1,0 +1,348 @@
+/* ===========================
+   MODO NOCTURNO GLOBAL AGRIMAX - CON BLUR DE FONDO
+   =========================== */
+
+/* --- Variables CSS para el Modo Oscuro --- */
+:root {
+    --dm-bg-base: #181818;
+    --dm-bg-surface: #232323;
+    --dm-bg-card: #2a2a2a;
+    --dm-text-primary: #e0e0e0;
+    --dm-text-secondary: #999;
+    --dm-text-heading: #fff;
+    --dm-border: #444;
+    --dm-hover: #333;
+    --dm-active: #555;
+    --dm-transition: background-color 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease, filter 0.4s ease;
+}
+
+/* --- Configuración del BODY para el Modo Oscuro --- */
+body.darkmode {
+    color: var(--dm-text-primary);
+    transition: color 0.4s ease;
+    position: relative;
+    z-index: 0;
+}
+
+body.darkmode::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: -1;
+    transition: opacity 0.4s ease;
+}
+
+body.darkmode *,
+body.darkmode *::before,
+body.darkmode *::after {
+    transition: var(--dm-transition) !important;
+}
+
+/* --- Contenedores Principales y Secundarios --- */
+body.darkmode .container,
+body.darkmode .main-content,
+body.darkmode .config-container,
+body.darkmode .config-content,
+body.darkmode .card,
+body.darkmode .section,
+body.darkmode .sidebar,
+body.darkmode .profile-container,
+body.darkmode .cart-container,
+body.darkmode .historial-container,
+body.darkmode .products-container,
+body.darkmode .product-card,
+body.darkmode .table-container,
+body.darkmode .empty-cart,
+body.darkmode .form-group,
+body.darkmode .footer,
+body.darkmode .header,
+body.darkmode header,
+body.darkmode nav.navbar {
+    background-color: var(--dm-bg-surface);
+    color: var(--dm-text-primary);
+    border-color: var(--dm-border);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* --- Tarjetas y Cards --- */
+body.darkmode .card,
+body.darkmode .product-card,
+body.darkmode .cart-item,
+body.darkmode .historial-table,
+body.darkmode .profile-header,
+body.darkmode .empty-cart,
+body.darkmode .modal-content,
+body.darkmode .confirmar-pedido,
+body.darkmode .agregar-carrito,
+body.darkmode .form-container,
+body.darkmode .center-box,
+body.darkmode .main-box,
+body.darkmode .white-box,
+body.darkmode .content-box,
+body.darkmode .inner-container,
+body.darkmode .order-container,
+body.darkmode .payment-container,
+body.darkmode .order-section {
+    background-color: var(--dm-bg-card);
+    color: var(--dm-text-primary);
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    border: 1px solid var(--dm-border);
+}
+
+/* --- Menú Lateral y Navegación --- */
+body.darkmode .config-menu,
+body.darkmode .config-menu li,
+body.darkmode .sidebar {
+    background-color: var(--dm-bg-surface);
+    color: var(--dm-text-primary);
+}
+body.darkmode .config-menu li.active,
+body.darkmode .config-menu li:hover {
+    background-color: var(--dm-active);
+    color: var(--dm-text-heading);
+}
+body.darkmode .config-menu li i {
+    color: var(--dm-text-primary);
+}
+
+/* --- Títulos y Textos --- */
+body.darkmode h1,
+body.darkmode h2,
+body.darkmode h3,
+body.darkmode .section-title,
+body.darkmode .card-title,
+body.darkmode .cart-title,
+body.darkmode .profile-name,
+body.darkmode .historial-title,
+body.darkmode label,
+body.darkmode .form-label {
+    color: var(--dm-text-heading);
+    
+}
+
+/* --- Tablas --- */
+body.darkmode table,
+body.darkmode .historial-table {
+    background-color: var(--dm-bg-base);
+    color: var(--dm-text-primary);
+    border-collapse: collapse;
+}
+body.darkmode table thead,
+body.darkmode .historial-table thead {
+    background-color: var(--dm-hover);
+}
+body.darkmode table th,
+body.darkmode table td,
+body.darkmode .historial-table th,
+body.darkmode .historial-table td {
+    border: 1px solid var(--dm-border);
+    color: var(--dm-text-primary);
+    padding: 12px 15px;
+}
+body.darkmode table tbody tr:nth-child(even) {
+    background-color: var(--dm-bg-surface);
+}
+body.darkmode table tbody tr:hover {
+    background-color: var(--dm-hover);
+    transition: background-color 0.3s;
+}
+
+/* --- Formularios e Inputs --- */
+body.darkmode input,
+body.darkmode textarea,
+body.darkmode select,
+body.darkmode .form-control {
+    background-color: var(--dm-bg-surface);
+    color: var(--dm-text-primary);
+    border: 1px solid var(--dm-border);
+}
+body.darkmode input::placeholder,
+body.darkmode textarea::placeholder {
+    color: var(--dm-text-secondary);
+}
+body.darkmode input:focus,
+body.darkmode textarea:focus,
+body.darkmode select:focus,
+body.darkmode .form-control:focus {
+    background-color: var(--dm-hover);
+    border-color: #eff0f0;
+    outline: none;
+}
+body.darkmode input[type="radio"] {
+    accent-color: #e6ebe7;
+}
+
+/* --- BOTONES CORREGIDOS --- */
+body.darkmode .btn,
+body.darkmode button,
+body.darkmode .btn-primary,
+body.darkmode .btn-secondary,
+body.darkmode .btn-danger,
+body.darkmode .btn-checkout,
+body.darkmode .btn-comprar,
+body.darkmode .btn-remove,
+body.darkmode .btn-clear {
+    border-radius: 6px;
+    font-weight: bold;
+    color: #fff !important;
+    transition: background 0.2s;
+}
+
+/* Botones principales */
+body.darkmode .btn-primary,
+body.darkmode .btn,
+body.darkmode button {
+    background-color: #3a3a3a !important;
+    border: 1px solid #555 !important;
+    color: #ffffff !important;
+}
+body.darkmode .btn-primary:hover,
+body.darkmode .btn:hover,
+body.darkmode button:hover {
+    background-color: #555 !important;
+    color: #fff !important;
+}
+
+/* Deshabilitados */
+body.darkmode .btn:disabled,
+body.darkmode button:disabled {
+    background-color: #2a2a2a !important;
+    color: #aaa !important;
+    border-color: #444 !important;
+}
+
+/* Botones específicos */
+body.darkmode .btn-success {
+    background-color: #2e7d32 !important;
+    color: #fff !important;
+}
+body.darkmode .btn-warning {
+    background-color: #fbc02d !important;
+    color: #000 !important;
+}
+body.darkmode .btn-danger {
+    background-color: #c62828 !important;
+    color: #fff !important;
+}
+
+/* Botones dentro de modales */
+body.darkmode .modal-content .btn,
+body.darkmode .confirmar-pedido .btn,
+body.darkmode .agregar-carrito .btn {
+    background: var(--dm-active);
+    border: none;
+    padding: 10px 24px;
+    margin-top: 12px;
+}
+body.darkmode .modal-content .btn:hover,
+body.darkmode .confirmar-pedido .btn:hover,
+body.darkmode .agregar-carrito .btn:hover {
+    background: #888;
+}
+
+/* --- Switch Toggle --- */
+.switch { position: relative; display: inline-block; width: 50px; height: 28px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider {
+    position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #ccc; transition: .4s; border-radius: 28px;
+}
+.slider:before {
+    position: absolute; content: ""; height: 22px; width: 22px; left: 3px; bottom: 3px;
+    background-color: black; transition: .4s; border-radius: 50%;
+}
+body.darkmode .slider { background-color: #555; }
+input:checked + .slider { background-color: grey; }
+input:checked + .slider:before { transform: translateX(22px); }
+.center-switch { display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 30px 0 10px 0; }
+
+/* --- Imágenes y Multimedia --- */
+body.darkmode img,
+body.darkmode .product-image,
+body.darkmode .producto-imagen,
+body.darkmode .profile-avatar {
+    opacity: 0.95;
+    border-radius: 6px;
+    padding: 5px;
+}
+body.darkmode .modal-content img,
+body.darkmode .confirmar-pedido img,
+body.darkmode .agregar-carrito img,
+body.darkmode .modal-product-image {
+    background: var(--dm-bg-surface);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.7);
+    padding: 10px;
+    max-width: 180px;
+    max-height: 180px;
+    display: block;
+    margin: 0 auto 16px auto;
+}
+
+/* --- Enlaces --- */
+body.darkmode a {
+    color: #edf3ed;
+}
+body.darkmode a:hover {
+    color: #f5fcf5;
+}
+
+/* --- Badges y Etiquetas --- */
+body.darkmode .badge,
+body.darkmode .status-badge,
+body.darkmode .estado-badge {
+    background-color: var(--dm-active);
+    color: var(--dm-text-heading);
+}
+body.darkmode .badge-primary,
+body.darkmode .status-completed,
+body.darkmode .badge-secondary {
+    background-color: #666;
+}
+body.darkmode .status-pending {
+    background-color: #f57c00;
+    color: #fff;
+}
+body.darkmode .status-cancelled {
+    background-color: #d32f2f;
+    color: #fff;
+}
+
+/* --- Alertas --- */
+body.darkmode .alert-success { background-color: #2e7d32; color: #fff; border-color: #1b5e20; }
+body.darkmode .alert-danger { background-color: #c62828; color: #fff; border-color: #b71c1c; }
+body.darkmode .alert-warning { background-color: #f57c00; color: #fff; border-color: #e65100; }
+body.darkmode .alert-info { background-color: #0277bd; color: #fff; border-color: #01579b; }
+
+/* --- Scrollbar --- */
+body.darkmode::-webkit-scrollbar { width: 10px; }
+body.darkmode::-webkit-scrollbar-track { background: var(--dm-bg-base); }
+body.darkmode::-webkit-scrollbar-thumb { background: var(--dm-active); border-radius: 5px; }
+body.darkmode::-webkit-scrollbar-thumb:hover { background: #666; }
+
+/* --- Textos Especiales --- */
+body.darkmode .text-muted, body.darkmode .texto-secundario { color: var(--dm-text-secondary); }
+body.darkmode .text-success { color: #a5d6a7; }
+body.darkmode .text-danger { color: #ef5350; }
+body.darkmode .text-warning { color: #ffa726; }
+
+/* --- Estados Vacíos --- */
+body.darkmode .empty-cart, body.darkmode .carrito-vacio {
+    background-color: var(--dm-bg-card);
+    color: #8c8b8b;
+    padding: 60px 20px;
+    text-align: center;
+    border-radius: 8px;
+    border: 2px dashed var(--dm-border);
+}
+body.darkmode .empty-cart h3, body.darkmode .carrito-vacio h3 {
+    color: var(--dm-text-secondary);
+}

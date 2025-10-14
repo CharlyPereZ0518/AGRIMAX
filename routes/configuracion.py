@@ -3,7 +3,6 @@ from flask_login import login_required
 from bd import conectar_bd
 from utils import allowed_file
 from werkzeug.utils import secure_filename
-import bcrypt
 import os
 
 configuracion_bp = Blueprint('configuracion', __name__)
@@ -50,6 +49,8 @@ def configuracion():
                 return render_template('configuracion_clientes.html', usuario=usuario)
             elif tipo_usuario == "Proveedor":
                 return render_template('configuracion.html', usuario=usuario)
+            elif tipo_usuario == "Administrador":
+                return render_template('admin_configuracion.html', usuario=usuario)
             else:
                 flash("Tipo de usuario desconocido.", "error")
                 return redirect(url_for('inicio.inicio'))
@@ -59,10 +60,10 @@ def configuracion():
 
             cursor.execute("SELECT 1 FROM perfiles WHERE usuario_id = %s", (usuario_id,))
             if not cursor.fetchone():
-                cursor.execute("""
-                    INSERT INTO perfiles (usuario_id, foto, biografia, notificaciones_email, notificaciones_sms)
-                    VALUES (%s, %s, %s, %s, %s)
-                """, (usuario_id, 'imagenes/default-profile.jpg', '', False, False))
+                cursor.execute(
+                    "INSERT INTO perfiles (usuario_id, foto, biografia, notificaciones_email, notificaciones_sms) VALUES (%s, %s, %s, %s, %s)",
+                    (usuario_id, 'imagenes/default-profile.jpg', '', False, False)
+                )
 
             if seccion == 'perfil':
                 nombre = request.form.get('nombre')
@@ -104,48 +105,14 @@ def configuracion():
                     WHERE usuario_id = %s
                 """, (notificaciones_email, notificaciones_sms, usuario_id))
 
-            elif seccion == 'contrasena':
-                actual = request.form.get('actual')
-                nueva = request.form.get('nueva')
-                confirmar = request.form.get('confirmar')
-
-                cursor.execute("SELECT contraseña FROM usuarios WHERE id = %s", (usuario_id,))
-                resultado = cursor.fetchone()
-
-                if not resultado or not resultado[0]:
-                    flash("La contraseña actual no está configurada correctamente.", "error")
-                else:
-                    contrasena_actual_bd = resultado[0]
-
-                    if not bcrypt.checkpw(actual.encode('utf-8'), contrasena_actual_bd.encode('utf-8')):
-                        flash("La contraseña actual es incorrecta.", "error")
-                    elif nueva != confirmar:
-                        flash("Las nuevas contraseñas no coinciden.", "error")
-                    else:
-                        nueva_hash = bcrypt.hashpw(nueva.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
-                        cursor.execute("UPDATE usuarios SET contraseña = %s WHERE id = %s", (nueva_hash, usuario_id))
-                        flash("Contraseña actualizada correctamente.", "success")
-
-            elif seccion == 'correo':
-                nuevo_correo = request.form.get('nuevo_correo')
-
-                if not nuevo_correo:
-                    flash("Debes ingresar un nuevo correo.", "error")
-                else:
-                    cursor.execute("SELECT id FROM usuarios WHERE correo = %s AND id != %s", (nuevo_correo, usuario_id))
-                    if cursor.fetchone():
-                        flash("El correo ya está registrado por otro usuario.", "error")
-                    else:
-                        cursor.execute("UPDATE usuarios SET correo = %s WHERE id = %s", (nuevo_correo, usuario_id))
-                        flash("Correo actualizado correctamente.", "success")
-
             conexion.commit()
             cursor.close()
             conexion.close()
 
+            flash("Configuración actualizada correctamente.", "success")
             return redirect(url_for('configuracion.configuracion'))
 
     except Exception as e:
         print(f"Error al manejar la configuración: {e}")
         flash("Ocurrió un error al manejar la configuración.", "error")
-        return redirect(url_for('configuracion.configuracion'))
+        return redirect(url_for('inicio.inicio'))

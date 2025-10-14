@@ -5,7 +5,7 @@ configuracion_bd = {
     'host': 'localhost',
     'database': 'AGRIMAX',
     'user': 'postgres',
-    'password': '2812'
+    'password': '12345'
 }
 
 # Función que retorna la conexión
