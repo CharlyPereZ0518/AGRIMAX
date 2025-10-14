@@ -10,8 +10,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/cursor.css">
     <script src="/static/js/lector.js" defer></script>
+    <link rel="stylesheet" href="/static/css/contraste.css">
+<script src="/static/js/accesibilidad.js"></script>
+
 </head>
-<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }}">
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }}" "{{ usuario.nivel_contraste }}" data-contraste="{{ usuario.nivel_contraste }}">
+
     {% if not session.get('usuario_id') %}
     <script>
         window.location.href = "{{ url_for('login') }}";
@@ -190,29 +194,96 @@
                     </div>
                 </form>
             </div>
-            
-            <div class="config-section" id="accesibilidad">
+
+<div class="config-section" id="accesibilidad">
     <h2 class="section-title">Accesibilidad</h2>
     <form method="POST" action="{{ url_for('configuracion.configuracion') }}">
         <input type="hidden" name="seccion" value="accesibilidad">
         <div class="card">
             <h3 class="card-title">Preferencias de Accesibilidad</h3>
 
+            <!-- Nivel de Contraste -->
             <div class="form-group">
-                <label for="cursor-size">Tamaño del cursor:</label>
+                <label for="nivel-contraste" class="form-label">Nivel de contraste:</label>
+                <select name="nivel_contraste" id="nivel-contraste" class="form-control" aria-describedby="contraste-help">
+                    <option value="normal" {% if usuario.nivel_contraste == 'normal' or not usuario.nivel_contraste %}selected{% endif %}>
+                        Normal
+                    </option>
+                    <option value="alto" {% if usuario.nivel_contraste == 'alto' %}selected{% endif %}>
+                        Alto contraste
+                    </option>
+                    <option value="muy-alto" {% if usuario.nivel_contraste == 'muy-alto' %}selected{% endif %}>
+                        Muy alto contraste (Blanco y negro)
+                    </option>
+                    <option value="oscuro" {% if usuario.nivel_contraste == 'oscuro' %}selected{% endif %}>
+                        Cielo nocturno
+                    </option>
+                </select>
+                <small id="contraste-help" class="form-text" style="color: var(--text-muted); margin-top: 5px; display: block;">
+                    Ajusta el contraste de colores para mejorar la legibilidad
+                </small>
+            </div>
+
+            <!-- Tamaño del cursor -->
+            <div class="form-group">
+                <label for="cursor-size" class="form-label">Tamaño del cursor:</label>
                 <select name="cursor_size" id="cursor-size" class="form-control">
-                    <option value="default" {% if usuario.cursor_size == 'default' %}selected{% endif %}>Normal</option>
-                    <option value="large" {% if usuario.cursor_size == 'large' %}selected{% endif %}>Grande</option>
+                    <option value="default" {% if usuario.cursor_size == 'default' %}selected{% endif %}>
+                        Normal
+                    </option>
+                    <option value="large" {% if usuario.cursor_size == 'large' %}selected{% endif %}>
+                        Grande
+                    </option>
                 </select>
             </div>
 
+            <!-- Modo lector -->
             <div class="form-group">
-                <label for="modo-lector">Modo lector de pantalla:</label>
+                <label for="modo-lector" class="form-label">Modo lector de pantalla:</label>
                 <select name="modo_lector" id="modo-lector" class="form-control">
-                    <option value="off" {% if usuario.modo_lector == 'off' %}selected{% endif %}>Desactivado</option>
-                    <option value="on" {% if usuario.modo_lector == 'on' %}selected{% endif %}>Activado</option>
+                    <option value="off" {% if usuario.modo_lector == 'off' %}selected{% endif %}>
+                        Desactivado
+                    </option>
+                    <option value="on" {% if usuario.modo_lector == 'on' %}selected{% endif %}>
+                        Activado
+                    </option>
                 </select>
             </div>
+
+            <!-- Cambio tipografia-->
+            <div class="form-group">
+                  <label for="font-select" class="form-label">Tipo de letra:</label>
+                  <select id="font-select" class="form-control">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="'Helvetica Neue', Helvetica, sans-serif">Helvetica Neue</option>
+                    <option value="Verdana, sans-serif">Verdana</option>
+                    <option value="Tahoma, sans-serif">Tahoma</option>
+                    <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Trebuchet MS', sans-serif">Trebuchet MS</option>
+                    <option value="'Open Sans', sans-serif">Open Sans</option>
+                    <option value="'Roboto', sans-serif">Roboto</option>
+                    <option value="'Courier New', Courier, monospace">Courier New</option>
+                 </select>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', () => {
+                const fontSelect = document.getElementById('font-select');
+                const savedFont = localStorage.getItem('selectedFont');
+
+            if (savedFont) {
+              document.body.style.fontFamily = savedFont;
+              fontSelect.value = savedFont;
+            }
+
+              fontSelect.addEventListener('change', () => {
+              const selectedFont = fontSelect.value;
+              document.body.style.fontFamily = selectedFont;
+              localStorage.setItem('selectedFont', selectedFont);
+            });
+        });
+    </script>
 
             <div class="btn-group">
                 <button type="submit" class="btn btn-primary">Guardar preferencias</button>

@@ -4,6 +4,8 @@ from flask_login import LoginManager, UserMixin
 import bcrypt
 from models import Usuario
 from extensions import mail, login_manager
+from context_processors import inject_usuario_con_cache as inject_usuario
+
 
 app = Flask(__name__)
 
@@ -39,7 +41,7 @@ def load_user(user_id):
             return Usuario(usuario[0], usuario[1], usuario[2])
     return None
 
-
+# ==================== BLUEPRINTS ====================
 from routes.inicio import inicio_bp
 from routes.registro import registro_bp
 from routes.login import login_bp
@@ -81,6 +83,8 @@ from routes.vaciar_carrito import vaciar_carrito_bp
 from routes.actualizar_cantidad import actualizar_cantidad_bp
 from routes.mercadopago import mercadopago_bp
 
+
+app.context_processor(inject_usuario)
 app.register_blueprint(inicio_bp)
 app.register_blueprint(registro_bp)
 app.register_blueprint(login_bp)
@@ -121,6 +125,8 @@ app.register_blueprint(hortalizas_bp)
 app.register_blueprint(vaciar_carrito_bp)
 app.register_blueprint(actualizar_cantidad_bp)
 app.register_blueprint(mercadopago_bp)
+app.context_processor(inject_usuario)
+
 
 @app.after_request
 def add_no_cache_headers(response):
