@@ -1,0 +1,25 @@
+/* Contenedor principal de accesibilidad */
+.accesibilidad-container {
+    background-color: #f7f7f7;       /* Fondo suave */
+    padding: 20px;                   /* Espaciado interno */
+    border-radius: 12px;             /* Bordes redondeados */
+    max-width: 400px;                /* Ancho máximo */
+    margin: 20px auto;               /* Centrado horizontal */
+    text-align: center;              /* Centrado del texto */
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1); /* Sombra suave */
+}
+
+/* Slider de tamaño de letra */
+#accesibilidad-container input[type="range"],
+#fontSizeRange {
+    width: 80%;        /* Ancho de la barra */
+    margin-top: 10px;  /* Separación arriba */
+    cursor: pointer;   /* Cambia el cursor al pasar sobre la barra */
+}
+
+/* Valor del porcentaje */
+#fontSizeValue {
+    display: block;
+    margin-top: 8px;
+    font-weight: bold;
+}

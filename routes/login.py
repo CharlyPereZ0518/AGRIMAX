@@ -22,14 +22,7 @@ def login():
             return render_template('login.html')
 
         # Verificar CAPTCHA
-        verificacion = requests.post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            data={'secret': RECAPTCHA_SECRET_KEY, 'response': captcha_response}
-        )
-        resultado = verificacion.json()
-        if not resultado.get('success'):
-            flash("Verificación CAPTCHA fallida. Intenta nuevamente.", "error")
-            return render_template('login.html')
+        
 
         try:
             conexion = conectar_bd()
