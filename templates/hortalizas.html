@@ -4,12 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGRIMAX - Hortalizas</title>
+
+    <!-- Estilos -->
     <link rel="stylesheet" href="/static/css/boton_hamburguesaP.css">
     <link rel="stylesheet" href="/static/css/frutas.css">
+    <link rel="stylesheet" href="/static/css/footer.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Scripts que deben cargarse al inicio -->
     <script src="/static/js/boton_hamburguesaP.js" defer></script>
     <script src="/static/js/frutas.js" defer></script>
-    <link rel="stylesheet" href="/static/css/footer.css">
+
+    <!-- Si tu _font_script.html incluye fuentes (por ejemplo Google Fonts), lo dejamos aquí -->
+    {% include '_font_script.html' %}
 </head>
 <body>
     {% if not session.get('usuario_id') %}
@@ -17,35 +24,36 @@
         window.location.href = "{{ url_for('login') }}";
     </script>
     {% endif %}
-<header class="header">
-    <div class="logo" onclick="location.href='/menu_principal'">AGRIMAX</div>
-    <button id="menuBtn" class="menu-btn">☰</button>
-    <div class="header-right">
-        <button class="cart-btn" onclick="location.href='{{ url_for('carrito.carrito') }}'">
-            <i class="fas fa-shopping-cart"></i>
-        </button>
+
+    <header class="header">
+        <div class="logo" onclick="location.href='/menu_principal'">AGRIMAX</div>
+        <button id="menuBtn" class="menu-btn">☰</button>
+        <div class="header-right">
+            <button class="cart-btn" onclick="location.href='{{ url_for('carrito.carrito') }}'">
+                <i class="fas fa-shopping-cart"></i>
+            </button>
+        </div>
+    </header>
+
+    <div id="sidebar" class="sidebar">
+        <ul class="sidebar-menu">
+            <li><a href="{{ url_for('usuarios.perfil', usuario_id=session['usuario_id']) }}">PERFIL</a></li>
+            <li><a href="{{ url_for('menu_clientes.menu_principal') }}">MENÚ PRINCIPAL</a></li>
+            <li>
+                <button class="dropdown-btn">CATEGORÍAS <i class="fas fa-caret-down"></i></button>
+                <ul class="dropdown-container">
+                    <li><a href="{{ url_for('verduras.verduras') }}">Verduras</a></li>
+                    <li><a href="{{ url_for('frutas.frutas') }}">Frutas</a></li>
+                    <li><a href="{{ url_for('legumbres.legumbres') }}">Granos</a></li>
+                    <li><a href="{{ url_for('hortalizas.hortalizas') }}">Hortalizas</a></li>
+                </ul>
+            </li>
+            <li><a href="{{ url_for('configuracion.configuracion') }}">CONFIGURACIÓN</a></li>
+            <li><a href="{{ url_for('logout.logout') }}" class="logout-btn">CERRAR SESIÓN</a></li>
+        </ul>
     </div>
-</header>
 
-<div id="sidebar" class="sidebar">
-    <ul class="sidebar-menu">
-        <li><a href="{{ url_for('usuarios.perfil', usuario_id=session['usuario_id']) }}">PERFIL</a></li>
-        <li><a href="{{ url_for('menu_clientes.menu_principal') }}">MENÚ PRINCIPAL</a></li>
-        <li>
-            <button class="dropdown-btn">CATEGORÍAS <i class="fas fa-caret-down"></i></button>
-            <ul class="dropdown-container">
-                <li><a href="{{ url_for('verduras.verduras') }}">Verduras</a></li>
-                <li><a href="{{ url_for('frutas.frutas') }}">Frutas</a></li>
-                <li><a href="{{ url_for('legumbres.legumbres') }}">Granos</a></li>
-                <li><a href="{{ url_for('hortalizas.hortalizas') }}">Hortalizas</a></li>
-            </ul>
-        </li>
-        <li><a href="{{ url_for('configuracion.configuracion') }}">CONFIGURACIÓN</a></li>
-        <li><a href="{{ url_for('logout.logout') }}" class="logout-btn">CERRAR SESIÓN</a></li>
-    </ul>
-</div>
-
-<div id="overlay" class="overlay"></div>
+    <div id="overlay" class="overlay"></div>
 
     <h1 class="main-title">NUESTROS PRODUCTOS DE HORTALIZAS</h1>
 
@@ -91,14 +99,16 @@
             document.getElementById(id).style.display = 'none';
             document.getElementById('overlay').classList.remove('active');
         }
-    window.onpageshow = function(event) {
-        if (event.persisted) {
-            window.location.reload();
-        }
-    };
+
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
     </script>
-</body>
+
     <footer>
         <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>
     </footer>
+</body>
 </html>

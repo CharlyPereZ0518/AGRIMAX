@@ -5,30 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="AGRIMAX - Plataforma para productos agrícolas">
     <title>Perfil de Usuario - AGRIMAX</title>
+
     <link rel="stylesheet" href="/static/css/perfil.css">
     <link rel="stylesheet" href="/static/css/boton_hamburguesa.css">
     <link rel="stylesheet" href="/static/css/footer.css">
+
     <script src="/static/js/perfil.js" defer></script>
     <script src="/static/js/boton_hamburguesa.js" defer></script>
+
+    {% include '_font_script.html' %}
 </head>
 
 <body>
-     {% if not session.get('usuario_id') %}
-     <script>
-         window.location.href = "{{ url_for('login') }}";
-     </script>
-     {% endif %}
-     <header class="header">
-    <div class="logo" onclick="location.href='/menu_provedor'">AGRIMAX</div>
-    <button id="menuBtn" class="menu-btn">☰</button>
-    <button id="notificacionesBtn" class="notificaciones-btn" onclick="location.href='{{ url_for('notificaciones.notificaciones') }}'">
-        🔔
-    </button>
-</header>
+    {% if not session.get('usuario_id') %}
+    <script>
+        window.location.href = "{{ url_for('login') }}";
+    </script>
+    {% endif %}
+
+    <header class="header">
+        <div class="logo" onclick="location.href='/menu_provedor'">AGRIMAX</div>
+        <button id="menuBtn" class="menu-btn">☰</button>
+        <button id="notificacionesBtn" class="notificaciones-btn" onclick="location.href='{{ url_for('notificaciones.notificaciones') }}'">
+            🔔
+        </button>
+    </header>
 
     <div id="sidebar" class="sidebar">
         <ul class="sidebar-menu">
-            <li><a href="{{ url_for('menu_provedor.menu') }}">MENU PRINCIPAL</a></li>
+            <li><a href="{{ url_for('menu_provedor.menu') }}">MENÚ PRINCIPAL</a></li>
             <li><a href="{{ url_for('nuevo_producto.nuevo') }}">SUBIR PRODUCTOS</a></li>
             <li><a href="{{ url_for('graficas.graficas_agri') }}">ESTADÍSTICAS</a></li>
             <li><a href="{{ url_for('configuracion.configuracion') }}">CONFIGURACIÓN</a></li>
@@ -36,43 +41,45 @@
         </ul>
     </div>
 
-<div id="overlay" class="overlay"></div>
+    <div id="overlay" class="overlay"></div>
+
     <div class="banner">
         <img src="/static/imagenes/portada.jpg" alt="Portada">
     </div>
-    <!-- Portada estilo Facebook -->
+
+    <!-- Perfil tipo Facebook -->
     <div class="perfil-header">
-    <div class="foto-container">
-        <img class="foto-perfil"
-             src="{{ url_for('static', filename=perfil['foto'].replace('static/', '')) if perfil['foto'] else url_for('static', filename='imagenes/default-profile.jpg') }}"
-             alt="Foto de Perfil"
-             onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagenes/default-profile.jpg') }}'">
-    </div>
+        <div class="foto-container">
+            <img class="foto-perfil"
+                 src="{{ url_for('static', filename=perfil['foto'].replace('static/', '')) if perfil['foto'] else url_for('static', filename='imagenes/default-profile.jpg') }}"
+                 alt="Foto de Perfil"
+                 onerror="this.onerror=null;this.src='{{ url_for('static', filename='imagenes/default-profile.jpg') }}'">
+        </div>
 
-    <div class="datos-perfil">
-        <h2>{{ perfil['nombre'] }}</h2>
-        <p><strong>Correo:</strong> {{ perfil['correo'] }}</p>
-        <p><strong>Tipo de Usuario:</strong> {{ perfil['tipo'] }}</p>
-        <p><strong>Biografía:</strong> {{ perfil['biografia'] }}</p>
-    </div>
+        <div class="datos-perfil">
+            <h2>{{ perfil['nombre'] }}</h2>
+            <p><strong>Correo:</strong> {{ perfil['correo'] }}</p>
+            <p><strong>Tipo de Usuario:</strong> {{ perfil['tipo'] }}</p>
+            <p><strong>Biografía:</strong> {{ perfil['biografia'] }}</p>
+        </div>
 
-    <div class="boton-editar">
-        <button onclick="location.href='{{ url_for('configuracion.configuracion') }}'">EDITAR PERFIL</button>
+        <div class="boton-editar">
+            <button onclick="location.href='{{ url_for('configuracion.configuracion') }}'">EDITAR PERFIL</button>
+        </div>
     </div>
-</div>
 
     <footer>
         <div class="footer-content">
             <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>
         </div>
     </footer>
+
+    <script>
+        window.onpageshow = function(event) {
+            if (event.persisted) {
+                window.location.reload();
+            }
+        };
+    </script>
 </body>
-<script>
-    window.onpageshow = function(event) {
-        if (event.persisted) {
-            window.location.reload();
-        }
-    };
-</script>
-</html>
-    
+</html>    

@@ -1,0 +1,14 @@
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedFont = localStorage.getItem('selectedFont');
+    if (savedFont) {
+      document.body.style.fontFamily = savedFont;
+
+      // Si en esta página existe el select, actualiza su valor
+      const fontSelect = document.getElementById('font-select');
+      if (fontSelect) {
+        fontSelect.value = savedFont;
+      }
+    }
+  });
+</script>
