@@ -120,3 +120,11 @@
         }
     };
 </script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedFontSize = localStorage.getItem('fontSize');
+    if (savedFontSize) {
+      document.body.style.fontSize = `${savedFontSize}%`;
+    }
+  });
+</script>

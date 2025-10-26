@@ -193,7 +193,14 @@ document.querySelector("form").addEventListener("submit", function(event) {
     this.dataset.submitted = true;
 });
 </script>
-
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedFontSize = localStorage.getItem('fontSize');
+    if (savedFontSize) {
+      document.body.style.fontSize = `${savedFontSize}%`;
+    }
+  });
+</script>
 </body>
     <footer>
         <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>

@@ -1,23 +1,21 @@
-// Espera a que el DOM esté completamente cargado
-document.addEventListener("DOMContentLoaded", () => {
-    const fontSizeRange = document.getElementById('fontSizeRange');
-    const fontSizeValue = document.getElementById('fontSizeValue');
+// accesibilidad.js
+const fontSizeRange = document.getElementById('fontSizeRange');
+const fontSizeValue = document.getElementById('fontSizeValue');
 
-    if (fontSizeRange && fontSizeValue) {
-        // Evento para cuando el usuario mueve la barra
-        fontSizeRange.addEventListener('input', () => {
-            const sizePercent = fontSizeRange.value;
-            fontSizeValue.textContent = `${sizePercent}%`;   // Muestra el valor actual
-            document.body.style.fontSize = `${sizePercent}%`; // Cambia el tamaño del texto en toda la página
-            localStorage.setItem('fontSizePreference', sizePercent); // Guarda la preferencia
-        });
+// Cargar el valor guardado al cargar la página
+document.addEventListener('DOMContentLoaded', () => {
+  const savedFontSize = localStorage.getItem('fontSize');
+  if (savedFontSize) {
+    document.body.style.fontSize = `${savedFontSize}%`;
+    fontSizeRange.value = savedFontSize;
+    fontSizeValue.textContent = `${savedFontSize}%`;
+  }
+});
 
-        // Al cargar la página, revisa si el usuario ya guardó un tamaño
-        const savedSize = localStorage.getItem('fontSizePreference');
-        if (savedSize) {
-            fontSizeRange.value = savedSize;
-            fontSizeValue.textContent = `${savedSize}%`;
-            document.body.style.fontSize = `${savedSize}%`;
-        }
-    }
+// Actualizar el tamaño de fuente y guardar
+fontSizeRange.addEventListener('input', () => {
+  const newSize = fontSizeRange.value;
+  document.body.style.fontSize = `${newSize}%`;
+  fontSizeValue.textContent = `${newSize}%`;
+  localStorage.setItem('fontSize', newSize);
 });

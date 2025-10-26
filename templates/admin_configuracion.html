@@ -66,6 +66,14 @@
             <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>
         </div>
     </footer>
+    <script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedFontSize = localStorage.getItem('fontSize');
+    if (savedFontSize) {
+      document.body.style.fontSize = `${savedFontSize}%`;
+    }
+  });
+</script>
 </body>
 </body>
 </html>

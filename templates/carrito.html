@@ -130,5 +130,13 @@ document.querySelectorAll('.cantidad-input').forEach(input => {
     <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>
 
 </footer>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const savedFontSize = localStorage.getItem('fontSize');
+    if (savedFontSize) {
+      document.body.style.fontSize = `${savedFontSize}%`;
+    }
+  });
+</script>
 </body>
 </html>
