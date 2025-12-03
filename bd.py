@@ -1,17 +1,14 @@
 import psycopg2
+import os
 
-# Diccionario con los datos de conexión
-configuracion_bd = {
-    'host': 'localhost',
-    'database': 'AGRIMAX',
-    'user': 'postgres',
-    'password': '2812'
-}
-
-# Función que retorna la conexión
 def conectar_bd():
     try:
-        conexion = psycopg2.connect(**configuracion_bd)
+        # Railway te da la URL completa en la variable de entorno
+        database_url = os.environ.get("DATABASE_URL")
+
+        # Conexión directa usando la URL
+        conexion = psycopg2.connect(database_url)
+
         print("Conexión exitosa a la base de datos")
         return conexion
     except Exception as e:
