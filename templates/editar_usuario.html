@@ -4,8 +4,19 @@
     <meta charset="UTF-8">
     <title>Editar Usuario</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <script src="/static/js/admin_accesibilidad.js" defer></script>
+    <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/contraste.css"
+    
 </head>
-<body>
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} 
+              {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }} 
+              {{ usuario.nivel_contraste if usuario.nivel_contraste else '' }}
+              {{ 'font-large' if usuario.font_size == 'large' else 'font-x-large' if usuario.font_size == 'x-large' else '' }}
+              {{ 'modo-oscuro' if usuario.modo_oscuro == 'on' else '' }}
+              {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
+     data-contraste="{{ usuario.nivel_contraste }}"
+     style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">

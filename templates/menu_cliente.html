@@ -12,10 +12,67 @@
     <link rel="stylesheet" href="/static/css/footer.css"> 
     <link rel="stylesheet" href="/static/css/frutas.css">
     <script src="/static/js/frutas.js" defer></script>
-
+    <link rel="stylesheet" href="/static/css/contraste.css">
+    <script src="/static/js/accesibilidad.js" defer></script>
+    <script src="/static/js/accesibilidad_global.js"></script>
+ <style>
+      /* Floating chat bubble */
+      #chatBubble {
+        position: fixed;
+        right: 18px;
+        bottom: 18px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: #28a745;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 24px;
+        cursor: pointer;
+        z-index: 14010;
+        box-shadow: 0 6px 18px rgba(0,0,0,.25);
+        transition: transform .12s ease;
+      }
+      #chatBubble:hover { transform: translateY(-4px); }
+      /* Chat modal container */
+      #chatModal { display: none; position: fixed; right: 18px; bottom: 18px; z-index: 14011; }
+      @media (max-width:420px){
+        #chatBubble { right: 12px; bottom: 12px; width:50px; height:50px; font-size:20px; }
+        #chatModal > div { width: calc(100vw - 28px); height: 70vh; right: 6px; bottom: 6px; }
+      }
+        /* Accessibility bubbles container */
+        .acc-bubbles { position: fixed; right: 18px; bottom: 92px; display:flex; flex-direction: column; gap:10px; z-index:14009 }
+        .acc-bubble {
+          width:44px; height:44px; border-radius:50%; color:#fff; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 6px 18px rgba(0,0,0,.2); transition:transform .12s ease; font-size:18px
+        }
+        .acc-bubble:hover { transform: translateY(-4px) }
+        .acc-contrast { background:#007bff }
+        .acc-reader { background:#6f42c1 }
+        .acc-cursor { background:#17a2b8 }
+        .acc-font { background:#ffc107; color:#222 }
+        .acc-theme { background:#fd7e14 }
+        /* Accessibility modal common */
+        .accModal { display:none; position:fixed; right:18px; bottom: 18px; z-index:14012 }
+        .accModal > .panel { width:320px; max-width:calc(100vw - 32px); background:#fff; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.25); overflow:hidden }
+        .accModal .panel header { background:#343a40; color:#fff; padding:8px 12px; display:flex; justify-content:space-between; align-items:center }
+        .accModal .panel .content { padding:12px }
+        .accModal .panel .content button { padding:8px 12px; border-radius:8px; border:0; cursor:pointer; margin:6px 8px 6px 0; font-weight:600 }
+        .accModal .panel .content .acc-btn { background: linear-gradient(90deg,#4a90e2,#357ab8); color:#fff }
+        .accModal .panel .content .acc-btn.secondary { background: linear-gradient(90deg,#e0e0e0,#cfcfcf); color:#222 }
+        .accModal .panel .content .acc-btn.warn { background: linear-gradient(90deg,#ffb66b,#ff8a00); color:#222 }
+        @media (max-width:420px){ .accModal { right:12px; bottom:72px } .accModal > .panel { width:calc(100vw - 28px) } }
+    </style>
 </head>
-<body>
-    <body>
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} 
+              {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }} 
+              {{ usuario.nivel_contraste if usuario.nivel_contraste else '' }}
+              {{ 'font-large' if usuario.font_size == 'large' else 'font-x-large' if usuario.font_size == 'x-large' else '' }}
+              {{ 'modo-oscuro' if usuario.modo_oscuro == 'on' else '' }}
+              {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
+     data-contraste="{{ usuario.nivel_contraste }}"
+     style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
     {% if not session.get('usuario_id') %}
  <script>
      window.location.href = "{{ url_for('login') }}";
@@ -102,6 +159,248 @@
     </main>
 
     <div id="notificacion" class="notificacion">Producto agregado al carrito ✅</div>
+
+      <div id="chatBubble" aria-label="Abrir chat" title="Abrir chat">💬</div>
+
+  <!-- Chat modal (iframe loads chat page) -->
+  <div id="chatModal" aria-hidden="true">
+    <div style="width:360px;height:520px;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);overflow:hidden;display:flex;flex-direction:column;">
+      <div style="background:linear-gradient(90deg,#2d5a27,#4a8c3a);color:#fff;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+        <div>🤖 Asistente Agrimax</div>
+        <div>
+          <button id="chatMinimize" type="button" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">—</button>
+          <button id="chatClose" type="button" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button>
+        </div>
+      </div>
+      <iframe id="chatIframe"
+              src="{{ url_for('chat.chat_page', role='cliente') }}"
+              title="Chat Agrimax - Cliente"
+              aria-label="Chat Agrimax - Cliente"
+              style="border:0;width:100%;height:100%;"></iframe>
+    </div>
+  </div>
+  
+  <!-- Accessibility bubbles -->
+  <div class="acc-bubbles" aria-hidden="false">
+    <div id="accContrast" class="acc-bubble acc-contrast" title="Contraste">C</div>
+    <div id="accReader" class="acc-bubble acc-reader" title="Modo lector">R</div>
+    <div id="accCursor" class="acc-bubble acc-cursor" title="Cursor">🖱</div>
+    <div id="accFont" class="acc-bubble acc-font" title="Tamaño fuente">A</div>
+    <div id="accTheme" class="acc-bubble acc-theme" title="Tema">☼</div>
+  </div>
+
+  <!-- Accessibility modals -->
+  <div id="accContrastModal" class="accModal" aria-hidden="true">
+    <div class="panel">
+      <header><span>Contraste</span><button onclick="closeAccModal('accContrastModal')" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button></header>
+      <div class="content">
+        <p>Selecciona nivel de contraste:</p>
+        <button class="acc-btn secondary" onclick="setContrast('normal')">Normal</button>
+        <button class="acc-btn" onclick="setContrast('alto')">Alto</button>
+        <button class="acc-btn" onclick="setContrast('muy-alto')">Muy alto</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accReaderModal" class="accModal" aria-hidden="true">
+    <div class="panel">
+      <header><span>Modo Lector</span><button onclick="closeAccModal('accReaderModal')" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button></header>
+      <div class="content">
+        <p>Activa o desactiva el lector de pantalla:</p>
+        <button class="acc-btn" onclick="toggleReader(true)">Activar</button>
+        <button class="acc-btn secondary" onclick="toggleReader(false)">Desactivar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accCursorModal" class="accModal" aria-hidden="true">
+    <div class="panel">
+      <header><span>Tamaño del cursor</span><button onclick="closeAccModal('accCursorModal')" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button></header>
+      <div class="content">
+        <p>Selecciona tamaño del cursor:</p>
+        <button class="acc-btn secondary" onclick="setCursorSize('normal')">Normal</button>
+        <button class="acc-btn" onclick="setCursorSize('large')">Grande</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accFontModal" class="accModal" aria-hidden="true">
+    <div class="panel">
+      <header><span>Tamaño de fuente</span><button onclick="closeAccModal('accFontModal')" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button></header>
+      <div class="content">
+        <p>Selecciona tamaño de fuente:</p>
+        <button class="acc-btn secondary" onclick="setFontSize('normal')">Normal</button>
+        <button class="acc-btn" onclick="setFontSize('large')">Grande</button>
+        <button class="acc-btn" onclick="setFontSize('x-large')">Extra grande</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accThemeModal" class="accModal" aria-hidden="true">
+    <div class="panel">
+      <header><span>Tema</span><button onclick="closeAccModal('accThemeModal')" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button></header>
+      <div class="content">
+        <p>Alterna modos:</p>
+        <button class="acc-btn" onclick="setTheme('oscuro')">Modo oscuro</button>
+        <button class="acc-btn" onclick="setTheme('grises')">Modo grises</button>
+        <button class="acc-btn secondary" onclick="setTheme('normal')">Restablecer</button>
+      </div>
+    </div>
+  </div>
+  <script>
+    // Menu toggle
+    function toggleMenu() {
+      var menu = document.getElementById("menuContent");
+      if (!menu) return;
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    // Product modal controls
+    function openModal(id) {
+      var el = document.getElementById(id + '-modal');
+      if (!el) return;
+      el.style.display = 'block';
+      document.getElementById('overlay').classList.add('active');
+    }
+
+    function closeModal(id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.style.display = 'none';
+      document.getElementById('overlay').classList.remove('active');
+    }
+
+    // Chat bubble / modal controls
+    (function(){
+      const bubble = document.getElementById('chatBubble');
+      const modal = document.getElementById('chatModal');
+      const closeBtn = document.getElementById('chatClose');
+      const minBtn = document.getElementById('chatMinimize');
+      const headerBtn = document.getElementById('open-chat-btn');
+
+
+      function showModal(){
+        if (modal){
+          modal.style.display = 'block';
+          modal.setAttribute('aria-hidden', 'false');
+        }
+        if (bubble) bubble.style.display = 'none';
+        if (headerBtn) headerBtn.style.display = 'none';
+      }
+     function hideModal(){
+      if (modal){
+        modal.style.display = 'none';
+        modal.setAttribute('aria-hidden', 'true');
+      }
+      if(bubble) bubble.style.display = 'flex';
+      if(headerBtn) headerBtn.style.display = 'inline-block';
+     }
+
+     if (bubble) bubble.addEventListener('click', showModal);
+     if (headerBtn) headerBtn.addEventListener('click', showModal);
+     if (closeBtn) closeBtn.addEventListener('click', hideModal);
+     if (minBtn) minBtn.addEventListener('click', hideModal);
+
+      // allow parent openChatModal() used elsewhere
+      window.openChatModal = showModal;
+      window.closeChatModal = hideModal;
+      window.minimizeChat = hideModal;
+    })();
+
+    // Accessibility controls
+    (function(){
+      function showAccModal(id){
+        var el = document.getElementById(id);
+        if (!el) return;
+        el.style.display = 'block';
+        el.setAttribute('aria-hidden','false');
+      }
+
+      window.closeAccModal = function(id){
+        var el = document.getElementById(id);
+        if(el){ el.style.display='none'; el.setAttribute('aria-hidden','true'); }
+      }
+
+      var elContrast = document.getElementById('accContrast');
+      var elReader = document.getElementById('accReader');
+      var elCursor = document.getElementById('accCursor');
+      var elFont = document.getElementById('accFont');
+      var elTheme = document.getElementById('accTheme');
+
+      if(elContrast) elContrast.addEventListener('click', function(){ showAccModal('accContrastModal'); });
+      if(elReader) elReader.addEventListener('click', function(){ showAccModal('accReaderModal'); });
+      if(elCursor) elCursor.addEventListener('click', function(){ showAccModal('accCursorModal'); });
+      if(elFont) elFont.addEventListener('click', function(){ showAccModal('accFontModal'); });
+      if(elTheme) elTheme.addEventListener('click', function(){ showAccModal('accThemeModal'); });
+
+      window.setContrast = function(level){ localStorage.setItem('nivel_contraste', level); location.reload(); };
+      window.toggleReader = function(on){ localStorage.setItem('modo_lector', on ? 'on' : 'off'); location.reload(); };
+      window.setCursorSize = function(size){ localStorage.setItem('cursor_size', size); location.reload(); };
+      window.setFontSize = function(size){ localStorage.setItem('font_size', size); location.reload(); };
+
+      window.setTheme = function(kind){
+        if(kind === 'normal'){
+          localStorage.removeItem('modo_oscuro');
+          localStorage.removeItem('modoOscuro');
+          localStorage.removeItem('modoGrises');
+          localStorage.removeItem('modo_nocturno');
+        } else if(kind === 'oscuro'){
+          localStorage.setItem('modo_oscuro','on');
+          localStorage.setItem('modoOscuro','on');
+          localStorage.removeItem('modoGrises');
+          localStorage.removeItem('modo_nocturno');
+        } else if(kind === 'nocturno'){
+          // 'nocturno' mapea a la variante 'cielo-nocturno' usada en accesibilidad.js
+          localStorage.setItem('modoOscuro','cielo-nocturno');
+          localStorage.setItem('modo_oscuro','on');
+          localStorage.setItem('modo_nocturno','on');
+          localStorage.removeItem('modoGrises');
+        } else if(kind === 'grises'){
+          localStorage.setItem('modoGrises','true');
+          localStorage.removeItem('modo_oscuro');
+          localStorage.removeItem('modoOscuro');
+          localStorage.removeItem('modo_nocturno');
+        }
+        location.reload();
+      };
+    })();
+
+    // Improve page restore behavior
+    window.onpageshow = function(event) {
+      if (event.persisted) {
+        window.location.reload();
+      }
+    };
+  </script>
+    <script>
+  // Aplicar contraste desde localStorage
+  const contraste = localStorage.getItem('nivel_contraste') || 'normal';
+  const body = document.body;
+
+  // Remover clases previas
+  body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-oscuro');
+
+  // Aplicar clase según contraste
+  if (contraste !== 'normal') {
+    switch (contraste) {
+      case 'alto':
+        body.classList.add('contraste-alto');
+        break;
+      case 'muy-alto':
+        body.classList.add('contraste-muy-alto');
+        break;
+      case 'oscuro':
+        body.classList.add('modo-oscuro');
+        break;
+    }
+  }
+
+  // Aplicar modo grises si está activado
+  if (localStorage.getItem('modoGrises') === 'true') {
+    body.classList.add('modo-grises');
+  }
+</script>
+
 <script>
         function toggleMenu() {
             var menu = document.getElementById("menuContent");

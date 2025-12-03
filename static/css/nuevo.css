@@ -7,7 +7,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+   
     background: url('/static/imagenes/ima1.jpg') no-repeat center center/cover;
     background-attachment: fixed; /* Esto mantiene la imagen fija */
     color: white;

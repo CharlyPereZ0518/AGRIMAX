@@ -1,59 +1,618 @@
-        * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
+/* confirmacion_pedidos_mejorado.css */
 
-        body {
-        font-family: Arial, sans-serif;
-        background: #d9d1f3; 
-        }
-        .order-section {
-        max-width: 600px;
-        margin: 40px auto;
-        padding: 30px;
-        background: #fff;
-        border-radius: 15px;
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-        .form-group {
-        margin-bottom: 25px;
+/* Mensaje flotante */
+.mensaje-flotante {
+    position: fixed;
+    top: 80px;
+    right: 20px;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 15px 25px;
+    border-radius: 10px;
+    font-weight: bold;
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    z-index: 1000;
+    animation: slideInRight 0.5s ease-out;
+    display: none;
+    border-left: 4px solid #fff;
+}
+
+@keyframes slideInRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
     }
-        .radio-group {
-        display: flex; gap: 20px;
+    to {
+        transform: translateX(0);
+        opacity: 1;
     }
-        .form-textarea {
-        width: 100%;
-        padding: 12px;
-        border-radius: 8px;
-        resize: vertical;
-        min-height: 100px;
-    }
-        .button-group {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 40px;
-    }
-        
-        .btn {
-        padding: 12px 30px;
-        border-radius: 8px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: 0.3s;
-    }
-        
-        .btn-finish {
-        background: #8b4c12;
-        color: white;
-    }
-    @media (max-width: 600px)
-    {
-        .radio-group, .button-group {
+}
+
+/* Indicador de pasos */
+.pasos-proceso {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 600px;
+    margin: 0 auto 30px;
+    position: relative;
+    padding: 0 20px;
+}
+
+.pasos-proceso::before {
+    content: '';
+    position: absolute;
+    top: 25px;
+    left: 50px;
+    right: 50px;
+    height: 3px;
+    background: #e9ecef;
+    z-index: 1;
+}
+
+.paso {
+    text-align: center;
+    flex: 1;
+    position: relative;
+    z-index: 2;
+}
+
+.numero-paso {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: #e9ecef;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 8px;
+    font-weight: bold;
+    font-size: 1.2em;
+    border: 3px solid #e9ecef;
+    transition: all 0.3s ease;
+}
+
+.paso.activo .numero-paso {
+    background: #007bff;
+    color: white;
+    border-color: #007bff;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.paso.completado .numero-paso {
+    background: #28a745;
+    color: white;
+    border-color: #28a745;
+}
+
+.paso span {
+    font-size: 0.9em;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.paso.activo span {
+    color: #007bff;
+    font-weight: 600;
+}
+
+.paso.completado span {
+    color: #28a745;
+}
+
+/* Resumen del pedido */
+.resumen-pedido {
+    background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 25px 0;
+    border-left: 5px solid #28a745;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.resumen-pedido h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.resumen-pedido h3 i {
+    color: #28a745;
+}
+
+.producto-resumen {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.producto-resumen:last-child {
+    border-bottom: none;
+}
+
+.total-resumen {
+    font-weight: bold;
+    font-size: 1.3em;
+    color: #2c3e50;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 2px solid #28a745;
+    text-align: right;
+}
+
+/* Métodos de pago */
+.metodo-pago-info {
+    background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px 0;
+    border-left: 4px solid #1976d2;
+}
+
+.metodo-pago-info h4 {
+    color: #1976d2;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.metodo-pago-info p {
+    margin: 8px 0;
+    color: #37474f;
+}
+
+/* Grupos de radio mejorados */
+.radio-group.vertical {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.radio-option.large {
+    padding: 20px;
+    border: 2px solid #e9ecef;
+    border-radius: 10px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.radio-option.large:hover {
+    border-color: #007bff;
+    background: #f8f9fa;
+}
+
+.radio-option.large input[type="radio"]:checked ~ * {
+    color: #007bff;
+}
+
+.radio-option.large small {
+    display: block;
+    color: #6c757d;
+    font-size: 0.85em;
+    margin-top: 5px;
+}
+
+/* Términos y condiciones */
+.terminos-condiciones {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    border: 2px solid #b4b5b6;
+}
+
+.checkbox-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.checkbox-option input[type="checkbox"] {
+    margin-top: 3px;
+}
+
+.link-terminos {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.link-terminos:hover {
+    text-decoration: underline;
+}
+
+/* Botones mejorados */
+.btn-pagar {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: rgb(144, 143, 143);
+    border: none;
+    padding: 15px 30px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-pagar:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+}
+
+.btn-pagar:disabled {
+    background: #6c757d;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Resumen completo */
+.resumen-completo {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border-radius: 15px;
+    padding: 25px;
+    margin: 20px 0;
+    border-left: 5px solid #ffc107;
+}
+
+.resumen-completo h3 {
+    color: #856404;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pasos-proceso {
         flex-direction: column;
+        gap: 20px;
+    }
+    
+    .pasos-proceso::before {
+        display: none;
+    }
+    
+    .radio-group.vertical {
         gap: 10px;
     }
-    .btn {
+    
+    .radio-option.large {
+        padding: 15px;
+    }
+    
+    .resumen-pedido,
+    .resumen-completo {
+        padding: 20px;
+        margin: 15px 0;
+    }
+}
+
+/* Contenedor principal de confirmación */
+.confirmation-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.confirmation-title {
+    text-align: center;
+    color: #2c3e50;
+    margin-bottom: 30px;
+    font-size: 2.2em;
+}
+
+.confirmation-title i {
+    color: #28a745;
+    margin-right: 15px;
+}
+
+/* Tarjeta de confirmación */
+.confirmacion-card {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+    overflow: hidden;
+    border: 2px solid #e9ecef;
+}
+
+.confirmacion-header {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 30px;
+    text-align: center;
+}
+
+.confirmacion-header i {
+    font-size: 3em;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.confirmacion-header h2 {
+    margin: 0 0 10px 0;
+    font-size: 1.8em;
+}
+
+.confirmacion-header p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 1.1em;
+}
+
+.confirmacion-body {
+    padding: 30px;
+}
+
+.info-group {
+    margin-bottom: 30px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #a5a5a5;
+}
+
+.info-group:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+}
+
+.info-group h3 {
+    color: #2c3e50;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.3em;
+}
+
+.info-group h3 i {
+    color: #28a745;
+    width: 25px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+}
+
+.info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+}
+
+.info-label {
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.info-value {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.precio-total {
+    color: #28a745;
+    font-size: 1.2em;
+}
+
+/* Lista de productos */
+.productos-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.producto-item-final {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background: #adadad;
+    border-radius: 10px;
+    border-left: 4px solid #28a745;
+}
+
+.producto-nombre {
+    font-weight: 600;
+    color: #2c3e50;
+}
+
+.producto-detalles {
+    display: flex;
+    gap: 20px;
+    color: #6c757d;
+}
+
+.producto-precio {
+    font-weight: 600;
+    color: #28a745;
+}
+
+/* Footer de la tarjeta */
+.confirmacion-footer {
+    background: #f8f9fa;
+    padding: 25px 30px;
+    border-top: 2px solid #e9ecef;
+}
+
+.total-final {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.3em;
+}
+
+.total-label {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.total-amount {
+    color: #28a745;
+    font-weight: bold;
+    font-size: 1.4em;
+}
+
+/* Opciones de confirmación */
+.opciones-confirmacion {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+    margin-bottom: 25px;
+}
+
+.radio-group-horizontal {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.radio-group-horizontal .radio-option {
+    flex: 1;
+    min-width: 150px;
+    text-align: center;
+    padding: 15px;
+}
+
+/* Términos finales */
+.terminos-final {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 15px;
+    margin-bottom: 30px;
+    border: 2px solid #e9ecef;
+}
+
+.checkbox-option.grande {
+    align-items: flex-start;
+}
+
+.checkbox-option.grande input[type="checkbox"] {
+    margin-top: 5px;
+    transform: scale(1.2);
+}
+
+.checkbox-content {
+    flex: 1;
+}
+
+.checkbox-text {
+    font-size: 1.05em;
+    line-height: 1.5;
+    color: #2c3e50;
+}
+
+.link-destacado {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.link-destacado:hover {
+    text-decoration: underline;
+}
+
+/* Acciones finales */
+.acciones-final {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.btn-principal {
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    border: none;
+    padding: 18px 35px;
+    font-size: 1.2em;
+    font-weight: bold;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+    flex: 1;
+    max-width: 300px;
+}
+
+.btn-principal:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+}
+
+.btn-secundario {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 18px 30px;
+    font-size: 1.1em;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    max-width: 200px;
+}
+
+.btn-secundario:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .confirmacion-header {
+        padding: 20px;
+    }
+    
+    .confirmacion-body {
+        padding: 20px;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .radio-group-horizontal {
+        flex-direction: column;
+    }
+    
+    .acciones-final {
+        flex-direction: column;
+    }
+    
+    .btn-principal,
+    .btn-secundario {
+        max-width: 100%;
         width: 100%;
     }
+}
+
+/* Modos de accesibilidad */
+body.contraste-alto .resumen-pedido,
+body.contraste-alto .resumen-completo {
+    border-left-width: 8px;
+}
+
+body.contraste-muy-alto .radio-option.large {
+    border-width: 3px;
+}
+
+body.modo-oscuro .resumen-pedido,
+body.modo-oscuro .resumen-completo {
+    background: #2d3748;
+    color: white;
 }

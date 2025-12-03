@@ -14,7 +14,7 @@ def crear_admin(nombre, correo, contraseña_plana, fecha_nacimiento):
 
             cursor.execute("""
                 INSERT INTO usuarios (nombre, correo, contraseña, tipo, fecha_nacimiento)
-                VALUES (%s, %s, %s, 'Administrador', %s)
+                VALUES (%s, %s, %s, 'admin', %s)
             """, (nombre, correo, contraseña_hash, fecha_nacimiento))
 
             conexion.commit()

@@ -8,9 +8,48 @@
     <link rel="stylesheet" href="/static/css/menu_principal.css">
     <link rel="stylesheet" href="/static/css/footer.css">
     <script src="/static/js/boton_hamburguesa.js"></script>
+    <link rel="stylesheet" href="/static/css/cursor.css">
+    <script src="/static/js/lector.js" defer></script>
+    <script src="/static/js/accesibilidad_global.js"></script>
+    <link rel="stylesheet" href="/static/css/contraste.css">
+        <style>
+            /* Floating chat bubble */
+            #chatBubble {
+                position: fixed;
+                right: 18px;
+                bottom: 18px;
+                width: 56px;
+                height: 56px;
+                border-radius: 50%;
+                background: #28a745;
+                color: #fff;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 24px;
+                cursor: pointer;
+                z-index: 14010;
+                box-shadow: 0 6px 18px rgba(0,0,0,.25);
+                transition: transform .12s ease;
+            }
+            #chatBubble:hover { transform: translateY(-4px); }
+            /* Chat modal container */
+            #chatModal { display: none; position: fixed; right: 18px; bottom: 18px; z-index: 14011; }
+            @media (max-width:420px){
+                #chatBubble { right: 12px; bottom: 12px; width:50px; height:50px; font-size:20px; }
+                #chatModal > div { width: calc(100vw - 28px); height: 70vh; right: 6px; bottom: 6px; }
+            }
+        </style>
 </head>
 
-<body>
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} 
+              {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }} 
+              {{ usuario.nivel_contraste if usuario.nivel_contraste else '' }}
+              {{ 'font-large' if usuario.font_size == 'large' else 'font-x-large' if usuario.font_size == 'x-large' else '' }}
+              {{ 'modo-oscuro' if usuario.modo_oscuro == 'on' else '' }}
+              {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
+     data-contraste="{{ usuario.nivel_contraste }}"
+     style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
  {% if not session.get('usuario_id') %}
  <script>
      window.location.href = "{{ url_for('login') }}";
@@ -18,11 +57,9 @@
  {% endif %}
 
     <header class="header">
-        <div class="logo" onclick="location.href='/menu_principal'">AGRIMAX</div>
+        <div class="logo" onclick="location.href='{{ url_for('menu_provedor.menu') }}'">AGRIMAX</div>
         <button id="menuBtn" class="menu-btn">☰</button>
-        <button id="notificacionesBtn" class="notificaciones-btn" onclick="location.href='{{ url_for('notificaciones.notificaciones') }}'">
-            🔔
-        </button>
+        
     </header>
 
     <div id="sidebar" class="sidebar">
@@ -68,6 +105,26 @@
         </div>
     </main>
 
+            <div id="chatBubble" aria-label="Abrir chat" title="Abrir chat">💬</div>
+
+    <!-- Chat modal (iframe loads chat page) -->
+    <div id="chatModal" aria-hidden="true">
+        <div style="width:360px;height:520px;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3);overflow:hidden;display:flex;flex-direction:column;">
+            <div style="background:linear-gradient(90deg,#2d5a27,#4a8c3a);color:#fff;padding:8px 10px;display:flex;justify-content:space-between;align-items:center;">
+                <div>🤖 Asistente Agrimax</div>
+                <div>
+                    <button id="chatMinimize" type="button" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">—</button>
+                    <button id="chatClose" type="button" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button>
+                </div>
+            </div>
+            <iframe id="chatIframe"
+                            src="{{ url_for('chat.chat_page', role='proveedor') }}"
+                            title="Chat Agrimax - Proveedor"
+                            aria-label="Chat Agrimax - Proveedor"
+                            style="border:0;width:100%;height:100%;"></iframe>
+        </div>
+    </div>
+
     <script>
         function toggleMenu() {
             var menu = document.getElementById("menuContent");
@@ -84,7 +141,44 @@
             }
         };
     </script>
-</body>
+    <script>
+        // Chat bubble / modal controls (same logic used en menu_cliente)
+        (function(){
+            const bubble = document.getElementById('chatBubble');
+            const modal = document.getElementById('chatModal');
+            const closeBtn = document.getElementById('chatClose');
+            const minBtn = document.getElementById('chatMinimize');
+            const headerBtn = document.getElementById('open-chat-btn');
+
+
+            function showModal(){
+                if (modal){
+                    modal.style.display = 'block';
+                    modal.setAttribute('aria-hidden', 'false');
+                }
+                if (bubble) bubble.style.display = 'none';
+                if (headerBtn) headerBtn.style.display = 'none';
+            }
+         function hideModal(){
+            if (modal){
+                modal.style.display = 'none';
+                modal.setAttribute('aria-hidden', 'true');
+            }
+            if(bubble) bubble.style.display = 'flex';
+            if(headerBtn) headerBtn.style.display = 'inline-block';
+         }
+
+         if (bubble) bubble.addEventListener('click', showModal);
+         if (headerBtn) headerBtn.addEventListener('click', showModal);
+         if (closeBtn) closeBtn.addEventListener('click', hideModal);
+         if (minBtn) minBtn.addEventListener('click', hideModal);
+
+            // allow parent openChatModal() used elsewhere
+            window.openChatModal = showModal;
+            window.closeChatModal = hideModal;
+            window.minimizeChat = hideModal;
+        })();
+    </script>
     <footer>
         <div class="footer-content">
             <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>

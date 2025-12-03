@@ -9,7 +9,7 @@ admin_crear_usuarios_bp = Blueprint('admin_crear_usuarios', __name__)
 @admin_crear_usuarios_bp.route('/admin/crear_usuario', methods=['GET', 'POST'])
 @login_required
 def crear_usuario():
-    if session.get('tipo_usuario') != 'Administrador':
+    if session.get('tipo_usuario') != 'admin':
         flash("Acceso denegado", "error")
         return redirect(url_for('menu_principal'))
 

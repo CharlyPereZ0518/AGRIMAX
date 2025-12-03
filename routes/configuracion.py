@@ -26,7 +26,8 @@ def configuracion():
 
         if request.method == 'GET':
             cursor.execute("""
-                SELECT u.id, u.nombre, u.correo, p.foto, p.biografia, p.notificaciones_email, p.notificaciones_sms
+                SELECT u.id, u.nombre, u.correo, p.foto, p.biografia, p.notificaciones_email, p.notificaciones_sms,
+                       p.cursor_size, p.modo_lector, p.nivel_contraste
                 FROM usuarios u
                 LEFT JOIN perfiles p ON u.id = p.usuario_id
                 WHERE u.id = %s
@@ -40,7 +41,10 @@ def configuracion():
                 'foto': usuario_data[3] if usuario_data[3] else 'imagenes/default-profile.jpg',
                 'biografia': usuario_data[4] if usuario_data[4] else '',
                 'notificaciones_email': usuario_data[5],
-                'notificaciones_sms': usuario_data[6]
+                'notificaciones_sms': usuario_data[6],
+                'cursor_size': usuario_data[7] if usuario_data[7] else 'default',
+                'modo_lector': usuario_data[8] if usuario_data[8] else 'off',
+                'nivel_contraste': usuario_data[9] if usuario_data[9] else 'normal'  # NUEVO
             }
 
             cursor.close()
@@ -60,9 +64,10 @@ def configuracion():
             cursor.execute("SELECT 1 FROM perfiles WHERE usuario_id = %s", (usuario_id,))
             if not cursor.fetchone():
                 cursor.execute("""
-                    INSERT INTO perfiles (usuario_id, foto, biografia, notificaciones_email, notificaciones_sms)
-                    VALUES (%s, %s, %s, %s, %s)
-                """, (usuario_id, 'imagenes/default-profile.jpg', '', False, False))
+                    INSERT INTO perfiles (usuario_id, foto, biografia, notificaciones_email, notificaciones_sms,
+                                          cursor_size, modo_lector, nivel_contraste)
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+                """, (usuario_id, 'imagenes/default-profile.jpg', '', False, False, 'default', 'off', 'normal'))
 
             if seccion == 'perfil':
                 nombre = request.form.get('nombre')
@@ -138,6 +143,23 @@ def configuracion():
                     else:
                         cursor.execute("UPDATE usuarios SET correo = %s WHERE id = %s", (nuevo_correo, usuario_id))
                         flash("Correo actualizado correctamente.", "success")
+
+            elif seccion == 'accesibilidad':
+                cursor_size = request.form.get('cursor_size', 'default')
+                modo_lector = request.form.get('modo_lector', 'off')
+                nivel_contraste = request.form.get('nivel_contraste', 'normal')  # NUEVO
+                
+                cursor.execute("""
+                    UPDATE perfiles
+                    SET cursor_size = %s, modo_lector = %s, nivel_contraste = %s
+                    WHERE usuario_id = %s
+                """, (cursor_size, modo_lector, nivel_contraste, usuario_id))
+                
+                # Limpiar caché del usuario si se usa la versión con caché
+                from context_processors import limpiar_cache_usuario
+                limpiar_cache_usuario()
+                
+                flash("Preferencias de accesibilidad guardadas correctamente.", "success")
 
             conexion.commit()
             cursor.close()

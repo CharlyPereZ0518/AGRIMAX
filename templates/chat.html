@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot Agrimax</title>
+    <style>
+        /* ...existing styles... */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background: linear-gradient(135deg, #2d5a27, #4a8c3a); color: #333; min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 20px; }
+        .chat-container { width: 100%; max-width: 800px; background-color: white; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); overflow: hidden; display: flex; flex-direction: column; height: 90vh; }
+        .chat-header { background: linear-gradient(to right, #2d5a27, #4a8c3a); color: white; padding: 20px; text-align: center; position: relative; }
+        .chat-header h1 { font-size: 1.6rem; margin-bottom: 6px; }
+        .chat-header p { opacity: 0.95; font-size: 0.9rem; margin-top: 4px; }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; background-color: #f9f9f9; }
+        .message { max-width: 80%; padding: 12px 16px; border-radius: 18px; line-height: 1.4; position: relative; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .bot-message { align-self: flex-start; background-color: #e8f5e9; border-bottom-left-radius: 5px; color: #2d5a27; }
+        .user-message { align-self: flex-end; background-color: #4a8c3a; color: white; border-bottom-right-radius: 5px; }
+        .menu-options { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; }
+        .menu-btn { background-color: #4a8c3a; color: white; border: none; border-radius: 20px; padding: 8px 15px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
+        .menu-btn:hover { background-color: #3a7c2a; transform: translateY(-2px); }
+        .quick-options { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+        .quick-btn { background-color: transparent; color: #4a8c3a; border: 1px solid #4a8c3a; border-radius: 15px; padding: 5px 10px; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
+        .quick-btn:hover { background-color: #e8f5e9; }
+        .chat-input-container { padding: 15px 20px; background-color: white; border-top: 1px solid #eee; display: flex; gap: 10px; }
+        .chat-input { flex: 1; padding: 12px 15px; border: 1px solid #ddd; border-radius: 25px; outline: none; font-size: 1rem; transition: border 0.3s; }
+        .chat-input:focus { border-color: #4a8c3a; }
+        .send-btn { background-color: #4a8c3a; color: white; border: none; border-radius: 50%; width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; cursor: pointer; transition: all 0.2s; }
+        .send-btn:hover { background-color: #3a7c2a; transform: scale(1.05); }
+        .welcome-message { text-align: center; padding: 15px; background-color: #e8f5e9; border-radius: 10px; margin-bottom: 10px; }
+        .typing-indicator { display: inline-block; padding: 12px 16px; background-color: #e8f5e9; border-radius: 18px; border-bottom-left-radius: 5px; }
+        .typing-dots { display: flex; gap: 4px; }
+        .typing-dot { width: 8px; height: 8px; background-color: #4a8c3a; border-radius: 50%; animation: typing 1.4s infinite ease-in-out; }
+        .typing-dot:nth-child(1) { animation-delay: 0s; } .typing-dot:nth-child(2) { animation-delay: 0.2s; } .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+        @media (max-width: 600px) { .chat-container { height: 95vh; } .message { max-width: 90%; } .menu-options { flex-direction: column; } .menu-btn { width: 100%; } }
+    </style>
+</head>
+<body>
+    <div class="chat-container" role="main" aria-label="Chat Agrimax">
+        <div class="chat-header">
+            <h1>🤖 Chatbot Agrimax</h1>
+            <p>Tu asistente virtual para consultas agrícolas</p>
+        </div>
+
+        <div class="chat-messages" id="chatMessages" role="log" aria-live="polite"></div>
+
+        <div class="chat-input-container">
+            <input type="text" class="chat-input" id="userInput" placeholder="Escribe tu pregunta o selecciona una opción del menú..." autocomplete="off">
+            <button class="send-btn" id="sendButton" type="button" aria-label="Enviar mensaje">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22 2L11 13" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+    <script>
+        // role proporcionado por Flask: 'cliente', 'proveedor' o 'guest'
+        const CHAT_ROLE = "{{ chat_role|default('guest') }}";
+
+        // Base de conocimiento y mapeos
+        const knowledgeBase = {
+            "que es agrimax": "Agrimax es una plataforma que conecta productores agrícolas con clientes para comprar frutas, verduras, granos y hortalizas de forma directa.",
+            "productos venden": "Ofrecemos frutas, verduras, legumbres y hortalizas frescas, directamente del campo.",
+            "registrarme": "Haz clic en 'Registrarse' en la página principal, completa tus datos y confirma tu correo electrónico.",
+            "iniciar sesion": "Haz clic en 'Iniciar sesión' en la página principal e ingresa tu correo y contraseña.",
+            "costos adicionales": "No, solo pagas el precio de los productos que agregues a tu carrito.",
+            "agrimax gratuito": "Sí, registrarse y usar la plataforma no tiene costo.",
+            "cambiar contraseña": "Ve a Configuración > Seguridad y completa el formulario para actualizar tu contraseña.",
+            "cambiar correo": "En Configuración > Correo electrónico puedes ingresar tu nuevo correo y guardarlo.",
+            "lector pantalla": "En Configuración > Accesibilidad selecciona 'Activado' en el modo lector y guarda los cambios.",
+            "tamaño cursor": "En Configuración > Accesibilidad selecciona 'Normal' o 'Grande' y guarda los cambios.",
+            "foto perfil": "Sí, en Configuración > Perfil puedes subir una nueva foto y guardarla.",
+            "ver carrito": "Haz clic en el ícono del carrito 🛒 en la parte superior derecha del sitio.",
+            "agregar productos": "Entra a cualquier categoría, selecciona un producto y haz clic en 'Agregar al carrito'.",
+            "eliminar productos": "Abre tu carrito y haz clic en 'Eliminar' junto al producto que quieras quitar.",
+            "vaciar carrito": "Haz clic en 'Vaciar carrito' dentro de la página del carrito.",
+            "finalizar compra": "Revisa los productos en el carrito y haz clic en 'Realizar compra' para confirmar tu pedido.",
+            "modificar cantidad": "Sí, dentro del carrito puedes cambiar la cantidad antes de pagar.",
+            "entregas domicilio": "Sí, entregamos directamente en tu domicilio dentro de las zonas disponibles.",
+            "tiempo envio": "El tiempo de entrega depende de tu ubicación, normalmente de 1 a 3 días hábiles.",
+            "punto venta": "Por el momento solo ofrecemos entrega a domicilio.",
+            "reportar problema": "Puedes enviarnos un mensaje desde la sección Contacto o escribir a soporte@agrimax.com.",
+            "solicitar reembolso": "Contacta a soporte indicando tu número de pedido y motivo del reembolso.",
+            "vender productos": "Sí, los productores pueden registrarse y subir sus cosechas para la venta.",
+            "limite productos": "No, puedes subir tantos productos como desees.",
+            "verificacion productor": "Sí, todos los productores deben pasar un proceso de verificación para garantizar calidad.",
+            "contactar productor": "Por ahora, la comunicación se realiza a través de la plataforma y el soporte."
+        };
+
+        const keywordMap = {
+            "que es": "que es agrimax", "producto": "productos venden", "registr": "registrarme",
+            "sesion": "iniciar sesion", "costo": "costos adicionales", "gratis": "agrimax gratuito",
+            "contraseña": "cambiar contraseña", "correo": "cambiar correo", "lector": "lector pantalla",
+            "cursor": "tamaño cursor", "foto": "foto perfil", "carrito": "ver carrito", "agregar": "agregar productos",
+            "eliminar": "eliminar productos", "vaciar": "vaciar carrito", "finalizar": "finalizar compra",
+            "cantidad": "modificar cantidad", "domicilio": "entregas domicilio", "envio": "tiempo envio",
+            "punto": "punto venta", "problema": "reportar problema", "reembolso": "solicitar reembolso",
+            "vender": "vender productos", "limite": "limite productos", "verificacion": "verificacion productor",
+            "contactar": "contactar productor"
+        };
+
+        // DOM elements
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendButton = document.getElementById('sendButton');
+
+        // Util: escapar texto para evitar XSS
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function createMessageElement(textHtml, sender, isHtml = true) {
+            const el = document.createElement('div');
+            el.className = `message ${sender}-message`;
+            if (isHtml) el.innerHTML = textHtml;
+            else el.textContent = textHtml;
+            return el;
+        }
+
+        function addMessage(contentHtml, sender) {
+            const el = createMessageElement(contentHtml, sender, true);
+            chatMessages.appendChild(el);
+            scrollToBottom();
+        }
+
+        function addUserMessage(text) {
+            const safe = escapeHtml(text);
+            const el = createMessageElement(`<p>${safe}</p>`, 'user', true);
+            chatMessages.appendChild(el);
+            scrollToBottom();
+        }
+
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // Typing indicator helpers
+        function showTypingIndicator() {
+            if (document.getElementById('typingIndicator')) return;
+            const el = createMessageElement(`<div class="typing-dots"><div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div></div>`, 'bot', true);
+            el.id = 'typingIndicator';
+            el.classList.add('typing-indicator');
+            chatMessages.appendChild(el);
+            scrollToBottom();
+        }
+        function removeTypingIndicator() {
+            const t = document.getElementById('typingIndicator');
+            if (t) t.remove();
+        }
+
+        // Chat flows
+        function displayWelcomeMessage() {
+            const welcomeHTML = `<div class="welcome-message"><h3>¡Bienvenido a Agrimax! 🌱</h3><p>Estoy aquí para ayudarte con información sobre nuestros productos, compras, envíos y más.</p></div>`;
+            addMessage(welcomeHTML, 'bot');
+            showMainMenu();
+        }
+
+        // showMainMenu ahora adapta botones según rol
+        function showMainMenu() {
+            const role = (String(CHAT_ROLE || 'guest')).toLowerCase();
+            const isProveedor = role === 'proveedor';
+            const isCliente = role === 'cliente';
+            const isGuest = role === 'guest';
+
+            // construir botones según rol: clientes ven compras; proveedores ven sección productores; invitados ven todo
+            const buttons = [];
+            buttons.push(`<button class="menu-btn" data-cat="1">📋 Información General</button>`);
+            buttons.push(`<button class="menu-btn" data-cat="2">⚙️ Configuración y Cuenta</button>`);
+
+            if (isCliente || isGuest) {
+                buttons.push(`<button class="menu-btn" data-cat="3">🛒 Compras y Carrito</button>`);
+                buttons.push(`<button class="menu-btn" data-cat="4">🚚 Envíos y Soporte</button>`);
+            } else if (isProveedor) {
+                // proveedores pueden necesitar soporte y notificaciones pero no el flujo de compra
+                buttons.push(`<button class="menu-btn" data-cat="4">🚚 Envíos y Soporte</button>`);
+            }
+
+            // Información para productores: visible a proveedores y a invitados (según tu requerimiento)
+            if (isProveedor || isGuest) {
+                buttons.push(`<button class="menu-btn" data-cat="5">👨‍🌾 Información para Productores</button>`);
+            }
+
+            const menuHTML = `
+                <div class="message bot-message">
+                    <p><strong>¿En qué puedo ayudarte?</strong></p>
+                    <div class="menu-options">
+                        ${buttons.join('')}
+                    </div>
+                    <p style="margin-top: 10px;">También puedes escribir tu pregunta directamente.</p>
+                </div>
+            `;
+            addMessage(menuHTML, 'bot');
+
+            // attach handlers
+            const last = chatMessages.lastElementChild;
+            if (last) {
+                last.querySelectorAll('.menu-btn').forEach(btn => {
+                    btn.addEventListener('click', () => selectCategory(btn.dataset.cat));
+                });
+            }
+        }
+
+        function selectCategory(category) {
+            const categories = {
+                "1": { title: "📖 INFORMACIÓN GENERAL", options: [
+                    { text: "¿Qué es Agrimax?", key: "que es agrimax" },
+                    { text: "¿Qué productos venden?", key: "productos venden" },
+                    { text: "¿Cómo puedo registrarme?", key: "registrarme" },
+                    { text: "¿Cómo inicio sesión?", key: "iniciar sesion" },
+                    { text: "¿Hay costos adicionales?", key: "costos adicionales" },
+                    { text: "¿Agrimax es gratuito?", key: "agrimax gratuito" }
+                ]},
+                "2": { title: "⚙️ CONFIGURACIÓN Y CUENTA", options: [
+                    { text: "¿Cómo cambio mi contraseña?", key: "cambiar contraseña" },
+                    { text: "¿Dónde cambio mi correo electrónico?", key: "cambiar correo" },
+                    { text: "¿Cómo activo el modo lector de pantalla?", key: "lector pantalla" },
+                    { text: "¿Cómo cambio el tamaño del cursor?", key: "tamaño cursor" },
+                    { text: "¿Puedo actualizar mi foto de perfil?", key: "foto perfil" }
+                ]},
+                "3": { title: "🛒 COMPRAS Y CARRITO", options: [
+                    { text: "¿Cómo veo mi carrito?", key: "ver carrito" },
+                    { text: "¿Cómo agrego productos al carrito?", key: "agregar productos" },
+                    { text: "¿Cómo elimino productos del carrito?", key: "eliminar productos" },
+                    { text: "¿Cómo vacío el carrito?", key: "vaciar carrito" },
+                    { text: "¿Cómo finalizo mi compra?", key: "finalizar compra" },
+                    { text: "¿Puedo modificar la cantidad de un producto?", key: "modificar cantidad" }
+                ]},
+                "4": { title: "🚚 ENVÍOS Y SOPORTE", options: [
+                    { text: "¿Hacen entregas a domicilio?", key: "entregas domicilio" },
+                    { text: "¿Cuánto tarda el envío?", key: "tiempo envio" },
+                    { text: "¿Puedo recoger en un punto de venta?", key: "punto venta" },
+                    { text: "¿Dónde puedo reportar un problema?", key: "reportar problema" },
+                    { text: "¿Cómo solicito un reembolso?", key: "solicitar reembolso" }
+                ]},
+                "5": { title: "👨‍🌾 INFORMACIÓN PARA PRODUCTORES", options: [
+                    { text: "¿Puedo vender mis productos aquí?", key: "vender productos" },
+                    { text: "¿Hay un límite de productos que puedo subir?", key: "limite productos" },
+                    { text: "¿Se requiere verificación de productor?", key: "verificacion productor" },
+                    { text: "¿Puedo contactar directamente a un productor?", key: "contactar productor" }
+                ]}
+            };
+
+            const data = categories[category];
+            if (!data) return;
+
+            let optionsHTML = '';
+            data.options.forEach(opt => {
+                optionsHTML += `<button class="menu-btn" data-key="${escapeHtml(opt.key)}">${escapeHtml(opt.text)}</button>`;
+            });
+
+            const submenuHTML = `
+                <div class="message bot-message">
+                    <p><strong>${escapeHtml(data.title)}</strong></p>
+                    <div class="menu-options">
+                        ${optionsHTML}
+                        <button class="menu-btn" id="backToMain">← Volver al menú principal</button>
+                    </div>
+                </div>
+            `;
+            addMessage(submenuHTML, 'bot');
+
+            // attach handlers
+            const last = chatMessages.lastElementChild;
+            if (last) {
+                last.querySelectorAll('.menu-btn[data-key]').forEach(btn => {
+                    btn.addEventListener('click', () => selectOption(btn.dataset.key));
+                });
+                const back = last.querySelector('#backToMain');
+                if (back) back.addEventListener('click', showMainMenu);
+            }
+        }
+
+        function selectOption(key) {
+            const answer = knowledgeBase[key];
+            if (!answer) return;
+            addMessage(`<p>${escapeHtml(answer)}</p>`, 'bot');
+
+            setTimeout(() => {
+                const contHTML = `
+                    <div class="message bot-message">
+                        <p><strong>¿Necesitas ayuda con algo más?</strong></p>
+                        <div class="quick-options">
+                            <button class="quick-btn" id="qmMain">Menú principal</button>
+                            <button class="quick-btn" id="qmOther">Otras preguntas</button>
+                        </div>
+                    </div>
+                `;
+                addMessage(contHTML, 'bot');
+                const last = chatMessages.lastElementChild;
+                if (last) {
+                    const m = last.querySelector('#qmMain');
+                    const o = last.querySelector('#qmOther');
+                    if (m) m.addEventListener('click', showMainMenu);
+                    if (o) o.addEventListener('click', suggestCommonQuestions);
+                }
+            }, 400);
+        }
+
+        function suggestCommonQuestions() {
+            const common = [
+                { text: "¿Cómo me registro?", key: "registrarme" },
+                { text: "¿Qué productos venden?", key: "productos venden" },
+                { text: "¿Hacen entregas?", key: "entregas domicilio" },
+                { text: "¿Cómo veo mi carrito?", key: "ver carrito" }
+            ];
+            let html = '<div class="message bot-message"><p>Estas son algunas preguntas frecuentes:</p><div class="quick-options">';
+            common.forEach(q => html += `<button class="quick-btn" data-key="${escapeHtml(q.key)}">${escapeHtml(q.text)}</button>`);
+            html += '</div></div>';
+            addMessage(html, 'bot');
+            const last = chatMessages.lastElementChild;
+            if (last) {
+                last.querySelectorAll('.quick-btn[data-key]').forEach(btn => {
+                    btn.addEventListener('click', () => selectOption(btn.dataset.key));
+                });
+            }
+        }
+
+        function processUserInput() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            addUserMessage(message);
+            userInput.value = '';
+            userInput.focus();
+            sendButton.disabled = true;
+            showTypingIndicator();
+            setTimeout(() => {
+                removeTypingIndicator();
+                handleUserMessage(message);
+                sendButton.disabled = false;
+                userInput.focus();
+            }, 800);
+        }
+
+        function handleUserMessage(message) {
+            const lower = message.toLowerCase();
+            if (lower === 'menu' || lower === 'volver') { showMainMenu(); return; }
+
+            // try keyword map
+            for (const k in keywordMap) {
+                if (lower.includes(k)) {
+                    const mapped = keywordMap[k];
+                    const answer = knowledgeBase[mapped];
+                    if (answer) { addMessage(`<p>${escapeHtml(answer)}</p>`, 'bot'); return; }
+                }
+            }
+
+            // direct match words
+            let best = null, bestScore = 0;
+            const words = lower.split(/\s+/).filter(Boolean);
+            for (const q in knowledgeBase) {
+                let score = 0;
+                words.forEach(w => { if (q.includes(w)) score++; if (knowledgeBase[q].toLowerCase().includes(w)) score++; });
+                if (score > bestScore) { bestScore = score; best = q; }
+            }
+            if (bestScore >= 1) {
+                addMessage(`<p>${escapeHtml(knowledgeBase[best])}</p>`, 'bot');
+                return;
+            }
+
+            // fallback
+            const suggestions = Object.keys(knowledgeBase).slice(0, 5);
+            addMessage(`<p>No entiendo exactamente. Prueba con:</p><div class="quick-options">${suggestions.map(s => `<button class="quick-btn" data-key="${escapeHtml(s)}">${escapeHtml(s)}</button>`).join('')}</div>`, 'bot');
+            const last = chatMessages.lastElementChild;
+            if (last) last.querySelectorAll('.quick-btn[data-key]').forEach(btn => btn.addEventListener('click', () => selectOption(btn.dataset.key)));
+        }
+
+        // Init
+        function initChatbot() {
+            if (!chatMessages || !userInput || !sendButton){
+                console.error("Chat init abortado: elementos faltantes.", {chatMessages, userInput, sendButton});
+             return;
+            }
+            displayWelcomeMessage();
+            sendButton.addEventListener('click', processUserInput);
+            userInput.addEventListener('keypress', e => { if (e.key === 'Enter') processUserInput(); });
+        }
+
+        window.addEventListener('load', initChatbot);
+    </script>
+</body>
+</html>

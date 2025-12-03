@@ -5,7 +5,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    
     background-color: #d9d1f3;
 }
 
@@ -17,7 +17,6 @@ body {
 }
 
 body {
-    font-family: Arial, sans-serif;
     background-image: url('/static/imagenes/imagen\ 2.jpg'); /* Reemplaza con la URL de tu imagen */
     background-size: cover;
     background-position: center;

@@ -4,6 +4,9 @@ from flask_login import login_user
 from models import Usuario
 import bcrypt
 import requests
+import random
+from datetime import datetime, timedelta
+from correo_utils import enviar_correo
 
 login_bp = Blueprint("login", __name__)
 
@@ -21,16 +24,6 @@ def login():
             flash("Debes ingresar correo y contraseña.", "error")
             return render_template('login.html')
 
-        # Verificar CAPTCHA
-        verificacion = requests.post(
-            'https://www.google.com/recaptcha/api/siteverify',
-            data={'secret': RECAPTCHA_SECRET_KEY, 'response': captcha_response}
-        )
-        resultado = verificacion.json()
-        if not resultado.get('success'):
-            flash("Verificación CAPTCHA fallida. Intenta nuevamente.", "error")
-            return render_template('login.html')
-
         try:
             conexion = conectar_bd()
             if conexion:
@@ -43,22 +36,26 @@ def login():
                 conexion.close()
 
                 if usuario and usuario[3] and bcrypt.checkpw(contraseña.encode('utf-8'), usuario[3].encode('utf-8')):
-                    usuario_obj = Usuario(usuario[0], usuario[1], usuario[2])
-                    login_user(usuario_obj)
-                    session['usuario_id'] = usuario[0]
-                    session['tipo_usuario'] = usuario[2]
+                    # Generar código de verificación y guardarlo en sesión temporal
+                    codigo = '{:06d}'.format(random.randint(0, 999999))
+                    expires_at = (datetime.utcnow() + timedelta(minutes=5)).timestamp()
+                    session['2fa_pending'] = {
+                        'user_id': usuario[0],
+                        'nombre': usuario[1],
+                        'tipo': usuario[2],
+                        'correo': correo,
+                        'code': codigo,
+                        'expires': expires_at
+                    }
 
-                    flash(f"Bienvenido, {usuario[1]}!", "success")
+                    # Enviar correo con el código de verificación
+                    try:
+                        enviar_correo(correo, "Código de verificación AGRIMAX", 'correo_verificacion.html', {"nombre": usuario[1], "codigo": codigo})
+                    except Exception as e:
+                        print("Error al enviar código de verificación:", e)
 
-                    if usuario[2] == "Administrador":
-                        return redirect(url_for('admin_dashboard.admin_dashboard'))
-                    elif usuario[2] == "Cliente":
-                        return redirect(url_for('menu_clientes.menu_principal'))
-                    elif usuario[2] == "Proveedor":
-                        return redirect(url_for('menu_provedor.menu'))
-                    else:
-                        flash("Tipo de usuario desconocido.", "error")
-                        return render_template('login.html')
+                    flash("Se ha enviado un código de verificación a tu correo.", "info")
+                    return redirect(url_for('verificar_codigo.verificar_codigo'))
                 else:
                     flash("Correo o contraseña incorrectos.", "error")
                     return render_template('login.html')

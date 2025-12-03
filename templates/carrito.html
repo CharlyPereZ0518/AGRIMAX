@@ -3,13 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carrito</title>
+    <title>Carrito de Compras - AGRIMAX</title>
     <link rel="stylesheet" href="/static/css/boton_hamburguesaP.css">
     <link rel="stylesheet" href="/static/css/carrito.css">
+    <link rel="stylesheet" href="/static/css/contraste.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/footer.css">
+    <script src="/static/js/accesibilidad.js" defer></script>
+    <script src="/static/js/accesibilidad_global.js"></script>
+    
 </head>
-<body>
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} 
+              {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }} 
+              {{ usuario.nivel_contraste if usuario.nivel_contraste else '' }}
+              {{ 'font-large' if usuario.font_size == 'large' else 'font-x-large' if usuario.font_size == 'x-large' else '' }}
+              {{ 'modo-oscuro' if usuario.modo_oscuro == 'on' else '' }}
+              {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
+     data-contraste="{{ usuario.nivel_contraste }}"
+     style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
 
 {% if not session.get('usuario_id') %}
 <script>
@@ -27,27 +38,6 @@
     </div>
 </header>
 
-<div id="sidebar" class="sidebar">
-    <ul class="sidebar-menu">
-
-        <li><a href="{{ url_for('usuarios.perfil', usuario_id=session['usuario_id']) }}">PERFIL</a></li>
-        <li><a href="{{ url_for('menu_clientes.menu_principal') }}">MENÚ PRINCIPAL</a></li>
-        <li>
-            <button class="dropdown-btn">CATEGORÍAS <i class="fas fa-caret-down"></i></button>
-            <ul class="dropdown-container">
-                <li><a href="{{ url_for('verduras.verduras') }}">Verduras</a></li>
-                <li><a href="{{ url_for('frutas.frutas') }}">Frutas</a></li>
-                <li><a href="{{ url_for('legumbres.legumbres') }}">Legumbres</a></li>
-                <li><a href="{{ url_for('hortalizas.hortalizas') }}">Hortalizas</a></li>
-            </ul>
-        </li>
-        <li><a href="{{ url_for('configuracion.configuracion') }}">CONFIGURACIÓN</a></li>
-        <li><a href="{{ url_for('logout.logout') }}" class="logout-btn">CERRAR SESIÓN</a></li>
-    </ul>
-</div>
-
-<div id="overlay" class="overlay"></div>
-
 <main>
     <h1>Carrito de Compras</h1>
 
@@ -61,72 +51,118 @@
                 <p>{{ producto.descripcion }}</p>
                 <p><strong>Categoría:</strong> {{ producto.categoria }}</p>
                 <p><strong>Precio unitario:</strong> ${{ producto.precio }}</p>
-            <input type="number"
-                 name="cantidad"
-                value="{{ producto.cantidad }}"
-                min="0"
-                class="cantidad-input"
-                data-producto-id="{{ producto.id }}"
-            >
-                <p><strong>Subtotal:</strong> ${{ producto.subtotal }}</p>
+                <div class="quantity-controls">
+                    <input type="number"
+                         name="cantidad"
+                        value="{{ producto.cantidad }}"
+                        min="0"
+                        class="cantidad-input"
+                        data-producto-id="{{ producto.id }}"
+                    >   
+                </div>
+                <p class="subtotal"><strong>Subtotal:</strong> ${{ producto.subtotal }}</p>
             </div>
         </div>
         {% endfor %}
         <h2 class="total-price">Total: ${{ total }}</h2>
     {% else %}
-        <p>Tu carrito está vacío.</p>
+        <p class="empty-cart">Tu carrito está vacío.</p>
     {% endif %}
+    
     {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="flash {{ category }}">{{ message }}</div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-</div>
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    </div>
+
     <div class="button-group">
         <form method="POST" action="{{ url_for('vaciar_carrito.vaciar_carrito') }}">
-            <button type="submit" class="btn-cancelar">Vaciar Carrito</button>
+            <button type="submit" class="btn-cancelar">
+                <i class="fas fa-trash"></i> Vaciar Carrito
+            </button>
         </form>
         <form method="POST" action="{{ url_for('confirmar_pedidos.confirmar_pedido') }}" onsubmit="sessionStorage.setItem('compraExitosa', true);">
-            <button type="submit" class="btn-comprar">Comprar</button>
+            <button type="submit" class="btn-comprar" {{ 'disabled' if not productos }}>
+                <i class="fas fa-shopping-bag"></i> Comprar
+            </button>
         </form>
     </div>
 </main>
 
-<script src="/static/js/carrito.js"></script>
-<script src="/static/js/boton_hamburguesaP.js"></script>
-<script>
-document.querySelectorAll('.cantidad-input').forEach(input => {
-    input.addEventListener('change', function () {
-        const productoId = this.dataset.productoId;
-        const nuevaCantidad = this.value;
+<footer>
+    <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>
+</footer>
 
-        fetch('/actualizar_cantidad', {
+<script>
+    // Funcionalidad del carrito
+    document.addEventListener('DOMContentLoaded', function() {
+        // Actualizar cantidad al cambiar input
+        document.querySelectorAll('.cantidad-input').forEach(input => {
+            input.addEventListener('change', function() {
+                actualizarCantidad(this);
+            });
+            
+            input.addEventListener('input', function() {
+                actualizarSubtotal(this);
+            });
+        });
+    });
+
+    function actualizarSubtotal(input) {
+        const cartItem = input.closest('.cart-item');
+        const precioText = cartItem.querySelector('p:nth-child(4)').textContent;
+        const precio = parseFloat(precioText.replace('Precio unitario: $', ''));
+        const cantidad = parseInt(input.value) || 0;
+        
+        const subtotal = precio * cantidad;
+        const subtotalElement = cartItem.querySelector('.subtotal');
+        subtotalElement.innerHTML = `<strong>Subtotal:</strong> $${subtotal.toFixed(2)}`;
+        
+        recalcularTotal();
+    }
+
+    function recalcularTotal() {
+        let total = 0;
+        document.querySelectorAll('.cart-item').forEach(item => {
+            const subtotalText = item.querySelector('.subtotal').textContent;
+            const subtotal = parseFloat(subtotalText.replace('Subtotal: $', ''));
+            total += subtotal;
+        });
+        document.querySelector('.total-price').textContent = `Total: $${total.toFixed(2)}`;
+    }
+
+    function actualizarCantidad(input) {
+        const productoId = input.dataset.productoId;
+        const cantidad = parseInt(input.value) || 0;
+        
+        // Actualizar en servidor
+        fetch('/actualizar_cantidad_carrito', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-Requested-With': 'XMLHttpRequest' // para distinguir AJAX
             },
             body: JSON.stringify({
                 producto_id: productoId,
-                nueva_cantidad: nuevaCantidad
+                cantidad: cantidad
             })
         })
         .then(response => response.json())
         .then(data => {
-            if (data.success) {
-                location.reload(); // recarga para ver el nuevo subtotal y total
-            } else {
-                alert(data.message || "Error al actualizar cantidad.");
+            if (!data.success) {
+                console.error('Error actualizando cantidad:', data.error);
+                // Revertir cambios en caso de error
+                location.reload();
             }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            location.reload();
         });
-    });
-});
+    }
 </script>
-<footer>
-    <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>
 
-</footer>
 </body>
 </html>

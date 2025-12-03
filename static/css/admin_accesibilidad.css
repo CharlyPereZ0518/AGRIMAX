@@ -1,0 +1,126 @@
+/* Estilos para la página de accesibilidad */
+.card {
+    border: none;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border-radius: 10px;
+}
+
+.card-header {
+    border-radius: 10px 10px 0 0 !important;
+    font-weight: bold;
+}
+
+.form-check-input:checked {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+}
+
+.form-check-input:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.form-select:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.btn-primary {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    padding: 10px 30px;
+    font-weight: bold;
+}
+
+/* Estilos para alto contraste */
+.alto-contraste {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+}
+
+.alto-contraste .card {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+}
+
+.alto-contraste .form-control,
+.alto-contraste .form-select {
+    background-color: #000000 !important;
+    color: #ffffff !important;
+    border: 2px solid #ffffff !important;
+}
+
+/* Estilos para cursor grande */
+.cursor-grande {
+    cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><circle cx="16" cy="16" r="15" fill="%23000"/></svg>'), auto;
+}
+
+/* Estilos para tipos de letra */
+.fuente-arial {
+    font-family: Arial, sans-serif;
+}
+
+.fuente-verdana {
+    font-family: Verdana, sans-serif;
+}
+
+.fuente-helvetica {
+    font-family: Helvetica, sans-serif;
+}
+
+.fuente-times {
+    font-family: "Times New Roman", serif;
+}
+
+.fuente-georgia {
+    font-family: Georgia, serif;
+}
+
+/* Estilos para tamaños de letra */
+.letra-normal {
+    font-size: 1rem;
+}
+
+.letra-grande {
+    font-size: 1.25rem;
+}
+
+.letra-muy-grande {
+    font-size: 1.5rem;
+}
+
+.letra-grande .form-control,
+.letra-grande .form-select,
+.letra-grande .btn {
+    font-size: 1.25rem;
+}
+
+.letra-muy-grande .form-control,
+.letra-muy-grande .form-select,
+.letra-muy-grande .btn {
+    font-size: 1.5rem;
+}
+
+/* Estilos para modo oscuro */
+.modo-oscuro {
+    background-color: #1a1a1a !important;
+    color: #ffffff !important;
+}
+
+.modo-oscuro .card {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+}
+
+.modo-oscuro .form-control,
+.modo-oscuro .form-select {
+    background-color: #2d2d2d !important;
+    color: #ffffff !important;
+    border-color: #555555 !important;
+}
+
+/* Estilos para escala de grises */
+.escala-grises {
+    filter: grayscale(100%);
+}
