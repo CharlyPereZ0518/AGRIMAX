@@ -5,7 +5,7 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            
             background-color: #d9d1f3;
         }
         /*css del formulario*/
@@ -16,7 +16,7 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            
             background-image: url('/static/imagenes/ima1.jpg'); /* Reemplaza con la URL de tu imagen */
             background-size: cover;
             background-position: center;

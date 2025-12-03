@@ -7,7 +7,7 @@ admin_editar_usuarios_bp = Blueprint('admin_editar_usuario', __name__)
 @admin_editar_usuarios_bp.route('/admin/editar_usuario/<int:id>', methods=['GET', 'POST'])
 @login_required
 def editar_usuario(id):
-    if session.get('tipo_usuario') != 'Administrador':
+    if session.get('tipo_usuario') != 'admin':
         flash("Acceso denegado", "error")
         return redirect(url_for('inicio.inicio'))
 

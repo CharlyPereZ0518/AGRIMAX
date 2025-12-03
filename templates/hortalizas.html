@@ -10,8 +10,18 @@
     <script src="/static/js/boton_hamburguesaP.js" defer></script>
     <script src="/static/js/frutas.js" defer></script>
     <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="/static/css/contraste.css">
+    <script src="/static/js/accesibilidad.js" defer></script>
+    <script src="/static/js/accesibilidad_global.js"></script>
 </head>
-<body>
+<body class="{{ 'cursor-large' if usuario.cursor_size == 'large' else '' }} 
+              {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }} 
+              {{ usuario.nivel_contraste if usuario.nivel_contraste else '' }}
+              {{ 'font-large' if usuario.font_size == 'large' else 'font-x-large' if usuario.font_size == 'x-large' else '' }}
+              {{ 'modo-oscuro' if usuario.modo_oscuro == 'on' else '' }}
+              {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
+     data-contraste="{{ usuario.nivel_contraste }}"
+     style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
     {% if not session.get('usuario_id') %}
     <script>
         window.location.href = "{{ url_for('login') }}";
@@ -80,6 +90,35 @@
         <button class="close-modal" onclick="closeModal('{{ producto.id }}-modal')">×</button>
     </div>
     {% endfor %}
+
+    <script>
+  // Aplicar contraste desde localStorage
+  const contraste = localStorage.getItem('nivel_contraste') || 'normal';
+  const body = document.body;
+
+  // Remover clases previas
+  body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-oscuro');
+
+  // Aplicar clase según contraste
+  if (contraste !== 'normal') {
+    switch (contraste) {
+      case 'alto':
+        body.classList.add('contraste-alto');
+        break;
+      case 'muy-alto':
+        body.classList.add('contraste-muy-alto');
+        break;
+      case 'oscuro':
+        body.classList.add('modo-oscuro');
+        break;
+    }
+  }
+
+  // Aplicar modo grises si está activado
+  if (localStorage.getItem('modoGrises') === 'true') {
+    body.classList.add('modo-grises');
+  }
+</script>
 
     <script>
         function openModal(id) {

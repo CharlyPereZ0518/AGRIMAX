@@ -1,8 +1,124 @@
-/* contraste.css - Niveles de contraste para accesibilidad */
-/* IMPORTANTE: Este CSS SOLO se aplica cuando body tiene una clase de contraste activa */
-/* NO afecta el modo normal */
+/* ==================== CLASES DE ACCESIBILIDAD FALTANTES ==================== */
 
-/* ==================== CONTRASTE ALTO ==================== */
+/* Tamaño de cursor grande */
+/* ==================== CURSOR GRANDE SIMPLE ==================== */
+/* ==================== CURSOR GRANDE DEL SISTEMA ==================== */
+/* ==================== CURSOR GRANDE DEL SISTEMA ==================== */
+body.cursor-large {
+    cursor: url('/static/extra_large_arrow.cur'), auto;
+}
+
+/* Modo lector - sin afectar contraste */
+body.modo-lector {
+    zoom: 100% !important;
+    transform: none !important;
+    line-height: 1.8 !important;
+    letter-spacing: 0.8px !important;
+    font-size: 1.1em !important;
+}
+
+/* Asegurar que el modo lector no interfiera con los contrastes */
+body.contraste-alto.modo-lector,
+body.contraste-muy-alto.modo-lector,
+body.modo-oscuro.modo-lector {
+    /* Mantener todas las propiedades de contraste */
+    background-color: var(--bg-primary) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Tamaños de fuente */
+body.font-large {
+    font-size: 1.2em !important;
+}
+
+body.font-x-large {
+    font-size: 1.4em !important;
+}
+
+/* Aplicar tamaños de fuente específicos a elementos importantes */
+body.font-large .config-content,
+body.font-x-large .config-content {
+    font-size: inherit !important;
+}
+
+body.font-large .card,
+body.font-x-large .card {
+    font-size: inherit !important;
+}
+
+body.font-large .form-control,
+body.font-x-large .form-control {
+    font-size: 1em !important;
+    padding: 12px 16px !important;
+}
+
+body.font-large .btn,
+body.font-x-large .btn {
+    font-size: 1.1em !important;
+    padding: 14px 20px !important;
+}
+
+/* Modo escala de grises */
+body.modo-grises {
+    filter: grayscale(100%) !important;
+}
+
+/* Asegurar que el modo grises funcione con los contrastes */
+body.contraste-alto.modo-grises {
+    filter: grayscale(100%) contrast(150%) !important;
+}
+
+body.contraste-muy-alto.modo-grises {
+    filter: grayscale(100%) contrast(200%) !important;
+}
+
+body.modo-oscuro.modo-grises {
+    filter: grayscale(100%) brightness(0.9) !important;
+}
+
+/* Tipografías específicas */
+/* Tipografías específicas - método más efectivo */
+body[style*="Arial, sans-serif"] {
+    font-family: Arial, sans-serif !important;
+}
+
+body[style*="Helvetica Neue"] {
+    font-family: 'Helvetica Neue', Helvetica, sans-serif !important;
+}
+
+body[style*="Verdana, sans-serif"] {
+    font-family: Verdana, sans-serif !important;
+}
+
+body[style*="Tahoma, sans-serif"] {
+    font-family: Tahoma, sans-serif !important;
+}
+
+body[style*="Times New Roman"] {
+    font-family: 'Times New Roman', Times, serif !important;
+}
+
+body[style*="Georgia, serif"] {
+    font-family: Georgia, serif !important;
+}
+
+body[style*="Trebuchet MS"] {
+    font-family: 'Trebuchet MS', sans-serif !important;
+}
+
+body[style*="Open Sans"] {
+    font-family: 'Open Sans', sans-serif !important;
+}
+
+body[style*="Roboto"] {
+    font-family: 'Roboto', sans-serif !important;
+}
+
+body[style*="Courier New"] {
+    font-family: 'Courier New', Courier, monospace !important;
+}
+/* ==================== MEJORAS DE ACCESIBILIDAD EXISTENTES ==================== */
+
 body.contraste-alto {
     --bg-primary: #ffffff;
     --bg-secondary: #f0f0f0;
@@ -402,4 +518,24 @@ body.contraste-alto i,
 body.contraste-muy-alto i,
 body.modo-oscuro i {
     color: inherit !important;
+}
+/* ==================== MODO OSCURO ==================== */
+body.modo-oscuro {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-card: #2a2a2a;
+    --bg-white: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-muted: #b0b0b0;
+    --accent-primary: #bb86fc;
+    --accent-hover: #9965d4;
+    --border-color: #444444;
+    --shadow: rgba(255, 255, 255, 0.1);
+}
+
+body.modo-oscuro {
+    background-color: var(--bg-primary) !important;
+    background-image: none !important;
+    color: var(--text-primary) !important;
 }

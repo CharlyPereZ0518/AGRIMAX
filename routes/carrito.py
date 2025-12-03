@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, flash, session, redirect, url_for, request
+from flask import Blueprint, jsonify, render_template, flash, session, redirect, url_for, request
 from flask_login import login_required
 from bd import conectar_bd
 
@@ -51,4 +51,27 @@ def carrito():
     total = sum([p['subtotal'] for p in productos])
     return render_template('carrito.html', productos=productos, total=total, usuario_id=usuario_id)
 
-    
+@carrito_bp.route('/actualizar_cantidad_carrito', methods=['POST']) 
+@login_required
+def actualizar_cantidad_carrito():
+    try:
+        data = request.get_json()
+        producto_id = data.get('producto_id')
+        nueva_cantidad = int(data.get('cantidad', 1))
+        
+        carrito = session.get('carrito', [])
+        
+        # Buscar y actualizar el producto en el carrito de sesión
+        for item in carrito:
+            if str(item['producto_id']) == str(producto_id):
+                item['cantidad'] = nueva_cantidad
+                break
+        
+        session['carrito'] = carrito
+        session.modified = True
+        
+        return jsonify({'success': True})
+        
+    except Exception as e:
+        print("Error actualizando carrito:", e)
+        return jsonify({'success': False, 'error': str(e)})

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGRIMAX - Inicio de Sesión</title>
     <link rel="stylesheet" href="/static/css/login.css">
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </head>
 
 <body>
@@ -46,14 +46,11 @@
             <input type="password" id="contraseña" name="contraseña" placeholder="Ingresa tu contraseña" required>
             <br><br>
 
-            <!-- CAPTCHA -->
-            <div class="g-recaptcha" data-sitekey="6LcMNNsrAAAAADannwcB8bnD3BsMc2-jZ2ZZ9jB-"></div>
-            <br>
-
             <button type="submit">Iniciar Sesión</button>
         </form>
         <br>
         <p class="register">¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
+        <p class="register">¿Olvidaste tu contraseña? <a href="{{ url_for('olvido_contrasena.solicitar_reset') }}">Recuperarla</a></p>
     </div>
 </body>
 

@@ -1,145 +1,276 @@
-// contraste.js - Sistema de contraste para accesibilidad
-
-document.addEventListener('DOMContentLoaded', function() {
-    inicializarSistemaContraste();
+document.addEventListener('DOMContentLoaded', function () {
+  inicializarSistemaContraste();
+  aplicarPreferenciasVisuales();
+  configurarGuardadoAutomatico();
+  cargarValoresFormulario();
 });
 
-/**
- * Inicializa el sistema de contraste
- */
+/** CONTRASTE — Sistema original */
 function inicializarSistemaContraste() {
-    // Cargar y aplicar contraste guardado al cargar la página
-    const contrasteGuardado = obtenerContrasteGuardado();
-    if (contrasteGuardado && contrasteGuardado !== 'normal') {
-        aplicarContraste(contrasteGuardado);
-    }
+  const contrasteGuardado = obtenerContrasteGuardado();
+  if (contrasteGuardado && contrasteGuardado !== 'normal') {
+    aplicarContraste(contrasteGuardado);
+  }
 
-    // Listener para el selector de contraste
-    const selectorContraste = document.getElementById('nivel-contraste');
-    if (selectorContraste) {
-        // Aplicar el contraste inmediatamente al cambiar (sin necesidad de guardar)
-        selectorContraste.addEventListener('change', function() {
-            const nivel = this.value;
-            aplicarContraste(nivel);
-            anunciarCambioContraste(nivel);
-        });
-    }
+  const selectorContraste = document.getElementById('nivel-contraste');
+  if (selectorContraste) {
+    selectorContraste.addEventListener('change', function () {
+      const nivel = this.value;
+      aplicarContraste(nivel);
+      anunciarCambioContraste(nivel);
+    });
+  }
 }
 
-/**
- * Aplica el nivel de contraste seleccionado
- * @param {string} nivel - normal, alto, muy-alto, oscuro
- */
 function aplicarContraste(nivel) {
-    const body = document.body;
-    
-    // Remover todas las clases de contraste
-    body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-oscuro');
-    
-    // Aplicar la clase correspondiente SOLO si NO es normal
-    if (nivel !== 'normal') {
-        switch(nivel) {
-            case 'alto':
-                body.classList.add('contraste-alto');
-                break;
-            case 'muy-alto':
-                body.classList.add('contraste-muy-alto');
-                break;
-            case 'oscuro':
-                body.classList.add('modo-oscuro');
-                break;
-        }
+  const body = document.body;
+  body.classList.remove('contraste-alto', 'contraste-muy-alto');
+  
+  if (nivel !== 'normal') {
+    switch (nivel) {
+      case 'alto':
+        body.classList.add('contraste-alto');
+        break;
+      case 'muy-alto':
+        body.classList.add('contraste-muy-alto');
+        break;
     }
-    // Si es 'normal', simplemente se eliminaron todas las clases
-    
-    // Actualizar el atributo data-contraste para persistencia
-    body.setAttribute('data-contraste', nivel);
-    
-    // Actualizar el selector si existe y no es el que disparó el cambio
-    const selector = document.getElementById('nivel-contraste');
-    if (selector && selector.value !== nivel) {
-        selector.value = nivel;
-    }
-    
-    console.log('Contraste aplicado:', nivel);
+  }
+  
+  body.setAttribute('data-contraste', nivel);
 }
 
-/**
- * Obtiene el contraste guardado del atributo data del body
- * @returns {string} Nivel de contraste guardado o 'normal' por defecto
- */
 function obtenerContrasteGuardado() {
-    const body = document.body;
-    return body.getAttribute('data-contraste') || 'normal';
+  const body = document.body;
+  return body.getAttribute('data-contraste') || 'normal';
 }
 
-/**
- * Anuncia el cambio de contraste para lectores de pantalla
- * @param {string} nivel - Nivel aplicado
- */
 function anunciarCambioContraste(nivel) {
-    const mensajes = {
-        'normal': 'Contraste normal activado',
-        'alto': 'Contraste alto activado. Los colores son más definidos',
-        'muy-alto': 'Contraste muy alto activado. Modo blanco y negro',
-        'oscuro': 'Modo oscuro activado. Fondo oscuro con texto claro'
-    };
-    
-    // Crear o actualizar elemento para anuncio ARIA
-    let anuncio = document.getElementById('aria-live-contraste');
-    if (!anuncio) {
-        anuncio = document.createElement('div');
-        anuncio.id = 'aria-live-contraste';
-        anuncio.setAttribute('role', 'status');
-        anuncio.setAttribute('aria-live', 'polite');
-        anuncio.setAttribute('aria-atomic', 'true');
-        anuncio.style.position = 'absolute';
-        anuncio.style.left = '-10000px';
-        anuncio.style.width = '1px';
-        anuncio.style.height = '1px';
-        anuncio.style.overflow = 'hidden';
-        document.body.appendChild(anuncio);
+  const mensajes = {
+    'normal': 'Contraste normal activado',
+    'alto': 'Contraste alto activado',
+    'muy-alto': 'Contraste muy alto activado'
+  };
+
+  let anuncio = document.getElementById('aria-live-contraste');
+  if (!anuncio) {
+    anuncio = document.createElement('div');
+    anuncio.id = 'aria-live-contraste';
+    anuncio.setAttribute('role', 'status');
+    anuncio.setAttribute('aria-live', 'polite');
+    anuncio.setAttribute('aria-atomic', 'true');
+    anuncio.style.position = 'absolute';
+    anuncio.style.left = '-10000px';
+    document.body.appendChild(anuncio);
+  }
+
+  anuncio.textContent = mensajes[nivel] || 'Contraste actualizado';
+  setTimeout(() => { anuncio.textContent = ''; }, 3000);
+}
+
+/** SISTEMA DE TEXTO A VOZ */
+class LectorPantallaAuto {
+    constructor() {
+        this.estaLeyendo = false;
+        this.utterance = null;
     }
     
-    // Anunciar el cambio
-    anuncio.textContent = mensajes[nivel] || 'Contraste actualizado';
+    iniciarLecturaAutomatica() {
+        if (!('speechSynthesis' in window)) {
+            console.log('Navegador no soporta texto a voz');
+            return;
+        }
+        
+        this.detenerLectura();
+        
+        const texto = this.obtenerTextoParaLeer();
+        if (!texto) return;
+        
+        this.utterance = new SpeechSynthesisUtterance(texto);
+        this.utterance.lang = 'es-ES';
+        this.utterance.rate = 0.9;
+        this.utterance.pitch = 1;
+        this.utterance.volume = 1;
+        
+        this.utterance.onstart = () => {
+            this.estaLeyendo = true;
+            console.log('Lectura automática iniciada');
+        };
+        
+        this.utterance.onend = () => {
+            this.estaLeyendo = false;
+            console.log('Lectura automática finalizada');
+        };
+        
+        this.utterance.onerror = () => {
+            this.estaLeyendo = false;
+        };
+        
+        setTimeout(() => {
+            speechSynthesis.speak(this.utterance);
+        }, 500);
+    }
     
-    // Limpiar el mensaje después de 3 segundos
-    setTimeout(() => {
-        anuncio.textContent = '';
-    }, 3000);
-}
-
-/**
- * Función para forzar un contraste específico (útil para testing)
- * @param {string} nivel - Nivel de contraste a aplicar
- */
-function forzarContraste(nivel) {
-    aplicarContraste(nivel);
-    const selector = document.getElementById('nivel-contraste');
-    if (selector) {
-        selector.value = nivel;
+    detenerLectura() {
+        if (speechSynthesis.speaking) {
+            speechSynthesis.cancel();
+        }
+        this.estaLeyendo = false;
+    }
+    
+    obtenerTextoParaLeer() {
+        const seccionActiva = document.querySelector('.config-section.active');
+        if (seccionActiva) {
+            const titulo = seccionActiva.querySelector('.section-title')?.textContent || '';
+            const subtitulo = seccionActiva.querySelector('.card-title')?.textContent || '';
+            
+            let texto = `Sección de ${titulo}. ${subtitulo}. `;
+            texto = texto.replace(/\s+/g, ' ').trim();
+            
+            return texto;
+        }
+        
+        return "Configuración de accesibilidad.";
     }
 }
 
-/**
- * Obtiene el nivel de contraste actual
- * @returns {string} Nivel de contraste actual
- */
-function obtenerContrasteActual() {
-    const body = document.body;
-    if (body.classList.contains('contraste-alto')) return 'alto';
-    if (body.classList.contains('contraste-muy-alto')) return 'muy-alto';
-    if (body.classList.contains('modo-oscuro')) return 'oscuro';
-    return 'normal';
+const lectorAuto = new LectorPantallaAuto();
+
+/** Cargar valores en el formulario desde localStorage */
+function cargarValoresFormulario() {
+  // Cursor
+  const cursor = localStorage.getItem('cursor_size') || 'default';
+  const cursorSelect = document.getElementById('cursor-size');
+  if (cursorSelect) cursorSelect.value = cursor;
+
+  // Modo lector
+  const lector = localStorage.getItem('modo_lector') || 'off';
+  const lectorSelect = document.getElementById('modo-lector');
+  if (lectorSelect) lectorSelect.value = lector;
+
+  // Tipo de letra
+  const fontFamily = localStorage.getItem('font_family') || 'Arial, sans-serif';
+  const fontSelect = document.getElementById('font-select');
+  if (fontSelect) {
+    for (let i = 0; i < fontSelect.options.length; i++) {
+      if (fontSelect.options[i].value === fontFamily) {
+        fontSelect.selectedIndex = i;
+        break;
+      }
+    }
+  }
+
+  // Tamaño de letra
+  const fontSize = localStorage.getItem('font_size') || 'normal';
+  const fontSizeSelect = document.getElementById('font-size');
+  if (fontSizeSelect) fontSizeSelect.value = fontSize;
+
+  // Modo oscuro
+  const modoOscuro = localStorage.getItem('modoOscuro') || 'off';
+  const modoOscuroSelect = document.getElementById('modo-oscuro');
+  if (modoOscuroSelect) modoOscuroSelect.value = modoOscuro;
+
+  // Modo grises
+  const modoGrises = localStorage.getItem('modoGrises') || 'false';
+  const modoGrisesSelect = document.getElementById('modo-grises');
+  if (modoGrisesSelect) modoGrisesSelect.value = modoGrises === 'true' ? 'on' : 'off';
 }
 
-// Exportar funciones para uso global
-window.contrasteUtils = {
-    aplicar: aplicarContraste,
-    obtener: obtenerContrasteActual,
-    forzar: forzarContraste,
-    anunciar: anunciarCambioContraste
-};
+/** VISUAL — Aplica el resto de preferencias */
+function aplicarPreferenciasVisuales() {
+  const body = document.body;
 
-console.log('Sistema de contraste inicializado correctamente');
+  // Limpiar todas las clases visuales
+  body.classList.remove(
+    'cursor-large',
+    'modo-lector',
+    'modo-grises',
+    'font-large',
+    'font-x-large',
+    'modo-oscuro',
+    'cielo-nocturno'
+  );
+
+  // Cursor
+  const cursor = localStorage.getItem('cursor_size');
+  if (cursor === 'large') {
+    body.classList.add('cursor-large');
+  }
+
+  // Tamaño de letra
+  const fontSize = localStorage.getItem('font_size') || 'normal';
+  if (fontSize === 'large') {
+    body.classList.add('font-large');
+  } else if (fontSize === 'x-large') {
+    body.classList.add('font-x-large');
+  }
+
+  // Tipo de letra
+  const fontFamily = localStorage.getItem('font_family');
+  if (fontFamily) {
+    body.style.fontFamily = fontFamily;
+  }
+
+  // Modo lector - CON LECTURA AUTOMÁTICA
+  const lector = localStorage.getItem('modo_lector');
+  if (lector === 'on') {
+    body.classList.add('modo-lector');
+    // ACTIVAR LECTURA AUTOMÁTICA
+    lectorAuto.iniciarLecturaAutomatica();
+  } else {
+    body.classList.remove('modo-lector');
+    // DETENER LECTURA SI SE DESACTIVA
+    lectorAuto.detenerLectura();
+  }
+
+  // Modo oscuro
+  const modoOscuro = localStorage.getItem('modoOscuro') || 'off';
+  if (modoOscuro === 'on') {
+    body.classList.add('modo-oscuro');
+  } else if (modoOscuro === 'cielo-nocturno') {
+    body.classList.add('cielo-nocturno');
+  }
+
+  // Modo grises
+  const modoGrises = localStorage.getItem('modoGrises');
+  if (modoGrises === 'true') {
+    body.classList.add('modo-grises');
+  }
+}
+
+/** Configurar guardado automático */
+function configurarGuardadoAutomatico() {
+  const form = document.querySelector('#accesibilidad form');
+  if (!form) return;
+
+  form.addEventListener('submit', function (e) {
+    // Obtener valores del formulario
+    const contraste = document.getElementById('nivel-contraste')?.value;
+    const cursor = document.getElementById('cursor-size')?.value;
+    const lector = document.getElementById('modo-lector')?.value;
+    const tipografia = document.getElementById('font-select')?.value;
+    const tamanoLetra = document.getElementById('font-size')?.value;
+    const modoOscuro = document.getElementById('modo-oscuro')?.value;
+    const modoGrises = document.getElementById('modo-grises')?.value;
+
+    // Guardar en localStorage
+    if (cursor) localStorage.setItem('cursor_size', cursor);
+    if (lector) localStorage.setItem('modo_lector', lector);
+    if (tipografia) localStorage.setItem('font_family', tipografia);
+    if (tamanoLetra) localStorage.setItem('font_size', tamanoLetra);
+    if (modoOscuro) localStorage.setItem('modoOscuro', modoOscuro);
+    if (modoGrises) localStorage.setItem('modoGrises', modoGrises === 'on' ? 'true' : 'false');
+
+    // Aplicar inmediatamente
+    aplicarContraste(contraste || 'normal');
+    aplicarPreferenciasVisuales();
+    
+    // Recargar valores en el formulario
+    setTimeout(cargarValoresFormulario, 100);
+  });
+}
+
+// Detener lectura al cambiar de página
+window.addEventListener('beforeunload', function() {
+  lectorAuto.detenerLectura();
+}); 

@@ -7,7 +7,7 @@ admin_eliminar_pedidos_bp = Blueprint('admin_eliminar_pedidos', __name__)
 @admin_eliminar_pedidos_bp.route('/admin/eliminar_pedido/<int:pedido_id>', methods=['POST'])
 @login_required
 def eliminar_pedido(pedido_id):
-    if session.get('tipo_usuario') != 'Administrador':
+    if session.get('tipo_usuario') != 'admin':
         flash("Acceso denegado", "error")
         return redirect(url_for('menu_principal'))
 

@@ -7,7 +7,7 @@ admin_usuarios_bp = Blueprint('admin_usuarios', __name__)
 @admin_usuarios_bp.route('/admin/usuarios')
 @login_required
 def admin_usuarios():
-    if session.get('tipo_usuario') != 'Administrador':
+    if session.get('tipo_usuario') != 'admin':
         flash("Acceso denegado", "error")
         return redirect(url_for('inicio.inicio'))
     conn = conectar_bd()

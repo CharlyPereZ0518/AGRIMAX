@@ -47,6 +47,7 @@ from routes.registro import registro_bp
 from routes.login import login_bp
 from routes.logout import logout_bp
 from routes.admin_dashboard import admin_dashboard_bp
+from routes.verificar_codigo import verificar_codigo_bp
 from routes.admin_usuarios import admin_usuarios_bp
 from routes.admin_usuarios_eliminar import admin_usuarios_eliminar_bp
 from routes.admin_editar_usuarios import admin_editar_usuarios_bp
@@ -82,6 +83,9 @@ from routes.hortalizas import hortalizas_bp
 from routes.vaciar_carrito import vaciar_carrito_bp
 from routes.actualizar_cantidad import actualizar_cantidad_bp
 from routes.mercadopago import mercadopago_bp
+from routes.admin_accesibilidad import admin_accesibilidad
+from routes.olvido_contrasena import olvido_bp
+from routes.chat import chat_bp
 
 
 app.context_processor(inject_usuario)
@@ -89,6 +93,7 @@ app.register_blueprint(inicio_bp)
 app.register_blueprint(registro_bp)
 app.register_blueprint(login_bp)
 app.register_blueprint(logout_bp)
+app.register_blueprint(verificar_codigo_bp)
 app.register_blueprint(admin_dashboard_bp)
 app.register_blueprint(admin_usuarios_bp)
 app.register_blueprint(admin_usuarios_eliminar_bp)
@@ -125,6 +130,9 @@ app.register_blueprint(hortalizas_bp)
 app.register_blueprint(vaciar_carrito_bp)
 app.register_blueprint(actualizar_cantidad_bp)
 app.register_blueprint(mercadopago_bp)
+app.register_blueprint(admin_accesibilidad)
+app.register_blueprint(olvido_bp)
+app.register_blueprint(chat_bp)
 app.context_processor(inject_usuario)
 
 
@@ -136,4 +144,4 @@ def add_no_cache_headers(response):
     return response
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

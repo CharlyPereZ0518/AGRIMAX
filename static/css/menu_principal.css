@@ -6,7 +6,7 @@
 }
 
 body {
-    font-family: Arial, sans-serif;
+    
     background-color: #d9d1f3;
     background-image: url('/static/imagenes/ima1.jpg');
     background-size: cover;
@@ -124,4 +124,410 @@ body {
     background: #B20000;
     transform: scale(1.05);
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
+}
+
+/* contraste.css - Niveles de contraste para accesibilidad */
+/* IMPORTANTE: Este CSS SOLO se aplica cuando body tiene una clase de contraste activa */
+/* NO afecta el modo normal */
+
+/* ==================== CONTRASTE ALTO ==================== */
+body.contraste-alto {
+    --bg-primary: #ffffff;
+    --bg-secondary: #f0f0f0;
+    --bg-card: #fafafa;
+    --bg-white: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --text-muted: #000000;
+    --accent-primary: #0066cc;
+    --accent-hover: #0052a3;
+    --border-color: #000000;
+    --shadow: rgba(0, 0, 0, 0.3);
+}
+
+body.contraste-alto {
+    background-color: var(--bg-primary) !important;
+    background-image: none !important;
+    color: var(--text-primary) !important;
+}
+
+/* ==================== CONTRASTE MUY ALTO (Blanco y Negro) ==================== */
+body.contraste-muy-alto {
+    --bg-primary: #ffffff;
+    --bg-secondary: #ffffff;
+    --bg-card: #ffffff;
+    --bg-white: #ffffff;
+    --text-primary: #000000;
+    --text-secondary: #000000;
+    --text-muted: #000000;
+    --accent-primary: #000000;
+    --accent-hover: #333333;
+    --border-color: #000000;
+    --shadow: rgba(0, 0, 0, 0.5);
+}
+
+body.contraste-muy-alto {
+    background-color: #ffffff !important;
+    background-image: none !important;
+    color: #000000 !important;
+    filter: grayscale(100%) contrast(150%);
+}
+
+body.contraste-muy-alto * {
+    border-color: #000000 !important;
+}
+
+/* ==================== MODO OSCURO ==================== */
+body.modo-oscuro {
+    --bg-primary: #121212;
+    --bg-secondary: #1e1e1e;
+    --bg-card: #2a2a2a;
+    --bg-white: #1e1e1e;
+    --text-primary: #ffffff;
+    --text-secondary: #e0e0e0;
+    --text-muted: #b0b0b0;
+    --accent-primary: #bb86fc;
+    --accent-hover: #9965d4;
+    --border-color: #444444;
+    --shadow: rgba(255, 255, 255, 0.1);
+}
+
+body.modo-oscuro {
+    background-color: var(--bg-primary) !important;
+    background-image: none !important;
+    color: var(--text-primary) !important;
+}
+
+/* ==================== ESTILOS ESPECÍFICOS POR ELEMENTO ==================== */
+/* SOLO se aplican cuando body tiene clase de contraste */
+
+/* Sidebar de configuración */
+body.contraste-alto .config-sidebar,
+body.contraste-muy-alto .config-sidebar,
+body.modo-oscuro .config-sidebar {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .config-menu li,
+body.contraste-muy-alto .config-menu li,
+body.modo-oscuro .config-menu li {
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .config-menu li:hover,
+body.contraste-muy-alto .config-menu li:hover,
+body.modo-oscuro .config-menu li:hover {
+    background: var(--border-color) !important;
+}
+
+body.contraste-alto .config-menu li.active,
+body.contraste-muy-alto .config-menu li.active,
+body.modo-oscuro .config-menu li.active {
+    background: var(--accent-primary) !important;
+    color: var(--bg-white) !important;
+}
+
+/* Contenido principal */
+body.contraste-alto .config-content,
+body.contraste-muy-alto .config-content,
+body.modo-oscuro .config-content {
+    background: var(--bg-white) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Tarjetas */
+body.contraste-alto .card,
+body.contraste-muy-alto .card,
+body.modo-oscuro .card {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+body.contraste-alto .card-title,
+body.contraste-alto .section-title,
+body.contraste-muy-alto .card-title,
+body.contraste-muy-alto .section-title,
+body.modo-oscuro .card-title,
+body.modo-oscuro .section-title {
+    color: var(--text-primary) !important;
+}
+
+/* Formularios */
+body.contraste-alto .form-label,
+body.contraste-muy-alto .form-label,
+body.modo-oscuro .form-label {
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .form-control,
+body.contraste-muy-alto .form-control,
+body.modo-oscuro .form-control {
+    background: var(--bg-white) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+body.contraste-alto .form-control:focus,
+body.contraste-muy-alto .form-control:focus,
+body.modo-oscuro .form-control:focus {
+    outline: 3px solid var(--accent-primary) !important;
+    border-color: var(--accent-primary) !important;
+}
+
+body.contraste-alto select.form-control option,
+body.contraste-muy-alto select.form-control option,
+body.modo-oscuro select.form-control option {
+    background: var(--bg-white) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Botones */
+body.contraste-alto .btn-primary,
+body.contraste-muy-alto .btn-primary,
+body.modo-oscuro .btn-primary {
+    background: var(--accent-primary) !important;
+    color: var(--bg-white) !important;
+    border: 2px solid var(--accent-primary) !important;
+}
+
+body.contraste-alto .btn-primary:hover,
+body.contraste-muy-alto .btn-primary:hover,
+body.modo-oscuro .btn-primary:hover {
+    background: var(--accent-hover) !important;
+}
+
+body.contraste-alto .btn-secondary,
+body.contraste-muy-alto .btn-secondary,
+body.modo-oscuro .btn-secondary {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+body.contraste-alto .btn,
+body.contraste-muy-alto .btn,
+body.modo-oscuro .btn {
+    color: inherit !important;
+}
+
+/* Header */
+body.contraste-alto .header,
+body.contraste-muy-alto .header,
+body.modo-oscuro .header {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border-bottom: 2px solid var(--border-color) !important;
+}
+
+body.contraste-alto .logo,
+body.contraste-muy-alto .logo,
+body.modo-oscuro .logo {
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .menu-btn,
+body.contraste-muy-alto .menu-btn,
+body.modo-oscuro .menu-btn {
+    color: var(--text-primary) !important;
+    background: transparent !important;
+}
+
+body.contraste-alto .cart-btn,
+body.contraste-muy-alto .cart-btn,
+body.modo-oscuro .cart-btn {
+    color: var(--text-primary) !important;
+}
+
+/* Sidebar del menú */
+body.contraste-alto .sidebar,
+body.contraste-muy-alto .sidebar,
+body.modo-oscuro .sidebar {
+    background: var(--bg-white) !important;
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .sidebar-menu li,
+body.contraste-muy-alto .sidebar-menu li,
+body.modo-oscuro .sidebar-menu li {
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .sidebar-menu a,
+body.contraste-muy-alto .sidebar-menu a,
+body.modo-oscuro .sidebar-menu a {
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .sidebar-menu a:hover,
+body.contraste-muy-alto .sidebar-menu a:hover,
+body.modo-oscuro .sidebar-menu a:hover {
+    background: var(--bg-secondary) !important;
+}
+
+body.contraste-alto .dropdown-btn,
+body.contraste-muy-alto .dropdown-btn,
+body.modo-oscuro .dropdown-btn {
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .dropdown-container,
+body.contraste-muy-alto .dropdown-container,
+body.modo-oscuro .dropdown-container {
+    background: var(--bg-card) !important;
+}
+
+/* Footer */
+body.contraste-alto footer,
+body.contraste-muy-alto footer,
+body.modo-oscuro footer {
+    background: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
+    border-top: 2px solid var(--border-color) !important;
+}
+
+/* Feedback messages */
+body.contraste-alto .feedback,
+body.contraste-muy-alto .feedback,
+body.modo-oscuro .feedback {
+    border: 2px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .feedback.success,
+body.contraste-muy-alto .feedback.success {
+    background: #ffffff !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+}
+
+body.contraste-alto .feedback.error,
+body.contraste-muy-alto .feedback.error {
+    background: #ffffff !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+}
+
+body.modo-oscuro .feedback.success {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+body.modo-oscuro .feedback.error {
+    background: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Mejoras de accesibilidad */
+body.contraste-alto *:focus,
+body.contraste-muy-alto *:focus {
+    outline: 4px solid var(--accent-primary) !important;
+    outline-offset: 2px !important;
+}
+
+body.modo-oscuro *:focus {
+    outline: 3px solid var(--accent-primary) !important;
+    outline-offset: 2px !important;
+}
+
+/* Links e interactivos */
+body.contraste-alto a,
+body.contraste-muy-alto a {
+    text-decoration: underline !important;
+    font-weight: bold !important;
+    color: var(--text-primary) !important;
+}
+
+body.modo-oscuro a {
+    color: var(--accent-primary) !important;
+}
+
+/* Imágenes en alto contraste */
+body.contraste-muy-alto img {
+    filter: grayscale(100%) contrast(150%);
+}
+
+body.modo-oscuro img {
+    opacity: 0.9;
+}
+
+/* Checkbox personalizado */
+body.contraste-alto .checkbox-label,
+body.contraste-muy-alto .checkbox-label,
+body.modo-oscuro .checkbox-label {
+    color: var(--text-primary) !important;
+}
+
+body.contraste-alto .checkmark,
+body.contraste-muy-alto .checkmark,
+body.modo-oscuro .checkmark {
+    border: 2px solid var(--border-color) !important;
+}
+
+/* Overlay */
+body.contraste-alto .overlay,
+body.contraste-muy-alto .overlay {
+    background: rgba(0, 0, 0, 0.5) !important;
+}
+
+body.modo-oscuro .overlay {
+    background: rgba(255, 255, 255, 0.1) !important;
+}
+
+/* Textarea */
+body.contraste-alto textarea,
+body.contraste-muy-alto textarea,
+body.modo-oscuro textarea {
+    background: var(--bg-white) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+/* Input file */
+body.contraste-alto input[type="file"],
+body.contraste-muy-alto input[type="file"],
+body.modo-oscuro input[type="file"] {
+    background: var(--bg-white) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+/* Tablas */
+body.contraste-alto table,
+body.contraste-muy-alto table,
+body.modo-oscuro table {
+    background: var(--bg-white) !important;
+    color: var(--text-primary) !important;
+    border: 2px solid var(--border-color) !important;
+}
+
+body.contraste-alto th,
+body.contraste-alto td,
+body.contraste-muy-alto th,
+body.contraste-muy-alto td,
+body.modo-oscuro th,
+body.modo-oscuro td {
+    border: 1px solid var(--border-color) !important;
+    color: var(--text-primary) !important;
+}
+
+/* Elementos de la foto de perfil */
+body.contraste-alto .profile-preview,
+body.contraste-muy-alto .profile-preview,
+body.modo-oscuro .profile-preview {
+    border: 2px solid var(--border-color) !important;
+}
+
+body.contraste-alto .current-photo p,
+body.contraste-muy-alto .current-photo p,
+body.modo-oscuro .current-photo p {
+    color: var(--text-primary) !important;
+}
+
+/* Iconos Font Awesome */
+body.contraste-alto i,
+body.contraste-muy-alto i,
+body.modo-oscuro i {
+    color: inherit !important;
 }

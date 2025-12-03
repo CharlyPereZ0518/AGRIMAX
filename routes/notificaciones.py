@@ -9,7 +9,7 @@ notificaciones_bp = Blueprint('notificaciones', __name__)
 def notificaciones():
     if session.get('tipo_usuario') != "Proveedor":
         flash("Solo los proveedores pueden acceder a las notificaciones.", "error")
-        return redirect(url_for('menu'))
+        return redirect(url_for('menu_provedor.menu'))
 
     proveedor_id = session.get('usuario_id')
     print("Proveedor ID en sesión:", proveedor_id)
@@ -18,7 +18,7 @@ def notificaciones():
         conexion = conectar_bd()
         if not conexion:
             flash("Error al conectar con la base de datos.", "error")
-            return redirect(url_for('menu'))
+            return redirect(url_for('menu_provedor.menu'))
 
         cursor = conexion.cursor()
 
@@ -50,11 +50,36 @@ def notificaciones():
 
         if not notificaciones_lista:
             flash("No tienes notificaciones en este momento.", "info")
-            return redirect(url_for('menu'))
+            return redirect(url_for('menu_provedor.menu'))
 
         return render_template('notificaciones.html', notificaciones=notificaciones_lista)
 
     except Exception as e:
         print("Error al cargar las notificaciones:", e)
         flash("Error al cargar las notificaciones. Por favor, inténtalo de nuevo.", "error")
-        return redirect(url_for('menu'))
+        return redirect(url_for('menu_provedor.menu'))
+
+@notificaciones_bp.route('/marcar_leido/<int:notificacion_id>', methods=['POST'])
+@login_required
+def marcar_leido(notificacion_id):
+    try:
+        conexion = conectar_bd()
+        cursor = conexion.cursor()
+        
+        cursor.execute("""
+            UPDATE notificaciones 
+            SET leido = TRUE 
+            WHERE id = %s AND proveedor_id = %s
+        """, (notificacion_id, session.get('usuario_id')))
+        
+        conexion.commit()
+        cursor.close()
+        conexion.close()
+        
+        flash("Notificación marcada como leída.", "success")
+        
+    except Exception as e:
+        print("Error al marcar notificación como leída:", e)
+        flash("Error al marcar la notificación como leída.", "error")
+    
+    return redirect(url_for('notificaciones.notificaciones'))
