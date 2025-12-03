@@ -10,6 +10,7 @@
 
 <body>
     <div class="container">
+        {% include '_header.html' %}
         <h1>Registro de Usuario</h1>
 
         {% with messages = get_flashed_messages(with_categories=true) %}
@@ -36,7 +37,8 @@
             <input type="email" name="correo" placeholder="Correo electrónico" required>
 
             <label>Contraseña:</label>
-            <input type="password" name="contraseña" placeholder="Contraseña" required>
+            <input type="password" id="contraseña" name="contraseña" placeholder="Contraseña" required>
+            <div id="pwHelp" class="pw-help" style="color:#b00;margin-top:6px;font-size:0.9em;display:none;"></div>
 
             <label>Número telefónico:</label>
             <input type="text" name="telefono" placeholder="Teléfono" required pattern="\d{10}" title="Debe contener 10 dígitos">
@@ -45,10 +47,44 @@
                 <label><input type="radio" name="tipo" value="Cliente" checked> Cliente</label>
                 <label><input type="radio" name="tipo" value="Proveedor"> Proveedor</label>
             </div>
-            <button type="button" onclick="location.href='/'">Cancelar</button>
-            <button type="submit">Registrar</button>
+                        <button type="button" onclick="location.href='/'">Cancelar</button>
+                        <button type="submit">Registrar</button>
         </form>
+        <p class="register"><a href="/">Volver al inicio</a></p>
     </div>
+        <script>
+            (function(){
+                var form = document.querySelector('form');
+                var pwd = document.getElementById('contraseña');
+                var help = document.getElementById('pwHelp');
+                var re = /(?=.*\d)(?=.*[^A-Za-z0-9])/;
+
+                function validatePassword(){
+                    if(!pwd) return true;
+                    var val = pwd.value || '';
+                    if(!re.test(val)){
+                        help.style.display = 'block';
+                        help.textContent = 'La contraseña debe contener al menos un número y un carácter especial.';
+                        return false;
+                    }
+                    help.style.display = 'none';
+                    return true;
+                }
+
+                if(pwd){
+                    pwd.addEventListener('input', validatePassword);
+                }
+
+                if(form){
+                    form.addEventListener('submit', function(e){
+                        if(!validatePassword()){
+                            e.preventDefault();
+                            pwd.focus();
+                        }
+                    });
+                }
+            })();
+        </script>
 </body>
 
 </html>

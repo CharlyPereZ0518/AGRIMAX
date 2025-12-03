@@ -4,6 +4,7 @@ from correo_utils import enviar_correo
 import random
 from datetime import datetime, timedelta
 import bcrypt
+import re
 
 olvido_bp = Blueprint('olvido_contrasena', __name__)
 
@@ -77,6 +78,11 @@ def reset_password():
 
         if nueva != confirmar:
             flash('Las contraseñas no coinciden.', 'error')
+            return render_template('reset_password.html')
+
+        # Validar que la nueva contraseña tenga al menos un número y un carácter especial
+        if not re.search(r"(?=.*\d)(?=.*[^A-Za-z0-9])", nueva):
+            flash('La contraseña debe contener al menos un número y un carácter especial.', 'error')
             return render_template('reset_password.html')
 
         try:

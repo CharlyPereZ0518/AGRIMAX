@@ -11,16 +11,7 @@
 
 <body>
     <div class="container">
-        <div class="logo">
-            <div class="logo-content">
-                <div class="logo-arc"></div>
-                <div class="logo-leaf"></div>
-                <div class="logo-field">
-                    <div class="logo-field-line1"></div>
-                    <div class="logo-field-line2"></div>
-                </div>
-            </div>
-        </div>
+        {% include '_header.html' %}
 
         <h1>Bienvenido</h1>
 
@@ -51,6 +42,7 @@
         <br>
         <p class="register">¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
         <p class="register">¿Olvidaste tu contraseña? <a href="{{ url_for('olvido_contrasena.solicitar_reset') }}">Recuperarla</a></p>
+        <p class="register"><a href="/">Volver al inicio</a></p>
     </div>
 </body>
 

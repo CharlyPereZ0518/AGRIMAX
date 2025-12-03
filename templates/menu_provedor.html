@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/static/css/cursor.css">
     <script src="/static/js/lector.js" defer></script>
     <script src="/static/js/accesibilidad_global.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/contraste.css">
         <style>
             /* Floating chat bubble */
@@ -39,6 +40,16 @@
                 #chatBubble { right: 12px; bottom: 12px; width:50px; height:50px; font-size:20px; }
                 #chatModal > div { width: calc(100vw - 28px); height: 70vh; right: 6px; bottom: 6px; }
             }
+
+            /* Accessibility consolidated panel styles (same as cliente) */
+            .accModal { display:none; position:fixed; right:18px; bottom: 18px; z-index:14012 }
+            .accModal > .panel { width:320px; max-width:calc(100vw - 32px); background:#fff; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.25); overflow:hidden }
+            .accModal .panel header { background:#343a40; color:#fff; padding:8px 12px; display:flex; justify-content:space-between; align-items:center }
+            .accModal .panel .content { padding:12px }
+            .accModal .panel .content button { padding:8px 12px; border-radius:8px; border:0; cursor:pointer; margin:6px 8px 6px 0; font-weight:600 }
+            .accModal .panel .content .acc-btn { background: linear-gradient(90deg,#4a90e2,#357ab8); color:#fff }
+            .accModal .panel .content .acc-btn.secondary { background: linear-gradient(90deg,#e0e0e0,#cfcfcf); color:#222 }
+            .accModal .panel .content .acc-btn.warn { background: linear-gradient(90deg,#ffb66b,#ff8a00); color:#222 }
         </style>
 </head>
 
@@ -117,6 +128,60 @@
                     <button id="chatClose" type="button" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button>
                 </div>
             </div>
+
+            <!-- Accessibility bubble and panel -->
+            <div id="accBubble" title="Accesibilidad" style="position:fixed;right:18px;bottom:158px;z-index:14009;width:56px;height:56px;border-radius:50%;background:#0056b3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer"><i class="fas fa-universal-access" aria-hidden="true"></i></div>
+
+            <div id="accPanel" class="accModal" aria-hidden="true">
+                <div class="panel">
+                    <header>
+                        <span>Accesibilidad</span>
+                        <div>
+                            <button onclick="closeAccPanel()" style="background:transparent;border:0;color:#fff;font-size:18px;cursor:pointer">×</button>
+                        </div>
+                    </header>
+                    <div class="content">
+                        <section class="acc-section">
+                            <h4>Contraste</h4>
+                            <p>Selecciona nivel de contraste:</p>
+                            <button class="acc-btn secondary" onclick="setContrast('normal')">Normal</button>
+                            <button class="acc-btn" onclick="setContrast('alto')">Alto</button>
+                            <button class="acc-btn" onclick="setContrast('muy-alto')">Muy alto</button>
+                        </section>
+
+                        <section class="acc-section">
+                            <h4>Modo Lector</h4>
+                            <p>Activa o desactiva el lector de pantalla:</p>
+                            <button class="acc-btn" onclick="toggleReader(true)">Activar</button>
+                            <button class="acc-btn secondary" onclick="toggleReader(false)">Desactivar</button>
+                        </section>
+
+                        <section class="acc-section">
+                            <h4>Cursor</h4>
+                            <p>Tamaño del cursor:</p>
+                            <button class="acc-btn secondary" onclick="setCursorSize('normal')">Normal</button>
+                            <button class="acc-btn" onclick="setCursorSize('large')">Grande</button>
+                        </section>
+
+                        <section class="acc-section">
+                            <h4>Fuente</h4>
+                            <p>Tamaño de fuente:</p>
+                            <button class="acc-btn secondary" onclick="setFontSize('normal')">Normal</button>
+                            <button class="acc-btn" onclick="setFontSize('large')">Grande</button>
+                            <button class="acc-btn" onclick="setFontSize('x-large')">Extra grande</button>
+                        </section>
+
+                        <section class="acc-section">
+                            <h4>Tema</h4>
+                            <p>Alterna modos:</p>
+                            <button class="acc-btn" onclick="setTheme('nocturno')">Modo nocturno</button>
+                            <button class="acc-btn" onclick="setTheme('oscuro')">Modo oscuro</button>
+                            <button class="acc-btn" onclick="setTheme('grises')">Modo grises</button>
+                            <button class="acc-btn secondary" onclick="setTheme('normal')">Restablecer</button>
+                        </section>
+                    </div>
+                </div>
+            </div>
             <iframe id="chatIframe"
                             src="{{ url_for('chat.chat_page', role='proveedor') }}"
                             title="Chat Agrimax - Proveedor"
@@ -177,6 +242,55 @@
             window.openChatModal = showModal;
             window.closeChatModal = hideModal;
             window.minimizeChat = hideModal;
+        })();
+        // Accessibility consolidated panel controls (copied from menu_cliente)
+        (function(){
+            var accBubble = document.getElementById('accBubble');
+            var accPanel = document.getElementById('accPanel');
+
+            function showAccPanel(){
+                if(!accPanel) return;
+                accPanel.style.display = 'block';
+                accPanel.setAttribute('aria-hidden','false');
+            }
+
+            window.closeAccPanel = function(){
+                if(!accPanel) return;
+                accPanel.style.display = 'none';
+                accPanel.setAttribute('aria-hidden','true');
+            }
+
+            if(accBubble) accBubble.addEventListener('click', showAccPanel);
+
+            // Expose functions globally so buttons inside panel work
+            window.setContrast = function(level){ localStorage.setItem('nivel_contraste', level); location.reload(); };
+            window.toggleReader = function(on){ localStorage.setItem('modo_lector', on ? 'on' : 'off'); location.reload(); };
+            window.setCursorSize = function(size){ localStorage.setItem('cursor_size', size); location.reload(); };
+            window.setFontSize = function(size){ localStorage.setItem('font_size', size); location.reload(); };
+            window.setTheme = function(kind){
+                if(kind === 'normal'){
+                    localStorage.removeItem('modo_oscuro');
+                    localStorage.removeItem('modoOscuro');
+                    localStorage.removeItem('modoGrises');
+                    localStorage.removeItem('modo_nocturno');
+                } else if(kind === 'oscuro'){
+                    localStorage.setItem('modo_oscuro','on');
+                    localStorage.setItem('modoOscuro','on');
+                    localStorage.removeItem('modoGrises');
+                    localStorage.removeItem('modo_nocturno');
+                } else if(kind === 'nocturno'){
+                    localStorage.setItem('modoOscuro','cielo-nocturno');
+                    localStorage.setItem('modo_oscuro','on');
+                    localStorage.setItem('modo_nocturno','on');
+                    localStorage.removeItem('modoGrises');
+                } else if(kind === 'grises'){
+                    localStorage.setItem('modoGrises','true');
+                    localStorage.removeItem('modo_oscuro');
+                    localStorage.removeItem('modoOscuro');
+                    localStorage.removeItem('modo_nocturno');
+                }
+                location.reload();
+            };
         })();
     </script>
     <footer>

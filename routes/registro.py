@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from bd import conectar_bd
 import bcrypt
 from correo_utils import enviar_correo_registro
+import re
 
 registro_bp = Blueprint("registro",__name__)
 
@@ -23,7 +24,12 @@ def registro():
                 flash("Todos los campos son obligatorios.", "error")
                 return render_template('registro.html')
 
-           
+            
+            # Validar que la contraseña tenga al menos un número y un carácter especial
+            if not re.search(r"(?=.*\d)(?=.*[^A-Za-z0-9])", contraseña):
+                flash("La contraseña debe contener al menos un número y un carácter especial.", "error")
+                return render_template('registro.html')
+
             hashed_password = bcrypt.hashpw(contraseña.encode('utf-8'), bcrypt.gensalt())
 
             

@@ -7,6 +7,7 @@ import requests
 import random
 from datetime import datetime, timedelta
 from correo_utils import enviar_correo
+import re
 
 login_bp = Blueprint("login", __name__)
 
