@@ -43,7 +43,13 @@ def solicitar_reset():
 
                 # enviar correo de restablecimiento
                 try:
-                    enviar_correo(correo, 'Restablece tu contraseña - AGRIMAX', 'correo_reset.html', {"nombre": usuario[1], "codigo": codigo})
+                    try:
+                        enviar_correo(correo, 'Restablece tu contraseña - AGRIMAX', 'correo_reset.html', {"nombre": usuario[1], "codigo": codigo})
+                        flash("Se ha enviado un enlace de restablecimiento a tu correo.", "info")
+                    except Exception as e:
+                        print("Error al enviar correo de reset:", str(e))
+                        flash(f"Error al enviar el correo: {str(e)}", "error")
+                        return render_template('olvido_contrasena.html')
                 except Exception as e:
                     print('Error al enviar correo de restablecimiento:', e)
 

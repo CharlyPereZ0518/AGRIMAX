@@ -1,0 +1,27 @@
+# Configuración de Variables de Entorno para Railway
+# Copia estas variables en el panel de Railway (Settings > Variables)
+
+# Base de datos (ya está configurado)
+# DATABASE_URL=postgresql://...
+
+# Configuración de correo Gmail
+MAIL_SERVER=smtp.gmail.com
+MAIL_PORT=587
+MAIL_USE_TLS=True
+MAIL_USERNAME=agrimaaxx@gmail.com
+MAIL_PASSWORD=ojho ayqo kqzd mbaf
+
+# IMPORTANTE: 
+# 1. La contraseña debe ser una "Contraseña de aplicación" de Google
+# 2. Para generarla, ve a: https://myaccount.google.com/apppasswords
+# 3. Selecciona "Mail" y "Windows Computer" (o tu sistema)
+# 4. Google generará una contraseña de 16 caracteres con espacios
+# 5. Copia esa contraseña exactamente como aparece (con espacios)
+
+# Alternativa: Si quieres usar una contraseña sin espacios:
+# 1. Ve a https://myaccount.google.com/
+# 2. Activa la autenticación de dos factores
+# 3. Genera una contraseña de aplicación nueva
+# 4. Cópiala sin los espacios
+
+# Nota: Las contraseñas con espacios funcionan perfectamente en Railway

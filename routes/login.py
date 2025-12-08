@@ -52,10 +52,11 @@ def login():
                     # Enviar correo con el código de verificación
                     try:
                         enviar_correo(correo, "Código de verificación AGRIMAX", 'correo_verificacion.html', {"nombre": usuario[1], "codigo": codigo})
+                        flash("Se ha enviado un código de verificación a tu correo.", "info")
                     except Exception as e:
-                        print("Error al enviar código de verificación:", e)
-
-                    flash("Se ha enviado un código de verificación a tu correo.", "info")
+                        print("Error al enviar código de verificación:", str(e))
+                        flash(f"Error al enviar el código: {str(e)}", "error")
+                        return render_template('login.html')
                     return redirect(url_for('verificar_codigo.verificar_codigo'))
                 else:
                     flash("Correo o contraseña incorrectos.", "error")

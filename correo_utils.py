@@ -1,6 +1,10 @@
 from flask import render_template, current_app
 from flask_mail import Message
 from extensions import mail
+import logging
+
+# Configurar logging para ver errores de correo
+logger = logging.getLogger(__name__)
 
 
 def enviar_correo(destinatario, asunto, plantilla, datos):
@@ -12,9 +16,12 @@ def enviar_correo(destinatario, asunto, plantilla, datos):
         )
         mensaje.html = render_template(plantilla, datos=datos)
         mail.send(mensaje)
-        print(f"Correo enviado a {destinatario}")
+        logger.info(f"Correo enviado exitosamente a {destinatario}")
+        print(f"✓ Correo enviado a {destinatario}")
     except Exception as e:
-        print("Error al enviar correo:", e)
+        logger.error(f"Error al enviar correo a {destinatario}: {str(e)}")
+        print(f"✗ Error al enviar correo: {str(e)}")
+        raise
 
 
 def enviar_correo_pedido(destinatario, pedido_id, total, productos):
@@ -29,9 +36,12 @@ def enviar_correo_pedido(destinatario, pedido_id, total, productos):
             datos={"pedido_id": pedido_id, "total": total, "productos": productos}
         )
         mail.send(mensaje)
-        print(f"Correo de pedido enviado a {destinatario}")
+        logger.info(f"Correo de pedido enviado a {destinatario}")
+        print(f"✓ Correo de pedido enviado a {destinatario}")
     except Exception as e:
-        print("Error al enviar correo de pedido:", e)
+        logger.error(f"Error al enviar correo de pedido a {destinatario}: {str(e)}")
+        print(f"✗ Error al enviar correo de pedido: {str(e)}")
+        raise
 
 
 def enviar_correo_registro(destinatario, nombre, tipo_usuario):
@@ -52,6 +62,9 @@ def enviar_correo_registro(destinatario, nombre, tipo_usuario):
         )
         mensaje.html = render_template(plantilla, datos={"nombre": nombre})
         mail.send(mensaje)
-        print(f"Correo de registro enviado a {destinatario}")
+        logger.info(f"Correo de registro enviado a {destinatario}")
+        print(f"✓ Correo de registro enviado a {destinatario}")
     except Exception as e:
+        logger.error(f"Error al enviar correo de registro a {destinatario}: {str(e)}")
+        print(f"✗ Error al enviar correo de registro: {str(e)}")
         print("Error al enviar correo:", e)

@@ -58,7 +58,11 @@ def registro():
                 print("Usuario y perfil registrados correctamente.")
 
                 
-                enviar_correo_registro(correo, nombre, tipo)
+                try:
+                    enviar_correo_registro(correo, nombre, tipo)
+                except Exception as e:
+                    print("Error al enviar correo de bienvenida:", str(e))
+                    # No bloqueamos el registro si falla el correo
 
                 flash("Usuario registrado correctamente. Se ha enviado un correo de bienvenida.", "success")
                 return redirect(url_for('login.login'))

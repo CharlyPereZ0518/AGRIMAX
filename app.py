@@ -5,6 +5,12 @@ import bcrypt
 from models import Usuario
 from extensions import mail, login_manager
 from context_processors import inject_usuario_con_cache as inject_usuario
+import os
+import logging
+
+# Configurar logging para ver errores de correo
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 
 app = Flask(__name__)
@@ -16,16 +22,24 @@ app.config['SESSION_COOKIE_SAMESITE'] = 'Lax'
 app.config['UPLOAD_FOLDER'] = 'static/imagenes'
 app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 587
-app.config['MAIL_USE_TLS'] = True
-app.config['MAIL_USERNAME'] = 'agrimaaxx@gmail.com'
-app.config['MAIL_PASSWORD'] = 'ojho ayqo kqzd mbaf'
+app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
+app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
+app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
+app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'agrimaaxx@gmail.com')
+app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'ojho ayqo kqzd mbaf')
+app.config['MAIL_DEBUG'] = os.environ.get('MAIL_DEBUG', '0').lower() == '1'
+app.config['MAIL_SUPPRESS_SEND'] = False
 
 
 mail.init_app(app)
 login_manager.init_app(app)
 login_manager.login_view = "login.login"
+
+logger.info(f"Configuración de correo inicializada:")
+logger.info(f"  MAIL_SERVER: {app.config['MAIL_SERVER']}")
+logger.info(f"  MAIL_PORT: {app.config['MAIL_PORT']}")
+logger.info(f"  MAIL_USE_TLS: {app.config['MAIL_USE_TLS']}")
+logger.info(f"  MAIL_USERNAME: {app.config['MAIL_USERNAME']}")
 
 @login_manager.user_loader
 def load_user(user_id):
