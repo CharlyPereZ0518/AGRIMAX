@@ -154,24 +154,111 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- NUEVO CARD DE ACCESIBILIDAD -->
-                    <div class="col-md-3">
-                        <div class="card text-bg-purple mb-3">
-                            <div class="card-body">
-                                <h3 class="card-title h5">Configuración de Accesibilidad</h3>
-                                <p class="card-text">Gestiona las opciones de accesibilidad del sistema.</p>
-                                <a href="/admin/accesibilidad" class="btn btn-light focus-highlight"
-                                   aria-label="Configurar opciones de accesibilidad">
-                                    Gestionar Accesibilidad
-                                </a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </section>
         </div>
     </main>
+
+    <!-- Burbuja de accesibilidad consolidada -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <button onclick="toggleAccessibilityPanel()" 
+                style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                       border: none; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; 
+                       display: flex; align-items: center; justify-content: center; transition: transform 0.3s;"
+                onmouseover="this.style.transform='scale(1.1)'" 
+                onmouseout="this.style.transform='scale(1)'"
+                aria-label="Abrir panel de accesibilidad">
+            <span style="font-size: 28px; color: white;">♿</span>
+        </button>
+    </div>
+
+    <!-- Panel de accesibilidad consolidado -->
+    <div id="accessibilityPanel" 
+         style="position: fixed; bottom: 90px; right: 20px; width: 320px; background: white; 
+                border-radius: 15px; box-shadow: 0 8px 30px rgba(0,0,0,0.3); padding: 20px; 
+                display: none; z-index: 999; max-height: 500px; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h3 style="margin: 0; font-size: 18px; color: #333;">⚙️ Accesibilidad</h3>
+            <button onclick="toggleAccessibilityPanel()" 
+                    style="background: none; border: none; font-size: 24px; cursor: pointer; color: #999;"
+                    aria-label="Cerrar panel">×</button>
+        </div>
+
+        <!-- Contraste -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">🎨 Nivel de Contraste:</label>
+            <select id="contrastLevel" onchange="changeContrast(this.value)" 
+                    style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                <option value="normal">Normal</option>
+                <option value="alto">Alto Contraste</option>
+                <option value="invertido">Invertido</option>
+            </select>
+        </div>
+
+        <!-- Modo Lector -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">📖 Modo Lector:</label>
+            <select id="readerMode" onchange="changeReaderMode(this.value)" 
+                    style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                <option value="off">Desactivado</option>
+                <option value="simple">Simple</option>
+                <option value="avanzado">Avanzado</option>
+            </select>
+        </div>
+
+        <!-- Tamaño del Cursor -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">🖱️ Tamaño del Cursor:</label>
+            <select id="cursorSize" onchange="changeCursorSize(this.value)" 
+                    style="width: 100%; padding: 8px; border: 2px solid #ddd; border-radius: 8px; font-size: 14px;">
+                <option value="default">Predeterminado</option>
+                <option value="large">Grande</option>
+                <option value="extra-large">Extra Grande</option>
+            </select>
+        </div>
+
+        <!-- Tamaño de Fuente -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: block; font-weight: 600; margin-bottom: 8px; color: #555;">🔤 Tamaño de Fuente:</label>
+            <div style="display: flex; gap: 10px; align-items: center;">
+                <button onclick="changeFontSize('decrease')" 
+                        style="flex: 1; padding: 10px; background: #e74c3c; color: white; border: none; 
+                               border-radius: 8px; cursor: pointer; font-weight: 600;">A-</button>
+                <span id="fontSizeValue" style="font-weight: 600; color: #333;">100%</span>
+                <button onclick="changeFontSize('increase')" 
+                        style="flex: 1; padding: 10px; background: #27ae60; color: white; border: none; 
+                               border-radius: 8px; cursor: pointer; font-weight: 600;">A+</button>
+            </div>
+        </div>
+
+        <!-- Modo Oscuro -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: flex; align-items: center; cursor: pointer; user-select: none;">
+                <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()" 
+                       style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+                <span style="font-weight: 600; color: #555;">🌙 Modo Oscuro</span>
+            </label>
+        </div>
+
+        <!-- Escala de Grises -->
+        <div style="margin-bottom: 20px;">
+            <label style="display: flex; align-items: center; cursor: pointer; user-select: none;">
+                <input type="checkbox" id="grayscaleToggle" onchange="toggleGrayscale()" 
+                       style="width: 20px; height: 20px; margin-right: 10px; cursor: pointer;">
+                <span style="font-weight: 600; color: #555;">⚫ Escala de Grises</span>
+            </label>
+        </div>
+
+        <!-- Botón Restablecer -->
+        <button onclick="resetAccessibility()" 
+                style="width: 100%; padding: 12px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                       color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; 
+                       font-size: 14px; transition: opacity 0.3s;"
+                onmouseover="this.style.opacity='0.9'" 
+                onmouseout="this.style.opacity='1'">
+            🔄 Restablecer Todo
+        </button>
+    </div>
 
     <footer role="contentinfo">
         <div class="footer-content">
@@ -182,42 +269,162 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Funciones de accesibilidad
-        function toggleContrast() {
-            document.body.classList.toggle('high-contrast');
+        let currentFontSize = 100;
+
+        // Toggle panel de accesibilidad
+        function toggleAccessibilityPanel() {
+            const panel = document.getElementById('accessibilityPanel');
+            panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
         }
-        
-        function increaseTextSize() {
-            document.body.classList.remove('text-size-small');
-            document.body.classList.add('text-size-large');
+
+        // Cargar preferencias guardadas
+        function loadPreferences() {
+            const contrast = localStorage.getItem('nivel_contraste') || 'normal';
+            const reader = localStorage.getItem('modo_lector') || 'off';
+            const cursor = localStorage.getItem('cursor_size') || 'default';
+            const fontSize = localStorage.getItem('font_size') || '100';
+            const darkMode = localStorage.getItem('modo_oscuro') === 'true';
+            const grayscale = localStorage.getItem('modoGrises') === 'true';
+
+            document.getElementById('contrastLevel').value = contrast;
+            document.getElementById('readerMode').value = reader;
+            document.getElementById('cursorSize').value = cursor;
+            currentFontSize = parseInt(fontSize);
+            document.getElementById('fontSizeValue').textContent = fontSize + '%';
+            document.getElementById('darkModeToggle').checked = darkMode;
+            document.getElementById('grayscaleToggle').checked = grayscale;
+
+            applyContrast(contrast);
+            applyReaderMode(reader);
+            applyCursorSize(cursor);
+            applyFontSize(currentFontSize);
+            if (darkMode) applyDarkMode();
+            if (grayscale) applyGrayscale();
         }
-        
-        function decreaseTextSize() {
-            document.body.classList.remove('text-size-large');
-            document.body.classList.add('text-size-small');
+
+        // Cambiar contraste
+        function changeContrast(level) {
+            localStorage.setItem('nivel_contraste', level);
+            applyContrast(level);
         }
-        
+
+        function applyContrast(level) {
+            document.body.classList.remove('contraste-normal', 'contraste-alto', 'contraste-invertido');
+            document.body.classList.add('contraste-' + level);
+        }
+
+        // Cambiar modo lector
+        function changeReaderMode(mode) {
+            localStorage.setItem('modo_lector', mode);
+            applyReaderMode(mode);
+        }
+
+        function applyReaderMode(mode) {
+            document.body.classList.remove('lector-simple', 'lector-avanzado');
+            if (mode !== 'off') {
+                document.body.classList.add('lector-' + mode);
+            }
+        }
+
+        // Cambiar tamaño del cursor
+        function changeCursorSize(size) {
+            localStorage.setItem('cursor_size', size);
+            applyCursorSize(size);
+        }
+
+        function applyCursorSize(size) {
+            document.body.classList.remove('cursor-default', 'cursor-large', 'cursor-extra-large');
+            document.body.classList.add('cursor-' + size);
+        }
+
+        // Cambiar tamaño de fuente
+        function changeFontSize(action) {
+            if (action === 'increase' && currentFontSize < 150) {
+                currentFontSize += 10;
+            } else if (action === 'decrease' && currentFontSize > 80) {
+                currentFontSize -= 10;
+            }
+            localStorage.setItem('font_size', currentFontSize.toString());
+            document.getElementById('fontSizeValue').textContent = currentFontSize + '%';
+            applyFontSize(currentFontSize);
+        }
+
+        function applyFontSize(size) {
+            document.body.style.fontSize = size + '%';
+        }
+
+        // Toggle modo oscuro
+        function toggleDarkMode() {
+            const isEnabled = document.getElementById('darkModeToggle').checked;
+            localStorage.setItem('modo_oscuro', isEnabled.toString());
+            if (isEnabled) {
+                applyDarkMode();
+            } else {
+                removeDarkMode();
+            }
+        }
+
+        function applyDarkMode() {
+            document.body.style.backgroundColor = '#1a1a1a';
+            document.body.style.color = '#ffffff';
+        }
+
+        function removeDarkMode() {
+            document.body.style.backgroundColor = '';
+            document.body.style.color = '';
+        }
+
+        // Toggle escala de grises
+        function toggleGrayscale() {
+            const isEnabled = document.getElementById('grayscaleToggle').checked;
+            localStorage.setItem('modoGrises', isEnabled.toString());
+            if (isEnabled) {
+                applyGrayscale();
+            } else {
+                removeGrayscale();
+            }
+        }
+
+        function applyGrayscale() {
+            document.body.style.filter = 'grayscale(100%)';
+        }
+
+        function removeGrayscale() {
+            document.body.style.filter = '';
+        }
+
+        // Restablecer todo
         function resetAccessibility() {
-            document.body.classList.remove('high-contrast', 'text-size-small', 'text-size-large');
+            localStorage.removeItem('nivel_contraste');
+            localStorage.removeItem('modo_lector');
+            localStorage.removeItem('cursor_size');
+            localStorage.removeItem('font_size');
+            localStorage.removeItem('modo_oscuro');
+            localStorage.removeItem('modoGrises');
+            
+            currentFontSize = 100;
+            document.getElementById('contrastLevel').value = 'normal';
+            document.getElementById('readerMode').value = 'off';
+            document.getElementById('cursorSize').value = 'default';
+            document.getElementById('fontSizeValue').textContent = '100%';
+            document.getElementById('darkModeToggle').checked = false;
+            document.getElementById('grayscaleToggle').checked = false;
+
+            document.body.className = '';
+            document.body.style.fontSize = '';
+            document.body.style.backgroundColor = '';
+            document.body.style.color = '';
+            document.body.style.filter = '';
         }
+
+        // Cargar preferencias al iniciar
+        document.addEventListener('DOMContentLoaded', loadPreferences);
         
         // Enfocar el contenido principal después de saltar navegación
         document.querySelector('.skip-link').addEventListener('click', function() {
             setTimeout(() => {
                 document.getElementById('main-content').focus();
             }, 100);
-        });
-        
-        // Mejorar navegación por teclado
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                resetAccessibility();
-            }
-        });
-
-        // Inicializar accesibilidad
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Sistema de accesibilidad cargado');
         });
     </script>
 </body>

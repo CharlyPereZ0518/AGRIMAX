@@ -39,9 +39,6 @@ def inject_usuario_con_cache():
                 u.correo, 
                 u.tipo,
                 COALESCE(p.foto, 'imagenes/default-profile.jpg') as foto,
-                COALESCE(p.cursor_size, 'default') as cursor_size,
-                COALESCE(p.modo_lector, 'off') as modo_lector,
-                COALESCE(p.nivel_contraste, 'normal') as nivel_contraste,
                 p.usuario_id
             FROM usuarios u
             LEFT JOIN perfiles p ON u.id = p.usuario_id
@@ -59,10 +56,11 @@ def inject_usuario_con_cache():
                 'correo': usuario_data[2],
                 'tipo': usuario_data[3],
                 'foto': usuario_data[4],
-                'cursor_size': usuario_data[5],
-                'modo_lector': usuario_data[6],
-                'nivel_contraste': usuario_data[7],
-                'usuario_id': usuario_data[8]
+                'usuario_id': usuario_data[5],
+                # Valores por defecto para accesibilidad (manejados en localStorage)
+                'cursor_size': 'default',
+                'modo_lector': 'off',
+                'nivel_contraste': 'normal'
             }
 
             # Guardar en caché de sesión
