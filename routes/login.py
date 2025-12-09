@@ -37,7 +37,17 @@ def login():
                 conexion.close()
 
                 if usuario and usuario[3] and bcrypt.checkpw(contraseña.encode('utf-8'), usuario[3].encode('utf-8')):
-                    # Generar código de verificación y guardarlo en sesión temporal
+                    # Si es admin, permitir login directo sin verificación
+                    if usuario[2] == 'admin':
+                        user_obj = Usuario(usuario[0], usuario[1], usuario[2])
+                        login_user(user_obj)
+                        session['usuario_id'] = usuario[0]
+                        session['usuario_nombre'] = usuario[1]
+                        session['usuario_tipo'] = usuario[2]
+                        flash("Inicio de sesión exitoso.", "success")
+                        return redirect(url_for('admin_dashboard.admin_dashboard'))
+                    
+                    # Para otros usuarios, generar código de verificación
                     codigo = '{:06d}'.format(random.randint(0, 999999))
                     expires_at = (datetime.utcnow() + timedelta(minutes=5)).timestamp()
                     session['2fa_pending'] = {
