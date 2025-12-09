@@ -26,8 +26,8 @@ def configuracion():
 
         if request.method == 'GET':
             cursor.execute("""
-                SELECT u.id, u.nombre, u.correo, p.foto, p.biografia, p.notificaciones_email, p.notificaciones_sms,
-                       p.cursor_size, p.modo_lector, p.nivel_contraste
+                  SELECT u.id, u.nombre, u.correo, p.foto, p.biografia,
+                      p.cursor_size, p.modo_lector, p.nivel_contraste
                 FROM usuarios u
                 LEFT JOIN perfiles p ON u.id = p.usuario_id
                 WHERE u.id = %s
@@ -40,11 +40,9 @@ def configuracion():
                 'correo': usuario_data[2],
                 'foto': usuario_data[3] if usuario_data[3] else 'imagenes/default-profile.jpg',
                 'biografia': usuario_data[4] if usuario_data[4] else '',
-                'notificaciones_email': usuario_data[5],
-                'notificaciones_sms': usuario_data[6],
-                'cursor_size': usuario_data[7] if usuario_data[7] else 'default',
-                'modo_lector': usuario_data[8] if usuario_data[8] else 'off',
-                'nivel_contraste': usuario_data[9] if usuario_data[9] else 'normal'  # NUEVO
+                'cursor_size': usuario_data[5] if usuario_data[5] else 'default',
+                'modo_lector': usuario_data[6] if usuario_data[6] else 'off',
+                'nivel_contraste': usuario_data[7] if usuario_data[7] else 'normal'
             }
 
             cursor.close()
@@ -64,10 +62,10 @@ def configuracion():
             cursor.execute("SELECT 1 FROM perfiles WHERE usuario_id = %s", (usuario_id,))
             if not cursor.fetchone():
                 cursor.execute("""
-                    INSERT INTO perfiles (usuario_id, foto, biografia, notificaciones_email, notificaciones_sms,
+                    INSERT INTO perfiles (usuario_id, foto, biografia,
                                           cursor_size, modo_lector, nivel_contraste)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-                """, (usuario_id, 'imagenes/default-profile.jpg', '', False, False, 'default', 'off', 'normal'))
+                    VALUES (%s, %s, %s, %s, %s, %s)
+                """, (usuario_id, 'imagenes/default-profile.jpg', '', 'default', 'off', 'normal'))
 
             if seccion == 'perfil':
                 nombre = request.form.get('nombre')
@@ -100,14 +98,8 @@ def configuracion():
                 """, (nombre, apellido, usuario_id))
 
             elif seccion == 'notificaciones':
-                notificaciones_email = 'notificaciones_email' in request.form
-                notificaciones_sms = 'notificaciones_sms' in request.form
-
-                cursor.execute("""
-                    UPDATE perfiles 
-                    SET notificaciones_email = %s, notificaciones_sms = %s 
-                    WHERE usuario_id = %s
-                """, (notificaciones_email, notificaciones_sms, usuario_id))
+                flash("Notificaciones no disponibles aún.", "info")
+                # Sección reservada para configuración futura de notificaciones
 
             elif seccion == 'contrasena':
                 actual = request.form.get('actual')
