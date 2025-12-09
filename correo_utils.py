@@ -20,12 +20,62 @@ def _check_network():
         return False
 
 
+def _enviar_con_sendgrid(destinatario, asunto, html_content):
+    """Envía correo usando SendGrid API"""
+    try:
+        api_key = os.environ.get('SENDGRID_API_KEY')
+        if not api_key:
+            logger.error("SENDGRID_API_KEY no está configurado")
+            return False
+        
+        from_email = os.environ.get('SENDGRID_FROM_EMAIL', 'noreply@agrimax.com')
+        
+        url = "https://api.sendgrid.com/v3/mail/send"
+        headers = {
+            "Authorization": f"Bearer {api_key}",
+            "Content-Type": "application/json"
+        }
+        
+        payload = {
+            "personalizations": [{"to": [{"email": destinatario}]}],
+            "from": {"email": from_email, "name": "AGRIMAX"},
+            "subject": asunto,
+            "content": [{"type": "text/html", "value": html_content}]
+        }
+        
+        response = requests.post(url, json=payload, headers=headers)
+        
+        if response.status_code == 202:
+            logger.info(f"Correo enviado exitosamente a {destinatario} via SendGrid")
+            print(f"✓ Correo enviado a {destinatario} (SendGrid)")
+            return True
+        else:
+            logger.error(f"Error SendGrid: {response.status_code} - {response.text}")
+            print(f"✗ Error SendGrid: {response.text}")
+            return False
+            
+    except Exception as e:
+        logger.error(f"Error al enviar via SendGrid: {str(e)}")
+        print(f"✗ Error SendGrid: {str(e)}")
+        return False
+
+
 def _enviar_con_resend(destinatario, asunto, html_content):
     """Envía correo usando Resend API (alternativa a Gmail)"""
     try:
         api_key = os.environ.get('RESEND_API_KEY')
         if not api_key:
             logger.error("RESEND_API_KEY no está configurado")
+            return False
+        
+        # Email verificado del propietario de Resend
+        resend_owner_email = os.environ.get('RESEND_OWNER_EMAIL', 'caph238@gmail.com')
+        
+        # En modo test de Resend, solo se puede enviar al propietario
+        if destinatario.lower() != resend_owner_email.lower():
+            logger.warning(f"Resend en modo test: no se puede enviar a {destinatario}. Solo se permite enviar a {resend_owner_email}.")
+            logger.info(f"Para enviar a otros destinatarios, verifica un dominio en https://resend.com/domains")
+            print(f"⚠️ Correo a {destinatario} no enviado: Resend requiere verificación de dominio para enviar a otros usuarios")
             return False
         
         url = "https://api.resend.com/emails"
@@ -63,14 +113,23 @@ def enviar_correo(destinatario, asunto, plantilla, datos):
         # Renderizar el HTML
         html_content = render_template(plantilla, datos=datos)
         
-        # Intentar primero con Resend (recomendado para Railway)
-        if os.environ.get('RESEND_API_KEY'):
-            if _enviar_con_resend(destinatario, asunto, html_content):
+        # Prioridad 1: SendGrid (funciona sin verificación de dominio en plan gratuito)
+        if os.environ.get('SENDGRID_API_KEY'):
+            if _enviar_con_sendgrid(destinatario, asunto, html_content):
                 return True
-            else:
-                logger.warning("Resend falló, intentando con Gmail...")
+            logger.warning("SendGrid falló, intentando siguiente opción...")
         
-        # Fallback a Gmail SMTP
+        # Prioridad 2: Resend (requiere verificación de dominio para producción)
+        if os.environ.get('RESEND_API_KEY'):
+            resend_owner_email = os.environ.get('RESEND_OWNER_EMAIL', 'caph238@gmail.com')
+            resultado = _enviar_con_resend(destinatario, asunto, html_content)
+            if resultado:
+                return True
+            
+            if destinatario.lower() != resend_owner_email.lower():
+                logger.warning(f"⚠️ Resend en modo test: solo puede enviar a {resend_owner_email}")
+        
+        # Prioridad 3: Gmail SMTP (funciona localmente, bloqueado en Railway)
         try:
             mensaje = Message(
                 asunto,
@@ -83,9 +142,11 @@ def enviar_correo(destinatario, asunto, plantilla, datos):
             print(f"✓ Correo enviado a {destinatario} (Gmail)")
             return True
         except Exception as smtp_error:
-            logger.error(f"Error Gmail SMTP: {str(smtp_error)}")
-            logger.info("Intenta configurar RESEND_API_KEY en Railway para mejor compatibilidad")
-            # NO hacer raise - solo registrar el error
+            logger.error(f"❌ No se pudo enviar correo a {destinatario}")
+            logger.info(f"💡 Soluciones:")
+            logger.info(f"   • Configura SENDGRID_API_KEY (recomendado): https://sendgrid.com/")
+            logger.info(f"   • O verifica un dominio en Resend: https://resend.com/domains")
+            print(f"❌ Correo NO enviado a {destinatario}")
             return False
             
     except Exception as e:
