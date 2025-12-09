@@ -85,12 +85,14 @@ def enviar_correo(destinatario, asunto, plantilla, datos):
         except Exception as smtp_error:
             logger.error(f"Error Gmail SMTP: {str(smtp_error)}")
             logger.info("Intenta configurar RESEND_API_KEY en Railway para mejor compatibilidad")
-            raise
+            # NO hacer raise - solo registrar el error
+            return False
             
     except Exception as e:
         logger.error(f"Error al enviar correo a {destinatario}: {str(e)}")
         print(f"✗ Error al enviar correo: {str(e)}")
-        raise
+        # NO hacer raise - retornar False
+        return False
 
 
 def enviar_correo_pedido(destinatario, pedido_id, total, productos):
@@ -116,10 +118,12 @@ def enviar_correo_pedido(destinatario, pedido_id, total, productos):
         mail.send(mensaje)
         logger.info(f"Correo de pedido enviado a {destinatario}")
         print(f"✓ Correo de pedido enviado a {destinatario}")
+        return True
     except Exception as e:
         logger.error(f"Error al enviar correo de pedido a {destinatario}: {str(e)}")
         print(f"✗ Error al enviar correo de pedido: {str(e)}")
-        raise
+        # NO hacer raise - solo retornar False
+        return False
 
 
 def enviar_correo_registro(destinatario, nombre, tipo_usuario):
