@@ -25,10 +25,14 @@ app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024
 app.config['MAIL_SERVER'] = os.environ.get('MAIL_SERVER', 'smtp.gmail.com')
 app.config['MAIL_PORT'] = int(os.environ.get('MAIL_PORT', 587))
 app.config['MAIL_USE_TLS'] = os.environ.get('MAIL_USE_TLS', 'True').lower() == 'true'
+app.config['MAIL_USE_SSL'] = os.environ.get('MAIL_USE_SSL', 'False').lower() == 'true'
 app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME', 'agrimaaxx@gmail.com')
 app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD', 'ojho ayqo kqzd mbaf')
 app.config['MAIL_DEBUG'] = os.environ.get('MAIL_DEBUG', '0').lower() == '1'
 app.config['MAIL_SUPPRESS_SEND'] = False
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('MAIL_USERNAME', 'agrimaaxx@gmail.com')
+app.config['MAIL_MAX_EMAILS'] = 50
+app.config['MAIL_ANNOUNCE_ONLY_FAILURES'] = False
 
 
 mail.init_app(app)
@@ -39,7 +43,9 @@ logger.info(f"Configuración de correo inicializada:")
 logger.info(f"  MAIL_SERVER: {app.config['MAIL_SERVER']}")
 logger.info(f"  MAIL_PORT: {app.config['MAIL_PORT']}")
 logger.info(f"  MAIL_USE_TLS: {app.config['MAIL_USE_TLS']}")
+logger.info(f"  MAIL_USE_SSL: {app.config['MAIL_USE_SSL']}")
 logger.info(f"  MAIL_USERNAME: {app.config['MAIL_USERNAME']}")
+logger.info(f"  MAIL_DEBUG: {app.config['MAIL_DEBUG']}")
 
 @login_manager.user_loader
 def load_user(user_id):
