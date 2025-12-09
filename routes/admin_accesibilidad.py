@@ -7,7 +7,7 @@ admin_accesibilidad = Blueprint('admin_accesibilidad', __name__)
 @admin_accesibilidad.route('/admin/accesibilidad')
 @login_required
 def gestion_accesibilidad():
-    if session.get('tipo_usuario') != 'admin':
+    if session.get('usuario_tipo') != 'admin':
         flash("Acceso denegado", "error")
         return redirect(url_for('inicio.inicio'))
     

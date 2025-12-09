@@ -7,7 +7,7 @@ admin_reportes_bp = Blueprint('admin_reportes', __name__)
 @admin_reportes_bp.route('/admin/reportes')
 @login_required
 def admin_reportes():
-    if session.get('tipo_usuario') != 'admin':
+    if session.get('usuario_tipo') != 'admin':
         flash("Acceso denegado", "error")
         return redirect(url_for('menu_principal'))
 
