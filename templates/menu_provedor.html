@@ -129,10 +129,18 @@
                 </div>
             </div>
 
-            <!-- Accessibility bubble and panel -->
-            <div id="accBubble" title="Accesibilidad" style="position:fixed;right:18px;bottom:158px;z-index:14009;width:56px;height:56px;border-radius:50%;background:#0056b3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer"><i class="fas fa-universal-access" aria-hidden="true"></i></div>
+            <iframe id="chatIframe"
+                            src="{{ url_for('chat.chat_page', role='proveedor') }}"
+                            title="Chat Agrimax - Proveedor"
+                            aria-label="Chat Agrimax - Proveedor"
+                            style="border:0;width:100%;height:100%;"></iframe>
+        </div>
+    </div>
 
-            <div id="accPanel" class="accModal" aria-hidden="true">
+    <!-- Accessibility bubble and panel (OUTSIDE chatModal) -->
+    <div id="accBubble" title="Accesibilidad" style="position:fixed;right:18px;bottom:158px;z-index:14009;width:56px;height:56px;border-radius:50%;background:#0056b3;color:#fff;display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 6px 18px rgba(0,0,0,.25);cursor:pointer"><i class="fas fa-universal-access" aria-hidden="true"></i></div>
+
+    <div id="accPanel" class="accModal" aria-hidden="true">
                 <div class="panel">
                     <header>
                         <span>Accesibilidad</span>
@@ -182,13 +190,6 @@
                     </div>
                 </div>
             </div>
-            <iframe id="chatIframe"
-                            src="{{ url_for('chat.chat_page', role='proveedor') }}"
-                            title="Chat Agrimax - Proveedor"
-                            aria-label="Chat Agrimax - Proveedor"
-                            style="border:0;width:100%;height:100%;"></iframe>
-        </div>
-    </div>
 
     <script>
         function toggleMenu() {
