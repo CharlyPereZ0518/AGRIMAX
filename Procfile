@@ -1,2 +1,2 @@
-web: gunicorn app:app --bind 0.0.0.0:${PORT:-8080}
+web: python run_gunicorn.py
 release: python crear_admin.py
