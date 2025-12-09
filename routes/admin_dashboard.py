@@ -6,9 +6,8 @@ admin_dashboard_bp = Blueprint('admin_dashboard', __name__)
 
 @admin_dashboard_bp.route('/admin/dashboard')
 @login_required
-
 def admin_dashboard():
-    if session.get('tipo_usuario') != 'admin':
+    if session.get('usuario_tipo') != 'admin':
         flash("Acceso denegado", "error")
         return redirect(url_for('inicio.inicio'))
     
