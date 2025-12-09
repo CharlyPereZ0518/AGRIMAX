@@ -26,8 +26,7 @@ def configuracion():
 
         if request.method == 'GET':
             cursor.execute("""
-                  SELECT u.id, u.nombre, u.correo, p.foto, p.biografia,
-                      p.cursor_size, p.modo_lector, p.nivel_contraste
+                SELECT u.id, u.nombre, u.correo, p.foto, p.biografia
                 FROM usuarios u
                 LEFT JOIN perfiles p ON u.id = p.usuario_id
                 WHERE u.id = %s
@@ -39,10 +38,7 @@ def configuracion():
                 'nombre': usuario_data[1],
                 'correo': usuario_data[2],
                 'foto': usuario_data[3] if usuario_data[3] else 'imagenes/default-profile.jpg',
-                'biografia': usuario_data[4] if usuario_data[4] else '',
-                'cursor_size': usuario_data[5] if usuario_data[5] else 'default',
-                'modo_lector': usuario_data[6] if usuario_data[6] else 'off',
-                'nivel_contraste': usuario_data[7] if usuario_data[7] else 'normal'
+                'biografia': usuario_data[4] if usuario_data[4] else ''
             }
 
             cursor.close()
@@ -62,10 +58,9 @@ def configuracion():
             cursor.execute("SELECT 1 FROM perfiles WHERE usuario_id = %s", (usuario_id,))
             if not cursor.fetchone():
                 cursor.execute("""
-                    INSERT INTO perfiles (usuario_id, foto, biografia,
-                                          cursor_size, modo_lector, nivel_contraste)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                """, (usuario_id, 'imagenes/default-profile.jpg', '', 'default', 'off', 'normal'))
+                    INSERT INTO perfiles (usuario_id, foto, biografia)
+                    VALUES (%s, %s, %s)
+                """, (usuario_id, 'imagenes/default-profile.jpg', ''))
 
             if seccion == 'perfil':
                 nombre = request.form.get('nombre')
@@ -136,22 +131,7 @@ def configuracion():
                         cursor.execute("UPDATE usuarios SET correo = %s WHERE id = %s", (nuevo_correo, usuario_id))
                         flash("Correo actualizado correctamente.", "success")
 
-            elif seccion == 'accesibilidad':
-                cursor_size = request.form.get('cursor_size', 'default')
-                modo_lector = request.form.get('modo_lector', 'off')
-                nivel_contraste = request.form.get('nivel_contraste', 'normal')  # NUEVO
-                
-                cursor.execute("""
-                    UPDATE perfiles
-                    SET cursor_size = %s, modo_lector = %s, nivel_contraste = %s
-                    WHERE usuario_id = %s
-                """, (cursor_size, modo_lector, nivel_contraste, usuario_id))
-                
-                # Limpiar caché del usuario si se usa la versión con caché
-                from context_processors import limpiar_cache_usuario
-                limpiar_cache_usuario()
-                
-                flash("Preferencias de accesibilidad guardadas correctamente.", "success")
+            # La configuración de accesibilidad se gestiona en el cliente usando localStorage; no se guarda en la base de datos.
 
             conexion.commit()
             cursor.close()

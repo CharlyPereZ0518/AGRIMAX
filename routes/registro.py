@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request, redirect, url_for, flash,
 from bd import conectar_bd
 import bcrypt
 from correo_utils import enviar_correo_registro
+from psycopg2 import IntegrityError
 import re
 
 registro_bp = Blueprint("registro",__name__)
@@ -37,13 +38,29 @@ def registro():
             if conexion:
                 cursor = conexion.cursor()
 
-                
-                cursor.execute("""
-                    INSERT INTO usuarios (nombre, correo, contraseña, tipo, edad, fecha_nacimiento, telefono)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id
-                """, (nombre, correo, hashed_password.decode('utf-8'), tipo, edad, fecha_nacimiento, telefono))
+                # Verificar que el correo no exista ya (evitar duplicate key)
+                cursor.execute("SELECT id FROM usuarios WHERE correo = %s", (correo,))
+                if cursor.fetchone():
+                    flash("El correo ya está registrado. Usa otro correo o inicia sesión.", "error")
+                    cursor.close()
+                    conexion.close()
+                    return render_template('registro.html')
 
-                usuario_id = cursor.fetchone()[0]
+                try:
+                    cursor.execute("""
+                        INSERT INTO usuarios (nombre, correo, contraseña, tipo, edad, fecha_nacimiento, telefono)
+                        VALUES (%s, %s, %s, %s, %s, %s, %s) RETURNING id
+                    """, (nombre, correo, hashed_password.decode('utf-8'), tipo, edad, fecha_nacimiento, telefono))
+
+                    usuario_id = cursor.fetchone()[0]
+                except IntegrityError:
+                    # Manejar duplicado (condición de carrera u otro intento paralelo)
+                    conexion.rollback()
+                    cursor.close()
+                    conexion.close()
+                    print(f"Registro interrumpido: correo ya existe ({correo})")
+                    flash("El correo ya está registrado. Si olvidaste tu contraseña, recupérala.", "error")
+                    return render_template('registro.html')
 
                 
                 cursor.execute("""
