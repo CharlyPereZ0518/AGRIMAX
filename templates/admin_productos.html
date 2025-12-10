@@ -27,6 +27,82 @@
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
     }
+
+    /* Responsividad para móviles */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            text-align: center;
+        }
+
+        /* Hacer tabla scrollable horizontalmente */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            font-size: 0.85em;
+            min-width: 800px;
+        }
+
+        table th,
+        table td {
+            padding: 8px 6px;
+            white-space: nowrap;
+        }
+
+        /* Ajustar imágenes */
+        table img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+
+        /* Ajustar botones */
+        .action-btn {
+            width: 80px;
+            font-size: 0.8em;
+            padding: 5px 8px;
+        }
+
+        /* Navbar responsive */
+        .navbar-brand {
+            font-size: 1em;
+        }
+
+        .custom-flash {
+            right: 10px;
+            top: 10px;
+            padding: 10px 15px;
+            font-size: 0.9em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.3em;
+        }
+
+        table {
+            font-size: 0.75em;
+            min-width: 700px;
+        }
+
+        table th,
+        table td {
+            padding: 6px 4px;
+        }
+
+        .action-btn {
+            width: 70px;
+            font-size: 0.75em;
+            padding: 4px 6px;
+        }
+    }
 </style>
 </head>
 <style>
@@ -60,6 +136,7 @@
     {% if productos %}
     {% set proveedor_actual = None %}
 
+    <div class="table-responsive">
     <table class="table table-striped">
         <thead>
             <tr>
@@ -104,6 +181,7 @@
             {% endfor %}
         </tbody>
     </table>
+    </div>
     {% else %}
         <p>No hay productos disponibles.</p>
     {% endif %}

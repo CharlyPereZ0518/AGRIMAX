@@ -30,6 +30,45 @@ def count_notificaciones():
         print(f"Error al contar notificaciones: {e}")
         return jsonify({'count': 0})
 
+@notificaciones_bp.route('/api/notificaciones/list')
+@login_required
+def list_notificaciones():
+    """API endpoint para obtener lista de notificaciones recientes"""
+    proveedor_id = session.get('usuario_id')
+    
+    try:
+        conexion = conectar_bd()
+        if not conexion:
+            return jsonify({'notificaciones': []})
+
+        cursor = conexion.cursor()
+        cursor.execute("""
+            SELECT id, mensaje, leido, fecha
+            FROM notificaciones 
+            WHERE proveedor_id = %s 
+            ORDER BY fecha DESC 
+            LIMIT 10
+        """, (proveedor_id,))
+        
+        notificaciones = cursor.fetchall()
+        cursor.close()
+        conexion.close()
+        
+        # Formatear datos
+        notificaciones_list = []
+        for notif in notificaciones:
+            notificaciones_list.append({
+                'id': notif[0],
+                'mensaje': notif[1],
+                'leido': notif[2],
+                'fecha': notif[3].isoformat() if notif[3] else None
+            })
+        
+        return jsonify({'notificaciones': notificaciones_list})
+    except Exception as e:
+        print(f"Error al listar notificaciones: {e}")
+        return jsonify({'notificaciones': []})
+
 @notificaciones_bp.route('/notificaciones')
 @login_required
 def notificaciones():

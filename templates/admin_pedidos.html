@@ -30,6 +30,78 @@
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
     }
+
+    /* Responsividad para móviles */
+    @media (max-width: 768px) {
+        .container {
+            padding: 10px;
+            max-width: 100%;
+        }
+
+        h1 {
+            font-size: 1.5em;
+        }
+
+        p {
+            font-size: 0.9em;
+        }
+
+        /* Hacer tabla scrollable horizontalmente */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        table {
+            font-size: 0.85em;
+            min-width: 700px;
+        }
+
+        table th,
+        table td {
+            padding: 8px 6px;
+            white-space: nowrap;
+        }
+
+        /* Ajustar botones */
+        .btn {
+            font-size: 0.8em;
+            padding: 5px 10px;
+        }
+
+        /* Navbar responsive */
+        .navbar-brand {
+            font-size: 1em;
+        }
+
+        .custom-flash {
+            right: 10px;
+            top: 10px;
+            padding: 10px 15px;
+            font-size: 0.9em;
+        }
+    }
+
+    @media (max-width: 480px) {
+        h1 {
+            font-size: 1.3em;
+        }
+
+        table {
+            font-size: 0.75em;
+            min-width: 650px;
+        }
+
+        table th,
+        table td {
+            padding: 6px 4px;
+        }
+
+        .btn {
+            font-size: 0.75em;
+            padding: 4px 8px;
+        }
+    }
 </style>
 </head>
 <body>
@@ -57,6 +129,7 @@
         <h1 class="text-center">Pedidos de Clientes</h1>
         <p class="text-center">Aquí puedes ver el historial de compras realizadas.</p>
 
+        <div class="table-responsive">
         <table class="table table-bordered table-striped mt-3">
             <thead class="table-dark">
                 <tr>
@@ -91,7 +164,9 @@
                 {% endfor %}
             </tbody>
         </table>
+        </div>
     </div>
+
     <footer>
         <div class="footer-content">
             <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>

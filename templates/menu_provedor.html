@@ -41,7 +41,8 @@
                 border-radius: 50%;
                 background: rgba(255, 255, 255, 0.1);
                 color: white;
-                text-decoration: none;
+                border: none;
+                cursor: pointer;
                 transition: all 0.3s ease;
             }
 
@@ -52,6 +53,114 @@
 
             .notification-btn i {
                 font-size: 20px;
+            }
+
+            .notification-container {
+                position: relative;
+            }
+
+            /* Dropdown de notificaciones */
+            .notification-dropdown {
+                position: absolute;
+                top: 50px;
+                right: 0;
+                width: 350px;
+                max-height: 400px;
+                background: white;
+                border-radius: 8px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                z-index: 1000;
+                overflow: hidden;
+            }
+
+            .notification-header {
+                background: #8b4c12;
+                color: white;
+                padding: 12px 15px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .notification-header h4 {
+                margin: 0;
+                font-size: 16px;
+            }
+
+            .close-notifications {
+                background: transparent;
+                border: none;
+                color: white;
+                font-size: 24px;
+                cursor: pointer;
+                padding: 0;
+                width: 30px;
+                height: 30px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .close-notifications:hover {
+                background: rgba(255, 255, 255, 0.1);
+                border-radius: 50%;
+            }
+
+            .notification-list {
+                max-height: 300px;
+                overflow-y: auto;
+                padding: 10px;
+            }
+
+            .notification-item {
+                padding: 12px;
+                border-bottom: 1px solid #eee;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+
+            .notification-item:hover {
+                background: #f8f9fa;
+            }
+
+            .notification-item.unread {
+                background: #e3f2fd;
+            }
+
+            .notification-item p {
+                margin: 0 0 5px 0;
+                color: #333;
+                font-size: 14px;
+            }
+
+            .notification-item small {
+                color: #666;
+                font-size: 12px;
+            }
+
+            .notification-footer {
+                background: #f8f9fa;
+                padding: 10px;
+                text-align: center;
+                border-top: 1px solid #dee2e6;
+            }
+
+            .ver-todas {
+                color: #8b4c12;
+                text-decoration: none;
+                font-weight: 600;
+                font-size: 14px;
+            }
+
+            .ver-todas:hover {
+                text-decoration: underline;
+            }
+
+            .notification-list .loading,
+            .notification-list .empty {
+                text-align: center;
+                color: #666;
+                padding: 20px;
             }
 
             .notification-badge {
@@ -74,6 +183,22 @@
             @keyframes pulse {
                 0%, 100% { transform: scale(1); }
                 50% { transform: scale(1.1); }
+            }
+
+            /* Responsividad para notificaciones en móviles */
+            @media (max-width: 480px) {
+                .notification-dropdown {
+                    width: calc(100vw - 20px);
+                    right: -60px;
+                }
+
+                .notification-list {
+                    max-height: 250px;
+                }
+
+                .notification-item p {
+                    font-size: 13px;
+                }
             }
 
             /* Floating chat bubble */
@@ -132,10 +257,26 @@
     <header class="header">
         <div class="logo" onclick="location.href='{{ url_for('menu_provedor.menu') }}'">AGRIMAX</div>
         <div class="header-right">
-            <a href="{{ url_for('notificaciones.notificaciones') }}" class="notification-btn" id="notificationBtn">
-                <i class="fas fa-bell"></i>
-                <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
-            </a>
+            <div class="notification-container">
+                <button class="notification-btn" id="notificationBtn" onclick="toggleNotifications()">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
+                </button>
+                
+                <!-- Dropdown de notificaciones -->
+                <div class="notification-dropdown" id="notificationDropdown" style="display: none;">
+                    <div class="notification-header">
+                        <h4>Notificaciones</h4>
+                        <button onclick="toggleNotifications()" class="close-notifications">×</button>
+                    </div>
+                    <div class="notification-list" id="notificationList">
+                        <p class="loading">Cargando...</p>
+                    </div>
+                    <div class="notification-footer">
+                        <a href="{{ url_for('notificaciones.notificaciones') }}" class="ver-todas">Ver todas</a>
+                    </div>
+                </div>
+            </div>
         </div>
         <button id="menuBtn" class="menu-btn">☰</button>
         
@@ -408,38 +549,104 @@
             };
         })();
 
-        // Cargar notificaciones no leídas
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('🔔 Intentando cargar notificaciones...');
-            const badge = document.getElementById('notificationBadge');
-            console.log('Badge element:', badge);
+        // Sistema de notificaciones
+        let notificationsOpen = false;
+
+        function toggleNotifications() {
+            const dropdown = document.getElementById('notificationDropdown');
+            notificationsOpen = !notificationsOpen;
             
-            fetch('/api/notificaciones/count')
-                .then(response => {
-                    console.log('📡 Response status:', response.status);
-                    if (!response.ok) throw new Error('Network response was not ok');
-                    return response.json();
-                })
+            if (notificationsOpen) {
+                dropdown.style.display = 'block';
+                cargarNotificaciones();
+            } else {
+                dropdown.style.display = 'none';
+            }
+        }
+
+        // Cerrar dropdown al hacer clic fuera
+        document.addEventListener('click', function(event) {
+            const container = document.querySelector('.notification-container');
+            if (container && !container.contains(event.target)) {
+                const dropdown = document.getElementById('notificationDropdown');
+                if (dropdown) {
+                    dropdown.style.display = 'none';
+                    notificationsOpen = false;
+                }
+            }
+        });
+
+        function cargarNotificaciones() {
+            const lista = document.getElementById('notificationList');
+            lista.innerHTML = '<p class="loading">Cargando...</p>';
+            
+            fetch('/api/notificaciones/list')
+                .then(response => response.json())
                 .then(data => {
-                    console.log('✅ Notificaciones recibidas:', data);
-                    console.log('Count:', data.count, 'Type:', typeof data.count);
-                    
-                    if (badge) {
-                        console.log('Badge encontrado, actualizando...');
-                        if (data.count > 0) {
-                            badge.textContent = data.count > 99 ? '99+' : data.count;
-                            badge.style.display = 'flex';
-                            console.log('✅ Badge actualizado con', data.count, 'notificaciones');
-                        } else {
-                            console.log('ℹ️ No hay notificaciones (count = 0)');
-                        }
+                    if (data.notificaciones && data.notificaciones.length > 0) {
+                        lista.innerHTML = '';
+                        data.notificaciones.forEach(notif => {
+                            const item = document.createElement('div');
+                            item.className = 'notification-item' + (notif.leido ? '' : ' unread');
+                            item.innerHTML = `
+                                <p>${notif.mensaje}</p>
+                                <small>${formatearFecha(notif.fecha)}</small>
+                            `;
+                            item.onclick = () => marcarComoLeida(notif.id);
+                            lista.appendChild(item);
+                        });
                     } else {
-                        console.error('❌ Badge element no encontrado!');
+                        lista.innerHTML = '<p class="empty">No tienes notificaciones</p>';
                     }
                 })
                 .catch(error => {
-                    console.error('❌ Error al cargar notificaciones:', error);
+                    console.error('Error al cargar notificaciones:', error);
+                    lista.innerHTML = '<p class="empty">Error al cargar notificaciones</p>';
                 });
+        }
+
+        function marcarComoLeida(notifId) {
+            fetch(`/notificaciones/marcar_leido/${notifId}`, { method: 'POST' })
+                .then(() => {
+                    cargarNotificaciones();
+                    actualizarContador();
+                });
+        }
+
+        function formatearFecha(fecha) {
+            const date = new Date(fecha);
+            const ahora = new Date();
+            const diff = Math.floor((ahora - date) / 1000); // segundos
+            
+            if (diff < 60) return 'Hace un momento';
+            if (diff < 3600) return `Hace ${Math.floor(diff / 60)} minutos`;
+            if (diff < 86400) return `Hace ${Math.floor(diff / 3600)} horas`;
+            return `Hace ${Math.floor(diff / 86400)} días`;
+        }
+
+        function actualizarContador() {
+            fetch('/api/notificaciones/count')
+                .then(response => response.json())
+                .then(data => {
+                    const badge = document.getElementById('notificationBadge');
+                    if (badge) {
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.style.display = 'flex';
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    }
+                });
+        }
+
+        // Cargar notificaciones no leídas al inicio
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔔 Inicializando sistema de notificaciones...');
+            actualizarContador();
+            
+            // Actualizar cada 30 segundos
+            setInterval(actualizarContador, 30000);
         });
     </script>
     <footer>
