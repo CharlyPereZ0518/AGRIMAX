@@ -580,9 +580,111 @@ body.modo-oscuro i {
 @media (max-width: 768px) {
     .config-container {
         flex-direction: column;
+        margin: 10px;
+        padding: 0;
     }
 
     .config-sidebar {
         width: 100%;
+        border-right: none;
+        border-bottom: 2px solid #e0e0e0;
+        padding: 10px 0;
+    }
+
+    .config-menu {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 5px;
+    }
+
+    .config-menu li {
+        padding: 10px 15px;
+        font-size: 0.9em;
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        flex: 1;
+        min-width: 120px;
+        text-align: center;
+    }
+
+    .config-menu li.active {
+        border-left: none;
+        border-bottom: 3px solid #8b4c12;
+    }
+
+    .config-content {
+        padding: 15px;
+    }
+
+    .section-title {
+        font-size: 1.5em;
+    }
+
+    .card {
+        padding: 15px;
+    }
+
+    .form-row {
+        flex-direction: column;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn {
+        width: 100%;
+    }
+}
+
+/* Responsivo para pantallas muy pequeñas */
+@media (max-width: 480px) {
+    .config-container {
+        margin: 5px;
+    }
+
+    .config-menu {
+        flex-direction: column;
+    }
+
+    .config-menu li {
+        width: 100%;
+        min-width: auto;
+        padding: 12px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .section-title {
+        font-size: 1.3em;
+        text-align: center;
+    }
+
+    .card-title {
+        font-size: 1.1em;
+    }
+
+    .form-control, .form-label {
+        font-size: 0.95em;
+    }
+
+    .btn {
+        padding: 12px;
+        font-size: 0.95em;
+    }
+
+    /* Mejorar sidebar en móvil */
+    .sidebar {
+        width: 250px;
+    }
+
+    .sidebar-menu li a {
+        padding: 12px 20px;
+        font-size: 0.9em;
     }
 }

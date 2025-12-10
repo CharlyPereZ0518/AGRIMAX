@@ -17,30 +17,74 @@ body {
 /* Css formulario */
 .form-container {
     background: rgba(139, 76, 18, 0.9);
-    padding: 20px;
+    padding: 30px;
     border-radius: 15px;
     width: 50%;
+    max-width: 800px;
     margin: 50px auto;
     text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.form-container h1 {
+    margin-bottom: 25px;
+    font-size: 2em;
+    color: #f1942b;
+}
+
+.form-container h2 {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    font-size: 1.3em;
+    color: #f1942b;
+    border-bottom: 2px solid #f1942b;
+    padding-bottom: 10px;
+}
+
+.form-container label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    font-weight: 600;
+    font-size: 0.95em;
 }
 
 .form-container input,
 .form-container select,
 .form-container textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin: 10px 0;
-    border-radius: 5px;
-    border: none;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    background: white;
+    color: #333;
+}
+
+.form-container textarea {
+    min-height: 100px;
+    resize: vertical;
 }
 
 .form-container button {
     background: #f1942b;
-    padding: 10px;
+    padding: 14px 30px;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
     font-weight: bold;
+    font-size: 16px;
+    color: white;
+    margin-top: 20px;
+    width: 100%;
+    max-width: 300px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.form-container button:hover {
+    background: #d17a1f;
+    transform: scale(1.02);
 }
 
 /* Burbuja de Accesibilidad */
@@ -176,4 +220,122 @@ body {
 
 .reset-btn:hover {
     background: #c0392b !important;
+}
+
+/* ==================== RESPONSIVIDAD MÓVIL ==================== */
+
+/* Tablets y pantallas medianas */
+@media (max-width: 768px) {
+    .form-container {
+        width: 85%;
+        margin: 30px auto;
+        padding: 25px;
+    }
+
+    .form-container h1 {
+        font-size: 1.7em;
+    }
+
+    .form-container h2 {
+        font-size: 1.2em;
+        margin-top: 20px;
+    }
+
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+        padding: 10px;
+        font-size: 14px;
+    }
+
+    .form-container button {
+        padding: 12px 25px;
+        font-size: 15px;
+    }
+}
+
+/* Móviles */
+@media (max-width: 480px) {
+    body {
+        background-attachment: scroll;
+    }
+
+    .form-container {
+        width: 95%;
+        margin: 20px auto;
+        padding: 20px;
+        border-radius: 10px;
+    }
+
+    .form-container h1 {
+        font-size: 1.5em;
+        margin-bottom: 20px;
+    }
+
+    .form-container h2 {
+        font-size: 1.1em;
+        margin-top: 15px;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+    }
+
+    .form-container label {
+        font-size: 0.9em;
+        margin-bottom: 4px;
+    }
+
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+        padding: 10px;
+        margin: 8px 0;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+
+    .form-container textarea {
+        min-height: 80px;
+    }
+
+    .form-container button {
+        padding: 12px 20px;
+        font-size: 14px;
+        width: 100%;
+        max-width: 100%;
+        margin-top: 15px;
+    }
+
+    /* Ajustar inputs de fecha y archivo en móvil */
+    input[type="date"],
+    input[type="file"] {
+        font-size: 13px;
+    }
+}
+
+/* Pantallas muy pequeñas */
+@media (max-width: 360px) {
+    .form-container {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .form-container h1 {
+        font-size: 1.3em;
+    }
+
+    .form-container h2 {
+        font-size: 1em;
+    }
+
+    .form-container input,
+    .form-container select,
+    .form-container textarea {
+        padding: 8px;
+        font-size: 13px;
+    }
+
+    .form-container button {
+        padding: 10px 15px;
+        font-size: 13px;
+    }
 }

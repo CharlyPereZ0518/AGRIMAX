@@ -28,6 +28,13 @@
             text-align: center;
         }
 
+        h1 {
+            color: #2c5f2d;
+            margin-bottom: 20px;
+            font-size: 2em;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
         /* Contenedor del carrito */
         .cart-container {
             display: flex;
@@ -53,6 +60,13 @@
 
         .item-info {
             flex: 1;
+            text-align: left;
+        }
+
+        .subtotal {
+            margin-top: 10px;
+            font-size: 1.1em;
+            color: #2c5f2d;
         }
 
         .total-price {
@@ -60,6 +74,7 @@
             font-size: 1.5em;
             margin-top: 20px;
             font-weight: bold;
+            color: #2c5f2d;
         }
 
         /* Elementos individuales del carrito */
@@ -197,18 +212,106 @@
 
         /* Ajuste para pantallas pequeñas */
         @media (max-width: 600px) {
+            /* Ajustar el contenedor principal */
+            main {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 1.5em;
+                margin-bottom: 15px;
+            }
+
+            /* Ajustar items del carrito */
+            .cart-container {
+                gap: 15px;
+                margin: 10px 0;
+            }
+
+            .cart-item {
+                flex-direction: column;
+                text-align: center;
+                padding: 10px;
+            }
+
+            .cart-item img {
+                width: 100%;
+                max-width: 200px;
+                height: auto;
+                margin: 0 auto;
+            }
+
+            .item-info {
+                width: 100%;
+            }
+
+            .item-info h3 {
+                font-size: 1.1em;
+                margin-bottom: 8px;
+            }
+
+            .item-info p {
+                font-size: 0.9em;
+                margin: 5px 0;
+            }
+
+            /* Ajustar input de cantidad */
+            .cantidad-input {
+                width: 80px;
+                padding: 8px;
+                font-size: 16px;
+                margin: 10px auto;
+            }
+
+            /* Ajustar precio total */
+            .total-price {
+                font-size: 1.3em;
+                margin-top: 15px;
+                padding: 15px;
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 8px;
+            }
+
+            /* Ajustar botones */
             .button-group {
-                flex-wrap: wrap;
-                justify-content: center;
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 20px;
             }
 
             .btn-cancelar, .btn-comprar {
-                width: 48%;
+                width: 100%;
+                max-width: 300px;
+                margin: 0 auto;
                 padding: 14px;
+                font-size: 16px;
             }
 
             .btn-eliminar {
                 width: 100%;
+            }
+
+            /* Ajustar mensaje de carrito vacío */
+            .empty-cart {
+                font-size: 1.1em;
+                padding: 20px;
+            }
+        }
+
+        /* Ajuste para pantallas muy pequeñas */
+        @media (max-width: 400px) {
+            .cart-item img {
+                max-width: 150px;
+            }
+
+            .cantidad-input {
+                width: 70px;
+                padding: 6px;
+            }
+
+            .btn-cancelar, .btn-comprar {
+                padding: 12px;
+                font-size: 14px;
             }
         }
 

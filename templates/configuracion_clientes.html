@@ -75,9 +75,6 @@
                 <li data-section="notificaciones">
                     <i class="fas fa-bell"></i> Notificaciones
                 </li>
-                <li data-section="accesibilidad">
-                    <i class="fas fa-universal-access"></i> Accesibilidad
-                </li>
             </ul>
         </div>
 
@@ -202,93 +199,6 @@
                     </div>
                 </form>
             </div>
-
-<div class="config-section" id="accesibilidad">
-    <h2 class="section-title">Accesibilidad</h2>
-    <form method="POST" action="{{ url_for('configuracion.configuracion') }}">
-        <input type="hidden" name="seccion" value="accesibilidad">
-        <div class="card">
-            <h3 class="card-title">Preferencias de Accesibilidad</h3>
-
-            <!-- Nivel de Contraste -->
-            <div class="form-group">
-                <label for="nivel-contraste" class="form-label">Nivel de contraste:</label>
-                <select name="nivel_contraste" id="nivel-contraste" class="form-control">
-                    <option value="normal" {% if usuario.nivel_contraste == 'normal' %}selected{% endif %}>Normal</option>
-                    <option value="alto" {% if usuario.nivel_contraste == 'alto' %}selected{% endif %}>Alto contraste</option>
-                    <option value="muy-alto" {% if usuario.nivel_contraste == 'muy-alto' %}selected{% endif %}>Muy alto contraste (Blanco y negro)</option>
-                </select>
-            </div>
-
-            <!-- Tamaño del cursor -->
-            <div class="form-group">
-                <label for="cursor-size" class="form-label">Tamaño del cursor:</label>
-                <select name="cursor_size" id="cursor-size" class="form-control">
-                    <option value="default" {% if usuario.cursor_size == 'default' or not usuario.cursor_size %}selected{% endif %}>Normal</option>
-                    <option value="large" {% if usuario.cursor_size == 'large' %}selected{% endif %}>Grande</option>
-                </select>
-            </div>
-
-            <!-- Modo lector -->
-            <div class="form-group">
-                <label for="modo-lector" class="form-label">Modo lector de pantalla:</label>
-                <select name="modo_lector" id="modo-lector" class="form-control">
-                    <option value="off" {% if usuario.modo_lector == 'off' or not usuario.modo_lector %}selected{% endif %}>Desactivado</option>
-                    <option value="on" {% if usuario.modo_lector == 'on' %}selected{% endif %}>Activado</option>
-                </select>
-            </div>
-
-            <!-- Tipo de letra -->
-            <div class="form-group">
-                <label for="font-select" class="form-label">Tipo de letra:</label>
-                <select name="font_family" id="font-select" class="form-control">
-                    <option value="Arial, sans-serif" {% if usuario.font_family == 'Arial, sans-serif' %}selected{% endif %}>Arial</option>
-                    <option value="'Helvetica Neue', Helvetica, sans-serif" {% if usuario.font_family == "'Helvetica Neue', Helvetica, sans-serif" %}selected{% endif %}>Helvetica Neue</option>
-                    <option value="Verdana, sans-serif" {% if usuario.font_family == 'Verdana, sans-serif' %}selected{% endif %}>Verdana</option>
-                    <option value="Tahoma, sans-serif" {% if usuario.font_family == 'Tahoma, sans-serif' %}selected{% endif %}>Tahoma</option>
-                    <option value="'Times New Roman', Times, serif" {% if usuario.font_family == "'Times New Roman', Times, serif" %}selected{% endif %}>Times New Roman</option>
-                    <option value="Georgia, serif" {% if usuario.font_family == 'Georgia, serif' %}selected{% endif %}>Georgia</option>
-                    <option value="'Trebuchet MS', sans-serif" {% if usuario.font_family == "'Trebuchet MS', sans-serif" %}selected{% endif %}>Trebuchet MS</option>
-                    <option value="'Open Sans', sans-serif" {% if usuario.font_family == "'Open Sans', sans-serif" %}selected{% endif %}>Open Sans</option>
-                    <option value="'Roboto', sans-serif" {% if usuario.font_family == "'Roboto', sans-serif" %}selected{% endif %}>Roboto</option>
-                    <option value="'Courier New', Courier, monospace" {% if usuario.font_family == "'Courier New', Courier, monospace" %}selected{% endif %}>Courier New</option>
-                </select>
-            </div>
-
-            <!-- Tamaño de letra -->
-            <div class="form-group">
-                <label for="font-size" class="form-label">Tamaño de letra:</label>
-                <select name="font_size" id="font-size" class="form-control">
-                    <option value="normal" {% if usuario.font_size == 'normal' or not usuario.font_size %}selected{% endif %}>Normal</option>
-                    <option value="large" {% if usuario.font_size == 'large' %}selected{% endif %}>Grande</option>
-                    <option value="x-large" {% if usuario.font_size == 'x-large' %}selected{% endif %}>Extra grande</option>
-                </select>
-            </div>
-
-            <!-- Modo oscuro -->
-            <div class="form-group">
-                <label for="modo-oscuro" class="form-label">Modo oscuro:</label>
-                <select name="modo_oscuro" id="modo-oscuro" class="form-control">
-                    <option value="off" {% if usuario.modo_oscuro == 'off' or not usuario.modo_oscuro %}selected{% endif %}>Desactivado</option>
-                    <option value="on" {% if usuario.modo_oscuro == 'on' %}selected{% endif %}>Activado</option>
-                </select>
-            </div>
-
-            <!-- Escala de grises -->
-            <div class="form-group">
-                <label for="modo-grises" class="form-label">Escala de grises:</label>
-                <select name="modo_grises" id="modo-grises" class="form-control">
-                    <option value="off" {% if usuario.modo_grises == 'off' or not usuario.modo_grises %}selected{% endif %}>Desactivado</option>
-                    <option value="on" {% if usuario.modo_grises == 'on' %}selected{% endif %}>Activado</option>
-                </select>
-            </div>
-
-            <div class="btn-group">
-                <button type="submit" class="btn btn-primary">Guardar preferencias</button>
-            </div>
-        </div>
-    </form>
-</div>
         </div>
     </div>
 

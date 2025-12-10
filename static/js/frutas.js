@@ -44,29 +44,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Modificar `addToCart` para incluir imagen del producto
+// Modificar `addToCart` para enviar al servidor
 function addToCart(productId, productName, productPrice, productImage) {
-    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    // Crear formulario para enviar datos
+    const formData = new FormData();
+    formData.append('producto_id', productId);
+    formData.append('cantidad', 1);
 
-    const idNum = parseInt(productId);
-    const priceNum = parseFloat(productPrice);
-
-    const existingProduct = cart.find(product => product.id === idNum);
-
-    if (existingProduct) {
-        existingProduct.quantity += 1;
-    } else {
-        cart.push({
-            id: idNum,
-            name: productName,
-            price: priceNum,
-            quantity: 1,
-            image: productImage // Guardamos la imagen
-        });
-    }
-
-    localStorage.setItem('cart', JSON.stringify(cart));
-    showNotification(`${productName} agregado al carrito ✅`);
+    // Enviar petición al servidor
+    fetch('/agregar_al_carrito', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => {
+        if (response.ok) {
+            showNotification(`${productName} agregado al carrito ✅`);
+        } else {
+            showNotification(`Error al agregar ${productName} ❌`);
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error al agregar al carrito ❌');
+    });
 }
 
 
