@@ -88,13 +88,25 @@ def modificar_producto_individual(producto_id):
                 ruta = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
                 imagen.save(ruta)
 
-
+                # Verificar si ya existe una imagen para este producto
                 cursor.execute("""
-                    INSERT INTO imagenes_productos (producto_id, ruta_imagen)
-                    VALUES (%s, %s)
-                    ON CONFLICT (producto_id) DO UPDATE
-                    SET ruta_imagen = EXCLUDED.ruta_imagen
-                """, (producto_id, f"imagenes/{filename}"))
+                    SELECT id FROM imagenes_productos WHERE producto_id = %s
+                """, (producto_id,))
+                imagen_existente = cursor.fetchone()
+
+                if imagen_existente:
+                    # Actualizar la imagen existente
+                    cursor.execute("""
+                        UPDATE imagenes_productos 
+                        SET ruta_imagen = %s
+                        WHERE producto_id = %s
+                    """, (f"imagenes/{filename}", producto_id))
+                else:
+                    # Insertar nueva imagen
+                    cursor.execute("""
+                        INSERT INTO imagenes_productos (producto_id, ruta_imagen)
+                        VALUES (%s, %s)
+                    """, (producto_id, f"imagenes/{filename}"))
 
             conexion.commit()
             cursor.close()
