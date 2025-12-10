@@ -248,11 +248,7 @@
                 <div class="info-grid">
                     <div class="info-item">
                         <span class="info-label">Método de pago:</span>
-                        <span class="info-value" id="metodo-pago">Transferencia bancaria</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Factura:</span>
-                        <span class="info-value" id="factura-info">No</span>
+                        <span class="info-value" id="metodo-pago">Tarjeta de crédito/débito</span>
                     </div>
                 </div>
             </div>
@@ -415,13 +411,10 @@
                 case 'transferencia': textoPago = 'Transferencia bancaria'; break;
                 case 'tarjeta': textoPago = 'Tarjeta de crédito/débito'; break;
                 case 'efectivo': textoPago = 'Efectivo'; break;
-                default: textoPago = 'Transferencia bancaria';
+                default: textoPago = 'Tarjeta de crédito/débito';
             }
             document.getElementById('metodo-pago').textContent = textoPago;
         }
-
-        const facturaSeleccionada = document.querySelector('input[name="invoice"]:checked');
-        document.getElementById('factura-info').textContent = facturaSeleccionada.value === 'si' ? 'Sí' : 'No';
     }
 
     // Modificar la función siguientePaso para incluir la carga de datos
@@ -453,7 +446,6 @@
             empaque: document.querySelector('input[name="package"]:checked').value,
             metodoEntrega: document.querySelector('input[name="delivery-method"]:checked').value,
             metodoPago: document.querySelector('input[name="payment-method"]:checked').value,
-            factura: document.querySelector('input[name="invoice"]:checked').value,
             confirmacion: document.querySelector('input[name="confirmation"]:checked').value,
             comentarios: document.getElementById('comentarios-final').value,
             telefono: telefono,
@@ -469,23 +461,6 @@
         
         datosPedido.direccionEntrega = direccionEntrega;
         datosPedido.referenciasEntrega = document.getElementById('referencias-entrega').value;
-
-        // Si necesita factura, agregar datos fiscales
-        if (datosPedido.factura === 'si') {
-            const rfc = document.getElementById('rfc').value;
-            const razonSocial = document.getElementById('razon-social').value;
-            
-            if (!rfc || !razonSocial) {
-                alert('Por favor, complete todos los datos de facturación');
-                return;
-            }
-            
-            datosPedido.datosFiscales = {
-                rfc: rfc,
-                razonSocial: razonSocial,
-                direccionFiscal: document.getElementById('direccion-fiscal').value
-            };
-        }
 
         document.getElementById('datos_pedido').value = JSON.stringify(datosPedido);
         document.getElementById('form-mercadopago').submit();
