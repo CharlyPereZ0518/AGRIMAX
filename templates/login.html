@@ -50,13 +50,21 @@
     <script>
         const form = document.getElementById('loginForm');
         
+        console.log('reCAPTCHA site key:', '{{ site_key }}');
+        
         form.addEventListener('submit', function(e) {
             e.preventDefault();
             
+            console.log('Form submitted, executing reCAPTCHA...');
+            
             grecaptcha.ready(function() {
                 grecaptcha.execute('{{ site_key }}', {action: 'login'}).then(function(token) {
+                    console.log('reCAPTCHA token received:', token.substring(0, 20) + '...');
                     document.getElementById('recaptchaResponse').value = token;
                     form.submit();
+                }).catch(function(error) {
+                    console.error('reCAPTCHA error:', error);
+                    alert('Error al verificar reCAPTCHA. Por favor recarga la página.');
                 });
             });
         });

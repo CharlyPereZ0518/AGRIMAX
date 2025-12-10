@@ -142,7 +142,7 @@ function configurarEventListenersConfiguracion() {
 
 // Cargar preferencias guardadas del localStorage
 function cargarPreferencias() {
-    const guardadas = localStorage.getItem('preferenciasAccesibilidad');
+    const guardadas = localStorage.getItem('adminPreferenciasAccesibilidad');
     if (guardadas) {
         preferencias = JSON.parse(guardadas);
         
@@ -263,7 +263,7 @@ function aplicarPreferencias() {
 
 // Guardar preferencias en localStorage
 function guardarPreferencias() {
-    localStorage.setItem('preferenciasAccesibilidad', JSON.stringify(preferencias));
+    localStorage.setItem('adminPreferenciasAccesibilidad', JSON.stringify(preferencias));
     console.log('Preferencias guardadas en localStorage:', preferencias);
 }
 

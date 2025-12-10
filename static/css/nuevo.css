@@ -42,3 +42,138 @@ body {
     cursor: pointer;
     font-weight: bold;
 }
+
+/* Burbuja de Accesibilidad */
+.accessibility-bubble {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 60px;
+    height: 60px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    transition: all 0.3s ease;
+    z-index: 9998;
+}
+
+.accessibility-bubble:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
+
+/* Panel de Accesibilidad */
+.accessibility-panel {
+    position: fixed;
+    bottom: 90px;
+    right: 20px;
+    width: 320px;
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+    display: none;
+    z-index: 9999;
+    color: #333;
+}
+
+.accessibility-panel.show {
+    display: block;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.accessibility-panel h3 {
+    margin-bottom: 15px;
+    color: #667eea;
+    font-size: 18px;
+}
+
+.accessibility-panel label {
+    display: block;
+    margin-top: 12px;
+    margin-bottom: 5px;
+    font-weight: 500;
+    color: #555;
+}
+
+.accessibility-panel select,
+.accessibility-panel button {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    font-size: 14px;
+}
+
+.accessibility-panel button {
+    background: #667eea;
+    color: white;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.accessibility-panel button:hover {
+    background: #764ba2;
+}
+
+.close-acc-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 30px !important;
+    height: 30px;
+    padding: 0 !important;
+    background: transparent !important;
+    color: #999;
+    font-size: 20px;
+    border: none;
+}
+
+.close-acc-btn:hover {
+    color: #333;
+}
+
+.font-controls {
+    display: flex;
+    gap: 10px;
+}
+
+.font-btn {
+    flex: 1;
+    padding: 8px;
+    background: #667eea;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.font-btn:hover {
+    background: #764ba2;
+}
+
+.reset-btn {
+    background: #e74c3c !important;
+    margin-top: 10px;
+}
+
+.reset-btn:hover {
+    background: #c0392b !important;
+}

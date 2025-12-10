@@ -50,12 +50,17 @@ def login():
             return render_template('login.html', site_key=RECAPTCHA_SITE_KEY)
 
         # Verificar reCAPTCHA v3
-        if recaptcha_token:
+        print(f"reCAPTCHA token recibido: {recaptcha_token[:20] if recaptcha_token else 'None'}...")
+        print(f"reCAPTCHA secret key configurada: {RECAPTCHA_SECRET_KEY[:10] if RECAPTCHA_SECRET_KEY != 'default' else 'NO CONFIGURADA'}...")
+        
+        if recaptcha_token and RECAPTCHA_SECRET_KEY != 'default':
             is_valid, score = verify_recaptcha_v3(recaptcha_token)
             if not is_valid:
                 flash(f"Verificación de seguridad fallida. Por favor intenta nuevamente.", "error")
                 return render_template('login.html', site_key=RECAPTCHA_SITE_KEY)
             print(f"reCAPTCHA score: {score}")
+        elif RECAPTCHA_SECRET_KEY == 'default':
+            print("⚠️ ADVERTENCIA: reCAPTCHA no configurado, saltando verificación")
         else:
             flash("Verificación de seguridad requerida.", "error")
             return render_template('login.html', site_key=RECAPTCHA_SITE_KEY)
