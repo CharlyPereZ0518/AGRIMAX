@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="/static/css/perfil.css">
     <link rel="stylesheet" href="/static/css/boton_hamburguesa.css">
     <link rel="stylesheet" href="/static/css/footer.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="/static/js/perfil.js" defer></script>
     <script src="/static/js/boton_hamburguesa.js" defer></script>
     <link rel="stylesheet" href="/static/css/contraste.css">
@@ -31,9 +32,24 @@
      <header class="header">
     <div class="logo" onclick="location.href='/menu_provedor'">AGRIMAX</div>
     <button id="menuBtn" class="menu-btn">☰</button>
-    <button id="notificacionesBtn" class="notificaciones-btn" onclick="location.href='{{ url_for('notificaciones.notificaciones') }}'">
-        🔔
-    </button>
+    <div class="notification-container">
+        <button class="notification-btn" onclick="toggleNotifications()">
+            <i class="fas fa-bell"></i>
+            <span class="notification-badge" id="notificationBadge">0</span>
+        </button>
+        <div class="notification-dropdown" id="notificationDropdown">
+            <div class="notification-header">
+                <h4>Notificaciones</h4>
+                <button class="close-btn" onclick="toggleNotifications()">&times;</button>
+            </div>
+            <div class="notification-list" id="notificationList">
+                <p class="no-notifications">No hay notificaciones nuevas</p>
+            </div>
+            <div class="notification-footer">
+                <a href="{{ url_for('notificaciones.notificaciones') }}" class="ver-todas">Ver todas</a>
+            </div>
+        </div>
+    </div>
 </header>
 
     <div id="sidebar" class="sidebar">
@@ -76,6 +92,266 @@
             <p>© 2025 AGRIMAX. TODOS LOS DERECHOS RESERVADOS.</p>
         </div>
     </footer>
+
+<style>
+/* Estilos para el sistema de notificaciones */
+.notification-container {
+    position: relative;
+    display: inline-block;
+}
+
+.notification-btn {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+    padding: 8px;
+    transition: transform 0.2s;
+}
+
+.notification-btn:hover {
+    transform: scale(1.1);
+}
+
+.notification-badge {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background-color: #ff4444;
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    min-width: 18px;
+    text-align: center;
+}
+
+.notification-dropdown {
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 0;
+    width: 350px;
+    max-height: 400px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+    overflow: hidden;
+}
+
+.notification-dropdown.show {
+    display: block;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.notification-header {
+    background-color: #8b4c12;
+    color: white;
+    padding: 12px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h4 {
+    margin: 0;
+    font-size: 16px;
+}
+
+.close-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+}
+
+.notification-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.notification-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.notification-item:hover {
+    background-color: #f5f5f5;
+}
+
+.notification-item.unread {
+    background-color: #e3f2fd;
+}
+
+.notification-item .mensaje {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 4px;
+}
+
+.notification-item .fecha {
+    font-size: 12px;
+    color: #999;
+}
+
+.no-notifications {
+    padding: 20px;
+    text-align: center;
+    color: #999;
+}
+
+.notification-footer {
+    background-color: #f8f8f8;
+    padding: 10px;
+    text-align: center;
+    border-top: 1px solid #eee;
+}
+
+.ver-todas {
+    color: #8b4c12;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.ver-todas:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .notification-dropdown {
+        width: calc(100vw - 20px);
+        right: -60px;
+    }
+    
+    .notification-list {
+        max-height: 250px;
+    }
+}
+</style>
+
+<script>
+// Sistema de notificaciones
+let notificationDropdownVisible = false;
+
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    notificationDropdownVisible = !notificationDropdownVisible;
+    
+    if (notificationDropdownVisible) {
+        dropdown.classList.add('show');
+        cargarNotificaciones();
+    } else {
+        dropdown.classList.remove('show');
+    }
+}
+
+function cargarNotificaciones() {
+    fetch('/api/notificaciones/list')
+        .then(response => response.json())
+        .then(data => {
+            const notificationList = document.getElementById('notificationList');
+            
+            if (data.notificaciones && data.notificaciones.length > 0) {
+                notificationList.innerHTML = '';
+                data.notificaciones.forEach(notif => {
+                    const item = document.createElement('div');
+                    item.className = 'notification-item' + (notif.leido ? '' : ' unread');
+                    item.onclick = () => marcarComoLeida(notif.id);
+                    
+                    item.innerHTML = `
+                        <div class="mensaje">${notif.mensaje}</div>
+                        <div class="fecha">${formatearFecha(notif.fecha)}</div>
+                    `;
+                    
+                    notificationList.appendChild(item);
+                });
+            } else {
+                notificationList.innerHTML = '<p class="no-notifications">No hay notificaciones nuevas</p>';
+            }
+        })
+        .catch(error => {
+            console.error('Error al cargar notificaciones:', error);
+        });
+}
+
+function marcarComoLeida(notifId) {
+    fetch(`/notificaciones/marcar_leido/${notifId}`, {
+        method: 'POST'
+    })
+    .then(() => {
+        cargarNotificaciones();
+        actualizarContador();
+    })
+    .catch(error => {
+        console.error('Error al marcar como leída:', error);
+    });
+}
+
+function formatearFecha(fecha) {
+    const ahora = new Date();
+    const fechaNotif = new Date(fecha);
+    const diffSegundos = Math.floor((ahora - fechaNotif) / 1000);
+    
+    if (diffSegundos < 60) return 'Hace un momento';
+    if (diffSegundos < 3600) return `Hace ${Math.floor(diffSegundos / 60)} minutos`;
+    if (diffSegundos < 86400) return `Hace ${Math.floor(diffSegundos / 3600)} horas`;
+    return `Hace ${Math.floor(diffSegundos / 86400)} días`;
+}
+
+function actualizarContador() {
+    fetch('/api/notificaciones/count')
+        .then(response => response.json())
+        .then(data => {
+            const badge = document.getElementById('notificationBadge');
+            if (data.count > 0) {
+                badge.textContent = data.count;
+                badge.style.display = 'block';
+            } else {
+                badge.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error al actualizar contador:', error);
+        });
+}
+
+// Actualizar contador al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    actualizarContador();
+    
+    // Actualizar cada 30 segundos
+    setInterval(actualizarContador, 30000);
+    
+    // Cerrar dropdown al hacer clic fuera
+    document.addEventListener('click', function(event) {
+        const container = document.querySelector('.notification-container');
+        if (container && !container.contains(event.target) && notificationDropdownVisible) {
+            toggleNotifications();
+        }
+    });
+});
+</script>
 </body>
 
 <script>

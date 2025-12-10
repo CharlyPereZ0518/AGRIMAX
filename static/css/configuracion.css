@@ -125,6 +125,27 @@ textarea.form-control {
     height: 100px;
 }
 
+/* Foto de perfil */
+.current-photo {
+    margin-top: 15px;
+}
+
+.current-photo p {
+    margin-bottom: 10px;
+    font-weight: 500;
+    color: #666;
+}
+
+.profile-preview {
+    max-width: 200px;
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    object-fit: cover;
+    display: block;
+}
+
 /* Botones */
 .btn-group {
     display: flex;
@@ -641,6 +662,11 @@ body.modo-oscuro i {
     .btn {
         width: 100%;
     }
+
+    /* Imagen de perfil responsiva */
+    .profile-preview {
+        max-width: 150px;
+    }
 }
 
 /* Responsivo para pantallas muy pequeñas */
@@ -685,6 +711,19 @@ body.modo-oscuro i {
 
     .sidebar-menu li a {
         padding: 12px 20px;
+        font-size: 0.9em;
+    }
+
+    /* Imagen de perfil en móviles pequeños */
+    .profile-preview {
+        max-width: 120px;
+    }
+
+    .current-photo {
+        text-align: center;
+    }
+
+    .current-photo p {
         font-size: 0.9em;
     }
 }
