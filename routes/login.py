@@ -12,12 +12,15 @@ import os
 
 login_bp = Blueprint("login", __name__)
 
-# Clave secreta de reCAPTCHA v3
+# Clave secreta de reCAPTCHA v2
 RECAPTCHA_SECRET_KEY = os.environ.get('RECAPTCHA_SECRET_KEY', '6LcMNNsrAAAAAFj64Kr766S2lQLG5DkYYtnEFPDU')
 RECAPTCHA_SITE_KEY = os.environ.get('RECAPTCHA_SITE_KEY', '6LcMNNsrAAAAAA...')
 
-def verify_recaptcha_v3(token):
-    """Verifica el token de reCAPTCHA v3 con Google"""
+def verify_recaptcha_v2(token):
+    """Verifica el token de reCAPTCHA v2 con Google"""
+    if not token:
+        return False
+    
     try:
         response = requests.post(
             'https://www.google.com/recaptcha/api/siteverify',
@@ -28,15 +31,10 @@ def verify_recaptcha_v3(token):
             timeout=5
         )
         result = response.json()
-        
-        # reCAPTCHA v3 devuelve un score de 0.0 a 1.0
-        # 1.0 = muy probablemente humano, 0.0 = muy probablemente bot
-        if result.get('success') and result.get('score', 0) >= 0.5:
-            return True, result.get('score', 0)
-        return False, result.get('score', 0)
+        return result.get('success', False)
     except Exception as e:
         print(f"Error verificando reCAPTCHA: {e}")
-        return False, 0.0
+        return False
 
 @login_bp.route("/login", methods=['GET', 'POST'])
 def login():
@@ -49,20 +47,20 @@ def login():
             flash("Debes ingresar correo y contraseña.", "error")
             return render_template('login.html', site_key=RECAPTCHA_SITE_KEY)
 
-        # Verificar reCAPTCHA v3
+        # Verificar reCAPTCHA v2
         print(f"reCAPTCHA token recibido: {recaptcha_token[:20] if recaptcha_token else 'None'}...")
         print(f"reCAPTCHA secret key configurada: {RECAPTCHA_SECRET_KEY[:10] if RECAPTCHA_SECRET_KEY != 'default' else 'NO CONFIGURADA'}...")
         
         if recaptcha_token and RECAPTCHA_SECRET_KEY != 'default':
-            is_valid, score = verify_recaptcha_v3(recaptcha_token)
+            is_valid = verify_recaptcha_v2(recaptcha_token)
             if not is_valid:
-                flash(f"Verificación de seguridad fallida. Por favor intenta nuevamente.", "error")
+                flash(f"Por favor completa la verificación de seguridad correctamente.", "error")
                 return render_template('login.html', site_key=RECAPTCHA_SITE_KEY)
-            print(f"reCAPTCHA score: {score}")
+            print(f"reCAPTCHA verificado exitosamente")
         elif RECAPTCHA_SECRET_KEY == 'default':
             print("⚠️ ADVERTENCIA: reCAPTCHA no configurado, saltando verificación")
         else:
-            flash("Verificación de seguridad requerida.", "error")
+            flash("Por favor completa la verificación de seguridad.", "error")
             return render_template('login.html', site_key=RECAPTCHA_SITE_KEY)
 
         try:

@@ -172,3 +172,13 @@ button:hover {
     justify-content: center;
     margin: 20px 0;
 }
+
+/* Hacer el badge de reCAPTCHA más discreto */
+.grecaptcha-badge {
+    opacity: 0.5;
+    transition: opacity 0.3s ease;
+}
+
+.grecaptcha-badge:hover {
+    opacity: 1;
+}

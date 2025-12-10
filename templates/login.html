@@ -6,7 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AGRIMAX - Inicio de Sesión</title>
     <link rel="stylesheet" href="/static/css/login.css">
-    <script src="https://www.google.com/recaptcha/api.js?render={{ site_key }}"></script>
 </head>
 
 <body>
@@ -37,7 +36,8 @@
             <input type="password" id="contraseña" name="contraseña" placeholder="Ingresa tu contraseña" required>
             <br><br>
 
-            <input type="hidden" name="g-recaptcha-response" id="recaptchaResponse">
+            <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
+            <br>
 
             <button type="submit">Iniciar Sesión</button>
         </form>
@@ -45,30 +45,15 @@
         <p class="register">¿No tienes cuenta? <a href="/registro">Regístrate</a></p>
         <p class="register">¿Olvidaste tu contraseña? <a href="{{ url_for('olvido_contrasena.solicitar_reset') }}">Recuperarla</a></p>
         <p class="register"><a href="/">Volver al inicio</a></p>
+        
+        <p style="font-size: 11px; color: rgba(255,255,255,0.7); margin-top: 20px;">
+            Este sitio está protegido por reCAPTCHA y se aplican la 
+            <a href="https://policies.google.com/privacy" target="_blank" style="color: rgba(255,255,255,0.9);">Política de Privacidad</a> y 
+            <a href="https://policies.google.com/terms" target="_blank" style="color: rgba(255,255,255,0.9);">Términos de Servicio</a> de Google.
+        </p>
     </div>
 
-    <script>
-        const form = document.getElementById('loginForm');
-        
-        console.log('reCAPTCHA site key:', '{{ site_key }}');
-        
-        form.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            console.log('Form submitted, executing reCAPTCHA...');
-            
-            grecaptcha.ready(function() {
-                grecaptcha.execute('{{ site_key }}', {action: 'login'}).then(function(token) {
-                    console.log('reCAPTCHA token received:', token.substring(0, 20) + '...');
-                    document.getElementById('recaptchaResponse').value = token;
-                    form.submit();
-                }).catch(function(error) {
-                    console.error('reCAPTCHA error:', error);
-                    alert('Error al verificar reCAPTCHA. Por favor recarga la página.');
-                });
-            });
-        });
-    </script>
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 
 </html>
