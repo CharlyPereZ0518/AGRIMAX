@@ -21,7 +21,7 @@ def eliminar_producto(producto_id):
         resultado = cursor.fetchone()
         if not resultado or resultado[0] != usuario_id:
             flash("No tienes permiso para eliminar este producto.", "error")
-            return redirect(url_for('menu'))
+            return redirect(url_for('menu_provedor.menu'))
 
 
         cursor.execute("SELECT ruta_imagen FROM imagenes_productos WHERE producto_id = %s", (producto_id,))
@@ -41,8 +41,8 @@ def eliminar_producto(producto_id):
         conexion.close()
 
         flash("Producto eliminado correctamente.", "success")
-        return redirect(url_for('menu'))
+        return redirect(url_for('menu_provedor.menu'))
     except Exception as e:
         print(f"Error al eliminar el producto: {e}")
         flash("Ocurrió un error al eliminar el producto.", "error")
-        return redirect(url_for('menu'))
+        return redirect(url_for('menu_provedor.menu'))

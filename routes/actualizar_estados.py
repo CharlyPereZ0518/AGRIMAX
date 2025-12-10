@@ -36,7 +36,7 @@ def actualizar_estado(tipo, item_id):
         if tipo == "pedido":
             if session.get('tipo_usuario') != "Proveedor":
                 flash("Solo los proveedores pueden actualizar el estado del pedido.", "error")
-                return redirect(url_for('menu'))
+                return redirect(url_for('menu_clientes.menu_principal'))
 
             cursor.execute("""
                 UPDATE pedidos

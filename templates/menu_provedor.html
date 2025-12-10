@@ -15,12 +15,20 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="/static/css/contraste.css">
         <style>
-            /* Header right for notifications */
+            /* Ajustar header para campana y hamburguesa */
+            .header {
+                position: relative;
+            }
+            
             .header-right {
+                position: absolute;
+                right: 70px; /* Justo al lado izquierdo del botón hamburguesa (24px icon + 20px padding + 26px gap) */
+                top: 50%;
+                transform: translateY(-50%);
                 display: flex;
                 align-items: center;
-                margin-left: auto;
-                margin-right: 60px;
+                gap: 0;
+                z-index: 100;
             }
 
             .notification-btn {
@@ -324,50 +332,115 @@
 
             if(accBubble) accBubble.addEventListener('click', showAccPanel);
 
-            // Expose functions globally so buttons inside panel work
-            window.setContrast = function(level){ localStorage.setItem('nivel_contraste', level); location.reload(); };
-            window.toggleReader = function(on){ localStorage.setItem('modo_lector', on ? 'on' : 'off'); location.reload(); };
-            window.setCursorSize = function(size){ localStorage.setItem('cursor_size', size); location.reload(); };
-            window.setFontSize = function(size){ localStorage.setItem('font_size', size); location.reload(); };
+            // Funciones de accesibilidad que aplican cambios inmediatamente
+            window.setContrast = function(level){ 
+                localStorage.setItem('nivel_contraste', level); 
+                const body = document.body;
+                body.classList.remove('contraste-alto', 'contraste-muy-alto');
+                if(level === 'alto') body.classList.add('contraste-alto');
+                else if(level === 'muy-alto') body.classList.add('contraste-muy-alto');
+                body.setAttribute('data-contraste', level);
+                console.log('✅ Contraste aplicado:', level);
+            };
+            
+            window.toggleReader = function(on){ 
+                localStorage.setItem('modo_lector', on ? 'on' : 'off'); 
+                const body = document.body;
+                if(on) {
+                    body.classList.add('modo-lector');
+                    console.log('✅ Modo lector activado');
+                } else {
+                    body.classList.remove('modo-lector');
+                    console.log('✅ Modo lector desactivado');
+                }
+            };
+            
+            window.setCursorSize = function(size){ 
+                localStorage.setItem('cursor_size', size); 
+                const body = document.body;
+                body.classList.remove('cursor-large', 'cursor-x-large');
+                if(size === 'large') body.classList.add('cursor-large');
+                else if(size === 'x-large') body.classList.add('cursor-x-large');
+                console.log('✅ Tamaño de cursor aplicado:', size);
+            };
+            
+            window.setFontSize = function(size){ 
+                localStorage.setItem('font_size', size); 
+                const body = document.body;
+                body.classList.remove('font-large', 'font-x-large');
+                if(size === 'large') body.classList.add('font-large');
+                else if(size === 'x-large') body.classList.add('font-x-large');
+                console.log('✅ Tamaño de fuente aplicado:', size);
+            };
+            
             window.setTheme = function(kind){
+                const body = document.body;
+                body.classList.remove('modo-oscuro', 'cielo-nocturno', 'modo-grises');
+                
                 if(kind === 'normal'){
                     localStorage.removeItem('modo_oscuro');
                     localStorage.removeItem('modoOscuro');
                     localStorage.removeItem('modoGrises');
                     localStorage.removeItem('modo_nocturno');
+                    console.log('✅ Tema normal aplicado');
                 } else if(kind === 'oscuro'){
+                    body.classList.add('modo-oscuro');
                     localStorage.setItem('modo_oscuro','on');
                     localStorage.setItem('modoOscuro','on');
                     localStorage.removeItem('modoGrises');
                     localStorage.removeItem('modo_nocturno');
+                    console.log('✅ Modo oscuro aplicado');
                 } else if(kind === 'nocturno'){
+                    body.classList.add('cielo-nocturno');
                     localStorage.setItem('modoOscuro','cielo-nocturno');
                     localStorage.setItem('modo_oscuro','on');
                     localStorage.setItem('modo_nocturno','on');
                     localStorage.removeItem('modoGrises');
+                    console.log('✅ Modo nocturno aplicado');
                 } else if(kind === 'grises'){
+                    body.classList.add('modo-grises');
                     localStorage.setItem('modoGrises','true');
                     localStorage.removeItem('modo_oscuro');
                     localStorage.removeItem('modoOscuro');
                     localStorage.removeItem('modo_nocturno');
+                    console.log('✅ Modo grises aplicado');
                 }
-                location.reload();
             };
         })();
 
         // Cargar notificaciones no leídas
-        (function(){
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔔 Intentando cargar notificaciones...');
+            const badge = document.getElementById('notificationBadge');
+            console.log('Badge element:', badge);
+            
             fetch('/api/notificaciones/count')
-                .then(response => response.json())
+                .then(response => {
+                    console.log('📡 Response status:', response.status);
+                    if (!response.ok) throw new Error('Network response was not ok');
+                    return response.json();
+                })
                 .then(data => {
-                    const badge = document.getElementById('notificationBadge');
-                    if (data.count > 0) {
-                        badge.textContent = data.count > 99 ? '99+' : data.count;
-                        badge.style.display = 'flex';
+                    console.log('✅ Notificaciones recibidas:', data);
+                    console.log('Count:', data.count, 'Type:', typeof data.count);
+                    
+                    if (badge) {
+                        console.log('Badge encontrado, actualizando...');
+                        if (data.count > 0) {
+                            badge.textContent = data.count > 99 ? '99+' : data.count;
+                            badge.style.display = 'flex';
+                            console.log('✅ Badge actualizado con', data.count, 'notificaciones');
+                        } else {
+                            console.log('ℹ️ No hay notificaciones (count = 0)');
+                        }
+                    } else {
+                        console.error('❌ Badge element no encontrado!');
                     }
                 })
-                .catch(error => console.error('Error al cargar notificaciones:', error));
-        })();
+                .catch(error => {
+                    console.error('❌ Error al cargar notificaciones:', error);
+                });
+        });
     </script>
     <footer>
         <div class="footer-content">

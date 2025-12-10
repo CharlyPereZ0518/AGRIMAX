@@ -23,7 +23,7 @@ def frutas():
             tipo_usuario = cursor.fetchone()
             if not tipo_usuario or tipo_usuario[0] != "Cliente":
                 flash("Solo los clientes pueden acceder a esta página.", "error")
-                return redirect(url_for('menu'))
+                return redirect(url_for('menu_clientes.menu_principal'))
 
 
             cursor.execute("""

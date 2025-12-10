@@ -33,15 +33,17 @@ def menu():
 
             productos_procesados = []
             for producto in productos:
-                # Limpiar la ruta de la imagen
+                # Debug: mostrar ruta original
                 ruta_imagen = producto[6]
+                print(f"🖼️ DEBUG - Producto: {producto[1]}, Ruta BD: '{ruta_imagen}'")
+                
+                # Generar URL de imagen
                 if ruta_imagen:
-                    # Si ya tiene 'static/', quitarlo para agregarlo correctamente
-                    if ruta_imagen.startswith('static/'):
-                        ruta_imagen = ruta_imagen.replace('static/', '', 1)
                     imagen_url = f"/static/{ruta_imagen}"
                 else:
                     imagen_url = '/static/imagenes/default-product.jpg'
+                
+                print(f"✅ DEBUG - URL final: '{imagen_url}'")
                 
                 productos_procesados.append({
                     'id': producto[0],

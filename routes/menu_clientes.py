@@ -22,7 +22,7 @@ def menu_principal():
 
             if not tipo_usuario or tipo_usuario[0] != "Cliente":
                 flash("Solo los clientes pueden acceder a esta página.", "error")
-                return redirect(url_for('menu'))
+                return redirect(url_for('menu_clientes.menu_principal'))
 
             cursor.execute("""
                 SELECT p.id, p.nombre, p.descripcion, p.precio, c.nombre AS categoria, 
