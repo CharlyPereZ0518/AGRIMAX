@@ -17,16 +17,18 @@ body {
 }
 
 .container {
-    width: 320px;
-    padding: 50px;
+    width: 360px;
+    max-width: 90%;
+    padding: 30px;
     background-color: rgba(165, 90, 23, 0.9);
     border-radius: 10px;
     text-align: center;
+    margin: 20px auto;
 }
 
 .logo {
-    width: 150px;
-    height: 150px;
+    width: 120px;
+    height: 120px;
     margin: 0 auto 15px;
     background-image: url('/static/imagenes/ima_logo.jpg'); /* Corrección aquí */
     background-size: cover;
@@ -51,9 +53,10 @@ body {
     overflow: hidden;
 }
 h1 {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    margin-top: 10px;
     color: #f4eeee;
-    font-size: 24px;
+    font-size: 22px;
 }
 
 .form-group {
@@ -103,8 +106,10 @@ input {
 }
 
 .register {
-    margin-top: 15px;
-    font-size: 14px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    line-height: 1.4;
 }
 
 .register a {
@@ -170,7 +175,9 @@ button:hover {
 .g-recaptcha {
     display: flex;
     justify-content: center;
-    margin: 20px 0;
+    margin: 15px 0;
+    transform: scale(0.9);
+    transform-origin: center;
 }
 
 /* Hacer el badge de reCAPTCHA más discreto */
@@ -181,4 +188,22 @@ button:hover {
 
 .grecaptcha-badge:hover {
     opacity: 1;
+}
+
+/* Ajustar espaciado en formulario */
+form {
+    margin-top: 10px;
+}
+
+form label {
+    margin-bottom: 5px;
+}
+
+form input[type="email"],
+form input[type="password"] {
+    margin-bottom: 10px;
+}
+
+form button[type="submit"] {
+    margin-top: 10px;
 }

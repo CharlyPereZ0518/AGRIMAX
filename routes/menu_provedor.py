@@ -33,6 +33,16 @@ def menu():
 
             productos_procesados = []
             for producto in productos:
+                # Limpiar la ruta de la imagen
+                ruta_imagen = producto[6]
+                if ruta_imagen:
+                    # Si ya tiene 'static/', quitarlo para agregarlo correctamente
+                    if ruta_imagen.startswith('static/'):
+                        ruta_imagen = ruta_imagen.replace('static/', '', 1)
+                    imagen_url = f"/static/{ruta_imagen}"
+                else:
+                    imagen_url = '/static/imagenes/default-product.jpg'
+                
                 productos_procesados.append({
                     'id': producto[0],
                     'nombre': producto[1],
@@ -40,7 +50,7 @@ def menu():
                     'precio': producto[3],
                     'categoria': producto[4],
                     'fecha_creacion': producto[5],
-                    'imagen': f"/static/{producto[6]}" if producto[6] else '/static/imagenes/default-product.jpg'
+                    'imagen': imagen_url
                 })
 
             return render_template('menu_provedor.html', usuario_id=usuario_id, productos=productos_procesados)

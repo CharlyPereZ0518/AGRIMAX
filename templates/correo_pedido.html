@@ -3,22 +3,45 @@
 <head>
     <meta charset="UTF-8">
     <title>Confirmación de Pedido - AGRIMAX</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #f4f4f4; margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .header { background: linear-gradient(135deg, #8b4c12 0%, #f1942b 100%); padding: 30px; text-align: center; }
+        .header img { width: 120px; height: 120px; border-radius: 15px; margin-bottom: 15px; }
+        .header h1 { color: white; margin: 0; font-size: 24px; }
+        .content { padding: 30px; }
+        .pedido-info { background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 20px 0; }
+        .productos { background: #fff; border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin: 20px 0; }
+        .productos li { padding: 8px 0; border-bottom: 1px solid #e9ecef; }
+        .productos li:last-child { border-bottom: none; }
+        .footer { background: #8b4c12; color: white; padding: 20px; text-align: center; font-size: 14px; }
+    </style>
 </head>
 <body>
-    <h1>¡Gracias por tu compra!</h1>
-    <p>Tu pedido ha sido confirmado con el ID: <strong>{{ datos.pedido_id }}</strong></p>
-    <p>Total de la compra: <strong>${{ datos.total }}</strong></p>
+    <div class="container">
+        <div class="header">
+            <img src="https://agrimax-production.up.railway.app/static/imagenes/ima_logo.jpg" alt="AGRIMAX Logo">
+            <h1>¡Gracias por tu compra!</h1>
+        </div>
+        <div class="content">
+            <div class="pedido-info">
+                <p><strong>Pedido ID:</strong> {{ datos.pedido_id }}</p>
+                <p><strong>Total:</strong> <span style="color: #28a745; font-size: 20px;">${{ datos.total }}</span></p>
+            </div>
 
-    <h2>Productos comprados:</h2>
-    <ul>
-        {% for producto in datos.productos %}
-        <li><strong>{{ producto[0] }}</strong> - Cantidad: {{ producto[1] }}</li>
-        {% endfor %}
-    </ul>
+            <h2 style="color: #8b4c12;">Productos comprados:</h2>
+            <ul class="productos" style="list-style: none; padding: 0;">
+                {% for producto in datos.productos %}
+                <li>✓ <strong>{{ producto[0] }}</strong> - Cantidad: {{ producto[1] }}</li>
+                {% endfor %}
+            </ul>
 
-    <p>Te notificaremos cuando tu pedido esté listo para entrega.</p>
-    <br>
-    <p>Atentamente,</p>
-    <p><strong>Equipo AGRIMAX</strong></p>
+            <p>Te notificaremos cuando tu pedido esté listo para entrega.</p>
+        </div>
+        <div class="footer">
+            <p><strong>Equipo AGRIMAX</strong></p>
+            <p>Tu aliado en productos agrícolas</p>
+        </div>
+    </div>
 </body>
 </html>

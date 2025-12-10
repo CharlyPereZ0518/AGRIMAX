@@ -153,6 +153,21 @@ def pago_exitoso():
             cursor = conexion.cursor()
             cursor.execute("UPDATE pedidos SET estado = 'Aprobado' WHERE id = %s", (pedido['pedido_id'],))
             conexion.commit()
+            
+            # Crear notificaciones para los proveedores
+            for producto in pedido['productos_pedido']:
+                proveedor_id = producto['proveedor_id']
+                producto_id = producto['producto_id']
+                cantidad = producto['cantidad']
+                
+                mensaje = f"Nuevo pedido: {cantidad} unidad(es) de {producto['nombre']}"
+                
+                cursor.execute("""
+                    INSERT INTO notificaciones (proveedor_id, cliente_id, producto_id, mensaje, leido, estado, fecha)
+                    VALUES (%s, %s, %s, %s, FALSE, 'Pendiente', CURRENT_TIMESTAMP)
+                """, (proveedor_id, pedido['cliente_id'], producto_id, mensaje))
+            
+            conexion.commit()
             cursor.close()
             conexion.close()
         except Exception as e:

@@ -1,8 +1,34 @@
-from flask import Blueprint, render_template, flash, session, redirect, url_for, request
+from flask import Blueprint, render_template, flash, session, redirect, url_for, request, jsonify
 from flask_login import login_required
 from bd import conectar_bd
 
 notificaciones_bp = Blueprint('notificaciones', __name__)
+
+@notificaciones_bp.route('/api/notificaciones/count')
+@login_required
+def count_notificaciones():
+    """API endpoint para obtener el conteo de notificaciones no leídas"""
+    proveedor_id = session.get('usuario_id')
+    
+    try:
+        conexion = conectar_bd()
+        if not conexion:
+            return jsonify({'count': 0})
+
+        cursor = conexion.cursor()
+        cursor.execute("""
+            SELECT COUNT(*) FROM notificaciones 
+            WHERE proveedor_id = %s AND leido = FALSE
+        """, (proveedor_id,))
+        
+        count = cursor.fetchone()[0]
+        cursor.close()
+        conexion.close()
+        
+        return jsonify({'count': count})
+    except Exception as e:
+        print(f"Error al contar notificaciones: {e}")
+        return jsonify({'count': 0})
 
 @notificaciones_bp.route('/notificaciones')
 @login_required

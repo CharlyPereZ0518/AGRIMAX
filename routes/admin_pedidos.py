@@ -121,7 +121,7 @@ def pedidos():
         cursor.close()
         conexion.close()
 
-        return render_template('admin_pedidos.html', pedidos=pedidos, es_proveedor=True)
+        return render_template('proveedor_pedidos.html', pedidos=pedidos, es_proveedor=True)
 
     except Exception as e:
         print("Error al obtener los pedidos del proveedor:", e)
