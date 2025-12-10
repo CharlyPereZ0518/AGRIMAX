@@ -22,10 +22,6 @@
               {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
      data-contraste="{{ usuario.nivel_contraste }}"
      style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
- <script>
-     window.location.href = "{{ url_for('login') }}";
- </script>
- {% endif %}
 
     <header class="header">
         <div class="logo" onclick="location.href='/menu_principal'">AGRIMAX</div>
