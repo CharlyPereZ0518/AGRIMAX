@@ -68,6 +68,19 @@
     display: block;
 }
 
+.sidebar-category {
+    color: #f1942b;
+    font-weight: bold;
+    padding: 15px 20px 5px;
+    font-size: 16px;
+    text-transform: uppercase;
+}
+
+.logout-btn {
+    color: #f1942b !important;
+    font-weight: bold;
+}
+
 .dropdown-btn {
     background: none;
     border: none;
