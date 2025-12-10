@@ -122,7 +122,7 @@ body.contraste-muy-alto * {
 }
 
 /* ==================== MODO OSCURO ==================== */
-body.modo-oscuro {
+body.modo-nocturno {
     --bg-primary: #121212;
     --bg-secondary: #1e1e1e;
     --bg-card: #2a2a2a;
@@ -136,7 +136,7 @@ body.modo-oscuro {
     --shadow: rgba(255, 255, 255, 0.1);
 }
 
-body.modo-oscuro {
+body.modo-nocturno {
     background-color: var(--bg-primary) !important;
     background-image: none !important;
     color: var(--text-primary) !important;
@@ -148,26 +148,26 @@ body.modo-oscuro {
 /* Sidebar de configuración */
 body.contraste-alto .config-sidebar,
 body.contraste-muy-alto .config-sidebar,
-body.modo-oscuro .config-sidebar {
+body.modo-nocturno .config-sidebar {
     background: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .config-menu li,
 body.contraste-muy-alto .config-menu li,
-body.modo-oscuro .config-menu li {
+body.modo-nocturno .config-menu li {
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .config-menu li:hover,
 body.contraste-muy-alto .config-menu li:hover,
-body.modo-oscuro .config-menu li:hover {
+body.modo-nocturno .config-menu li:hover {
     background: var(--border-color) !important;
 }
 
 body.contraste-alto .config-menu li.active,
 body.contraste-muy-alto .config-menu li.active,
-body.modo-oscuro .config-menu li.active {
+body.modo-nocturno .config-menu li.active {
     background: var(--accent-primary) !important;
     color: var(--bg-white) !important;
 }
@@ -175,7 +175,7 @@ body.modo-oscuro .config-menu li.active {
 /* Contenido principal */
 body.contraste-alto .config-content,
 body.contraste-muy-alto .config-content,
-body.modo-oscuro .config-content {
+body.modo-nocturno .config-content {
     background: var(--bg-white) !important;
     color: var(--text-primary) !important;
 }
@@ -183,7 +183,7 @@ body.modo-oscuro .config-content {
 /* Tarjetas */
 body.contraste-alto .card,
 body.contraste-muy-alto .card,
-body.modo-oscuro .card {
+body.modo-nocturno .card {
     background: var(--bg-card) !important;
     color: var(--text-primary) !important;
     border: 2px solid var(--border-color) !important;
@@ -193,21 +193,21 @@ body.contraste-alto .card-title,
 body.contraste-alto .section-title,
 body.contraste-muy-alto .card-title,
 body.contraste-muy-alto .section-title,
-body.modo-oscuro .card-title,
-body.modo-oscuro .section-title {
+body.modo-nocturno .card-title,
+body.modo-nocturno .section-title {
     color: var(--text-primary) !important;
 }
 
 /* Formularios */
 body.contraste-alto .form-label,
 body.contraste-muy-alto .form-label,
-body.modo-oscuro .form-label {
+body.modo-nocturno .form-label {
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .form-control,
 body.contraste-muy-alto .form-control,
-body.modo-oscuro .form-control {
+body.modo-nocturno .form-control {
     background: var(--bg-white) !important;
     color: var(--text-primary) !important;
     border: 2px solid var(--border-color) !important;
@@ -215,14 +215,14 @@ body.modo-oscuro .form-control {
 
 body.contraste-alto .form-control:focus,
 body.contraste-muy-alto .form-control:focus,
-body.modo-oscuro .form-control:focus {
+body.modo-nocturno .form-control:focus {
     outline: 3px solid var(--accent-primary) !important;
     border-color: var(--accent-primary) !important;
 }
 
 body.contraste-alto select.form-control option,
 body.contraste-muy-alto select.form-control option,
-body.modo-oscuro select.form-control option {
+body.modo-nocturno select.form-control option {
     background: var(--bg-white) !important;
     color: var(--text-primary) !important;
 }
@@ -230,7 +230,7 @@ body.modo-oscuro select.form-control option {
 /* Botones */
 body.contraste-alto .btn-primary,
 body.contraste-muy-alto .btn-primary,
-body.modo-oscuro .btn-primary {
+body.modo-nocturno .btn-primary {
     background: var(--accent-primary) !important;
     color: var(--bg-white) !important;
     border: 2px solid var(--accent-primary) !important;
@@ -238,13 +238,13 @@ body.modo-oscuro .btn-primary {
 
 body.contraste-alto .btn-primary:hover,
 body.contraste-muy-alto .btn-primary:hover,
-body.modo-oscuro .btn-primary:hover {
+body.modo-nocturno .btn-primary:hover {
     background: var(--accent-hover) !important;
 }
 
 body.contraste-alto .btn-secondary,
 body.contraste-muy-alto .btn-secondary,
-body.modo-oscuro .btn-secondary {
+body.modo-nocturno .btn-secondary {
     background: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
     border: 2px solid var(--border-color) !important;
@@ -252,14 +252,14 @@ body.modo-oscuro .btn-secondary {
 
 body.contraste-alto .btn,
 body.contraste-muy-alto .btn,
-body.modo-oscuro .btn {
+body.modo-nocturno .btn {
     color: inherit !important;
 }
 
 /* Header */
 body.contraste-alto .header,
 body.contraste-muy-alto .header,
-body.modo-oscuro .header {
+body.modo-nocturno .header {
     background: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
     border-bottom: 2px solid var(--border-color) !important;
@@ -267,65 +267,65 @@ body.modo-oscuro .header {
 
 body.contraste-alto .logo,
 body.contraste-muy-alto .logo,
-body.modo-oscuro .logo {
+body.modo-nocturno .logo {
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .menu-btn,
 body.contraste-muy-alto .menu-btn,
-body.modo-oscuro .menu-btn {
+body.modo-nocturno .menu-btn {
     color: var(--text-primary) !important;
     background: transparent !important;
 }
 
 body.contraste-alto .cart-btn,
 body.contraste-muy-alto .cart-btn,
-body.modo-oscuro .cart-btn {
+body.modo-nocturno .cart-btn {
     color: var(--text-primary) !important;
 }
 
 /* Sidebar del menú */
 body.contraste-alto .sidebar,
 body.contraste-muy-alto .sidebar,
-body.modo-oscuro .sidebar {
+body.modo-nocturno .sidebar {
     background: var(--bg-white) !important;
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .sidebar-menu li,
 body.contraste-muy-alto .sidebar-menu li,
-body.modo-oscuro .sidebar-menu li {
+body.modo-nocturno .sidebar-menu li {
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .sidebar-menu a,
 body.contraste-muy-alto .sidebar-menu a,
-body.modo-oscuro .sidebar-menu a {
+body.modo-nocturno .sidebar-menu a {
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .sidebar-menu a:hover,
 body.contraste-muy-alto .sidebar-menu a:hover,
-body.modo-oscuro .sidebar-menu a:hover {
+body.modo-nocturno .sidebar-menu a:hover {
     background: var(--bg-secondary) !important;
 }
 
 body.contraste-alto .dropdown-btn,
 body.contraste-muy-alto .dropdown-btn,
-body.modo-oscuro .dropdown-btn {
+body.modo-nocturno .dropdown-btn {
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .dropdown-container,
 body.contraste-muy-alto .dropdown-container,
-body.modo-oscuro .dropdown-container {
+body.modo-nocturno .dropdown-container {
     background: var(--bg-card) !important;
 }
 
 /* Footer */
 body.contraste-alto footer,
 body.contraste-muy-alto footer,
-body.modo-oscuro footer {
+body.modo-nocturno footer {
     background: var(--bg-secondary) !important;
     color: var(--text-primary) !important;
     border-top: 2px solid var(--border-color) !important;
@@ -334,7 +334,7 @@ body.modo-oscuro footer {
 /* Feedback messages */
 body.contraste-alto .feedback,
 body.contraste-muy-alto .feedback,
-body.modo-oscuro .feedback {
+body.modo-nocturno .feedback {
     border: 2px solid var(--border-color) !important;
     color: var(--text-primary) !important;
 }
@@ -353,12 +353,12 @@ body.contraste-muy-alto .feedback.error {
     color: #000000 !important;
 }
 
-body.modo-oscuro .feedback.success {
+body.modo-nocturno .feedback.success {
     background: var(--bg-card) !important;
     color: var(--text-primary) !important;
 }
 
-body.modo-oscuro .feedback.error {
+body.modo-nocturno .feedback.error {
     background: var(--bg-card) !important;
     color: var(--text-primary) !important;
 }
@@ -370,7 +370,7 @@ body.contraste-muy-alto *:focus {
     outline-offset: 2px !important;
 }
 
-body.modo-oscuro *:focus {
+body.modo-nocturno *:focus {
     outline: 3px solid var(--accent-primary) !important;
     outline-offset: 2px !important;
 }
@@ -383,7 +383,7 @@ body.contraste-muy-alto a {
     color: var(--text-primary) !important;
 }
 
-body.modo-oscuro a {
+body.modo-nocturno a {
     color: var(--accent-primary) !important;
 }
 
@@ -392,20 +392,20 @@ body.contraste-muy-alto img {
     filter: grayscale(100%) contrast(150%);
 }
 
-body.modo-oscuro img {
+body.modo-nocturno img {
     opacity: 0.9;
 }
 
 /* Checkbox personalizado */
 body.contraste-alto .checkbox-label,
 body.contraste-muy-alto .checkbox-label,
-body.modo-oscuro .checkbox-label {
+body.modo-nocturno .checkbox-label {
     color: var(--text-primary) !important;
 }
 
 body.contraste-alto .checkmark,
 body.contraste-muy-alto .checkmark,
-body.modo-oscuro .checkmark {
+body.modo-nocturno .checkmark {
     border: 2px solid var(--border-color) !important;
 }
 
@@ -415,14 +415,14 @@ body.contraste-muy-alto .overlay {
     background: rgba(0, 0, 0, 0.5) !important;
 }
 
-body.modo-oscuro .overlay {
+body.modo-nocturno .overlay {
     background: rgba(255, 255, 255, 0.1) !important;
 }
 
 /* Textarea */
 body.contraste-alto textarea,
 body.contraste-muy-alto textarea,
-body.modo-oscuro textarea {
+body.modo-nocturno textarea {
     background: var(--bg-white) !important;
     color: var(--text-primary) !important;
     border: 2px solid var(--border-color) !important;
@@ -431,7 +431,7 @@ body.modo-oscuro textarea {
 /* Input file */
 body.contraste-alto input[type="file"],
 body.contraste-muy-alto input[type="file"],
-body.modo-oscuro input[type="file"] {
+body.modo-nocturno input[type="file"] {
     background: var(--bg-white) !important;
     color: var(--text-primary) !important;
     border: 2px solid var(--border-color) !important;
@@ -440,7 +440,7 @@ body.modo-oscuro input[type="file"] {
 /* Tablas */
 body.contraste-alto table,
 body.contraste-muy-alto table,
-body.modo-oscuro table {
+body.modo-nocturno table {
     background: var(--bg-white) !important;
     color: var(--text-primary) !important;
     border: 2px solid var(--border-color) !important;
@@ -450,8 +450,8 @@ body.contraste-alto th,
 body.contraste-alto td,
 body.contraste-muy-alto th,
 body.contraste-muy-alto td,
-body.modo-oscuro th,
-body.modo-oscuro td {
+body.modo-nocturno th,
+body.modo-nocturno td {
     border: 1px solid var(--border-color) !important;
     color: var(--text-primary) !important;
 }
@@ -459,19 +459,19 @@ body.modo-oscuro td {
 /* Elementos de la foto de perfil */
 body.contraste-alto .profile-preview,
 body.contraste-muy-alto .profile-preview,
-body.modo-oscuro .profile-preview {
+body.modo-nocturno .profile-preview {
     border: 2px solid var(--border-color) !important;
 }
 
 body.contraste-alto .current-photo p,
 body.contraste-muy-alto .current-photo p,
-body.modo-oscuro .current-photo p {
+body.modo-nocturno .current-photo p {
     color: var(--text-primary) !important;
 }
 
 /* Iconos Font Awesome */
 body.contraste-alto i,
 body.contraste-muy-alto i,
-body.modo-oscuro i {
+body.modo-nocturno i {
     color: inherit !important;
 }

@@ -283,7 +283,7 @@
             const reader = localStorage.getItem('modo_lector') || 'off';
             const cursor = localStorage.getItem('cursor_size') || 'default';
             const fontSize = localStorage.getItem('font_size') || '100';
-            const darkMode = localStorage.getItem('modo_oscuro') === 'true';
+            const darkMode = localStorage.getItem('modo_nocturno') === 'true';
             const grayscale = localStorage.getItem('modoGrises') === 'true';
 
             document.getElementById('contrastLevel').value = contrast;
@@ -356,7 +356,7 @@
         // Toggle modo oscuro
         function toggleDarkMode() {
             const isEnabled = document.getElementById('darkModeToggle').checked;
-            localStorage.setItem('modo_oscuro', isEnabled.toString());
+            localStorage.setItem('modo_nocturno', isEnabled.toString());
             if (isEnabled) {
                 applyDarkMode();
             } else {
@@ -399,7 +399,7 @@
             localStorage.removeItem('modo_lector');
             localStorage.removeItem('cursor_size');
             localStorage.removeItem('font_size');
-            localStorage.removeItem('modo_oscuro');
+            localStorage.removeItem('modo_nocturno');
             localStorage.removeItem('modoGrises');
             
             currentFontSize = 100;

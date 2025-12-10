@@ -82,7 +82,7 @@ function cargarPreferencias() {
         'cursor_size': localStorage.getItem('cursor_size') || 'default',
         'modo_lector': localStorage.getItem('modo_lector') || 'off',
         'font_size': localStorage.getItem('font_size') || 'normal',
-        'modo_oscuro': localStorage.getItem('modo_oscuro') || 'off',
+        'modo_nocturno': localStorage.getItem('modo_nocturno') || 'off',
         'modo_grises': localStorage.getItem('modo_grises') || 'off'
     };
 
@@ -105,7 +105,7 @@ function aplicarPreferencias() {
     
     // Remover todas las clases previas
     body.classList.remove(
-        'contraste-alto', 'contraste-muy-alto', 'modo-oscuro', 'modo-grises',
+        'contraste-alto', 'contraste-muy-alto', 'modo-nocturno', 'modo-grises',
         'cursor-large', 'modo-lector', 'font-large', 'font-x-large'
     );
     
@@ -116,9 +116,9 @@ function aplicarPreferencias() {
     }
     
     // Aplicar modo oscuro
-    const modoOscuro = localStorage.getItem('modo_oscuro') || 'off';
+    const modoOscuro = localStorage.getItem('modo_nocturno') || 'off';
     if (modoOscuro === 'on') {
-        body.classList.add('modo-oscuro');
+        body.classList.add('modo-nocturno');
     }
     
     // Aplicar escala de grises

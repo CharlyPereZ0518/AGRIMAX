@@ -19,7 +19,7 @@ function aplicarPreferenciasVisuales() {
   if (fontFamily) body.style.fontFamily = fontFamily;
   
   const modoOscuro = localStorage.getItem('modoOscuro');
-  if (modoOscuro === 'on') body.classList.add('modo-oscuro');
+  if (modoOscuro === 'on') body.classList.add('modo-nocturno');
   else if (modoOscuro === 'cielo-nocturno') body.classList.add('cielo-nocturno');
   
   const modoGrises = localStorage.getItem('modoGrises');

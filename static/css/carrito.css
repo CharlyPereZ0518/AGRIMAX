@@ -319,32 +319,32 @@
         /* ==================== RESET PARA ACCESIBILIDAD EN CARRITO ==================== */
 
 /* Reset para modo oscuro en carrito */
-body.modo-oscuro .cart-container,
-body.modo-oscuro .cart-item,
-body.modo-oscuro .item-info,
-body.modo-oscuro .total-price,
-body.modo-oscuro .empty-cart {
+body.modo-nocturno .cart-container,
+body.modo-nocturno .cart-item,
+body.modo-nocturno .item-info,
+body.modo-nocturno .total-price,
+body.modo-nocturno .empty-cart {
     background-color: #f9f9f9 !important;
     color: #333 !important;
     border-color: #ccc !important;
 }
 
-body.modo-oscuro .cart-item {
+body.modo-nocturno .cart-item {
     background: #ffffff !important;
     box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1) !important;
 }
 
-body.modo-oscuro .btn-comprar {
+body.modo-nocturno .btn-comprar {
     background: #008CBA !important;
     color: white !important;
 }
 
-body.modo-oscuro .btn-cancelar {
+body.modo-nocturno .btn-cancelar {
     background: #FF3B3B !important;
     color: white !important;
 }
 
-body.modo-oscuro .cantidad-input {
+body.modo-nocturno .cantidad-input {
     background: white !important;
     color: black !important;
     border-color: #ddd !important;

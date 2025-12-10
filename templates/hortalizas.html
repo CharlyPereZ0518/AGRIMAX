@@ -18,7 +18,7 @@
               {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }} 
               {{ usuario.nivel_contraste if usuario.nivel_contraste else '' }}
               {{ 'font-large' if usuario.font_size == 'large' else 'font-x-large' if usuario.font_size == 'x-large' else '' }}
-              {{ 'modo-oscuro' if usuario.modo_oscuro == 'on' else '' }}
+              {{ 'modo-nocturno' if usuario.modo_nocturno == 'on' else '' }}
               {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
      data-contraste="{{ usuario.nivel_contraste }}"
      style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
@@ -97,7 +97,7 @@
   const body = document.body;
 
   // Remover clases previas
-  body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-oscuro');
+  body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-nocturno');
 
   // Aplicar clase según contraste
   if (contraste !== 'normal') {
@@ -109,7 +109,7 @@
         body.classList.add('contraste-muy-alto');
         break;
       case 'oscuro':
-        body.classList.add('modo-oscuro');
+        body.classList.add('modo-nocturno');
         break;
     }
   }

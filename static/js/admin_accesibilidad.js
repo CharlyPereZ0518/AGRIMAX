@@ -255,9 +255,9 @@ function aplicarPreferencias() {
 
     // Modo oscuro
     if (preferencias.modoOscuro) {
-        document.body.classList.add('modo-oscuro');
+        document.body.classList.add('modo-nocturno');
     } else {
-        document.body.classList.remove('modo-oscuro');
+        document.body.classList.remove('modo-nocturno');
     }
 }
 

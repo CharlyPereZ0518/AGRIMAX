@@ -167,7 +167,7 @@ function cargarValoresFormulario() {
 
   // Modo oscuro
   const modoOscuro = localStorage.getItem('modoOscuro') || 'off';
-  const modoOscuroSelect = document.getElementById('modo-oscuro');
+  const modoOscuroSelect = document.getElementById('modo-nocturno');
   if (modoOscuroSelect) modoOscuroSelect.value = modoOscuro;
 
   // Modo grises
@@ -187,7 +187,7 @@ function aplicarPreferenciasVisuales() {
     'modo-grises',
     'font-large',
     'font-x-large',
-    'modo-oscuro',
+    'modo-nocturno',
     'cielo-nocturno'
   );
 
@@ -226,7 +226,7 @@ function aplicarPreferenciasVisuales() {
   // Modo oscuro
   const modoOscuro = localStorage.getItem('modoOscuro') || 'off';
   if (modoOscuro === 'on') {
-    body.classList.add('modo-oscuro');
+    body.classList.add('modo-nocturno');
   } else if (modoOscuro === 'cielo-nocturno') {
     body.classList.add('cielo-nocturno');
   }
@@ -250,7 +250,7 @@ function configurarGuardadoAutomatico() {
     const lector = document.getElementById('modo-lector')?.value;
     const tipografia = document.getElementById('font-select')?.value;
     const tamanoLetra = document.getElementById('font-size')?.value;
-    const modoOscuro = document.getElementById('modo-oscuro')?.value;
+    const modoOscuro = document.getElementById('modo-nocturno')?.value;
     const modoGrises = document.getElementById('modo-grises')?.value;
 
     // Guardar en localStorage

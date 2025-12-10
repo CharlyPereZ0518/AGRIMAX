@@ -67,7 +67,7 @@
               {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }} 
               {{ usuario.nivel_contraste if usuario.nivel_contraste else '' }}
               {{ 'font-large' if usuario.font_size == 'large' else 'font-x-large' if usuario.font_size == 'x-large' else '' }}
-              {{ 'modo-oscuro' if usuario.modo_oscuro == 'on' else '' }}
+              {{ 'modo-nocturno' if usuario.modo_nocturno == 'on' else '' }}
               {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
      data-contraste="{{ usuario.nivel_contraste }}"
      style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
@@ -312,24 +312,24 @@
 
       window.setTheme = function(kind){
         if(kind === 'normal'){
-          localStorage.removeItem('modo_oscuro');
+          localStorage.removeItem('modo_nocturno');
           localStorage.removeItem('modoOscuro');
           localStorage.removeItem('modoGrises');
           localStorage.removeItem('modo_nocturno');
         } else if(kind === 'oscuro'){
-          localStorage.setItem('modo_oscuro','on');
+          localStorage.setItem('modo_nocturno','on');
           localStorage.setItem('modoOscuro','on');
           localStorage.removeItem('modoGrises');
           localStorage.removeItem('modo_nocturno');
         } else if(kind === 'nocturno'){
           // 'nocturno' mapea a la variante 'cielo-nocturno' usada en accesibilidad.js
           localStorage.setItem('modoOscuro','cielo-nocturno');
-          localStorage.setItem('modo_oscuro','on');
+          localStorage.setItem('modo_nocturno','on');
           localStorage.setItem('modo_nocturno','on');
           localStorage.removeItem('modoGrises');
         } else if(kind === 'grises'){
           localStorage.setItem('modoGrises','true');
-          localStorage.removeItem('modo_oscuro');
+          localStorage.removeItem('modo_nocturno');
           localStorage.removeItem('modoOscuro');
           localStorage.removeItem('modo_nocturno');
         }
@@ -350,7 +350,7 @@
   const body = document.body;
 
   // Remover clases previas
-  body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-oscuro');
+  body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-nocturno');
 
   // Aplicar clase según contraste
   if (contraste !== 'normal') {
@@ -362,7 +362,7 @@
         body.classList.add('contraste-muy-alto');
         break;
       case 'oscuro':
-        body.classList.add('modo-oscuro');
+        body.classList.add('modo-nocturno');
         break;
     }
   }

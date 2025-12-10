@@ -103,18 +103,18 @@
 }
 
 /* Estilos para modo oscuro */
-.modo-oscuro {
+.modo-nocturno {
     background-color: #1a1a1a !important;
     color: #ffffff !important;
 }
 
-.modo-oscuro .card {
+.modo-nocturno .card {
     background-color: #2d2d2d !important;
     color: #ffffff !important;
 }
 
-.modo-oscuro .form-control,
-.modo-oscuro .form-select {
+.modo-nocturno .form-control,
+.modo-nocturno .form-select {
     background-color: #2d2d2d !important;
     color: #ffffff !important;
     border-color: #555555 !important;

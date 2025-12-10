@@ -611,8 +611,8 @@ body.contraste-muy-alto .radio-option.large {
     border-width: 3px;
 }
 
-body.modo-oscuro .resumen-pedido,
-body.modo-oscuro .resumen-completo {
+body.modo-nocturno .resumen-pedido,
+body.modo-nocturno .resumen-completo {
     background: #2d3748;
     color: white;
 }

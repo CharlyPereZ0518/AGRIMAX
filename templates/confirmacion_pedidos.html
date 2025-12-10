@@ -23,7 +23,7 @@
               {{ 'modo-lector' if usuario.modo_lector == 'on' else '' }} 
               {{ usuario.nivel_contraste if usuario.nivel_contraste else '' }}
               {{ 'font-large' if usuario.font_size == 'large' else 'font-x-large' if usuario.font_size == 'x-large' else '' }}
-              {{ 'modo-oscuro' if usuario.modo_oscuro == 'on' else '' }}
+              {{ 'modo-nocturno' if usuario.modo_nocturno == 'on' else '' }}
               {{ 'modo-grises' if usuario.modo_grises == 'on' else '' }}"
      data-contraste="{{ usuario.nivel_contraste }}"
      style="{{ 'font-family: ' + usuario.font_family + ';' if usuario.font_family else '' }}">
@@ -171,35 +171,6 @@
                     <small>Pago seguro con MercadoPago</small>
                 </label>
                
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label><i class="fas fa-file-invoice"></i> ¿Necesita factura?</label>
-            <div class="radio-group">
-                <label class="radio-option">
-                    <input type="radio" name="invoice" value="si"> SÍ
-                </label>
-                <label class="radio-option">
-                    <input type="radio" name="invoice" value="no" checked> NO
-                </label>
-            </div>
-        </div>
-
-        <!-- Información de facturación (se muestra solo si selecciona SÍ) -->
-        <div id="datos-facturacion" style="display: none;">
-            <h3 class="section-title"><i class="fas fa-file-alt"></i> Datos de Facturación</h3>
-            <div class="form-group">
-                <label for="rfc">RFC</label>
-                <input type="text" id="rfc" class="form-control" placeholder="ABCD123456XYZ">
-            </div>
-            <div class="form-group">
-                <label for="razon-social">Razón Social</label>
-                <input type="text" id="razon-social" class="form-control" placeholder="Empresa S.A. de C.V.">
-            </div>
-            <div class="form-group">
-                <label for="direccion-fiscal">Dirección Fiscal</label>
-                <textarea id="direccion-fiscal" class="form-control" rows="3" placeholder="Calle, Número, Colonia, CP, Ciudad..."></textarea>
             </div>
         </div>
 
@@ -532,7 +503,7 @@
     // Configuraciones de accesibilidad
     const contraste = localStorage.getItem('nivel_contraste') || 'normal';
     const body = document.body;
-    body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-oscuro');
+    body.classList.remove('contraste-alto', 'contraste-muy-alto', 'modo-nocturno');
     
     if (contraste !== 'normal') {
         switch (contraste) {
@@ -543,7 +514,7 @@
                 body.classList.add('contraste-muy-alto');
                 break;
             case 'oscuro':
-                body.classList.add('modo-oscuro');
+                body.classList.add('modo-nocturno');
                 break;
         }
     }
