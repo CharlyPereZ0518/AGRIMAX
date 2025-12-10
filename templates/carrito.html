@@ -40,15 +40,23 @@
 </header>
 
 <div class="sidebar" id="sidebar">
-    <button class="close-btn" id="closeBtn">×</button>
-    <a href="{{ url_for('menu_clientes.menu_principal') }}">Inicio</a>
-    <a href="{{ url_for('frutas.frutas') }}">Frutas</a>
-    <a href="{{ url_for('verduras.verduras') }}">Verduras</a>
-    <a href="{{ url_for('hortalizas.hortalizas') }}">Hortalizas</a>
-    <a href="{{ url_for('legumbres.legumbres') }}">Legumbres</a>
-    <a href="{{ url_for('configuracion.configuracion') }}">Configuración</a>
-    <a href="{{ url_for('logout.logout') }}">Cerrar Sesión</a>
+    <ul class="sidebar-menu">
+        <li><a href="{{ url_for('menu_clientes.menu_principal') }}">MENÚ PRINCIPAL</a></li>
+        <li>
+            <button class="dropdown-btn">CATEGORÍAS <i class="fas fa-caret-down"></i></button>
+            <ul class="dropdown-container">
+                <li><a href="{{ url_for('verduras.verduras') }}">Verduras</a></li>
+                <li><a href="{{ url_for('frutas.frutas') }}">Frutas</a></li>
+                <li><a href="{{ url_for('legumbres.legumbres') }}">Granos</a></li>
+                <li><a href="{{ url_for('hortalizas.hortalizas') }}">Hortalizas</a></li>
+            </ul>
+        </li>
+        <li><a href="{{ url_for('configuracion.configuracion') }}">CONFIGURACIÓN</a></li>
+        <li><a href="{{ url_for('logout.logout') }}" class="logout-btn">CERRAR SESIÓN</a></li>
+    </ul>
 </div>
+
+<div id="overlay" class="overlay"></div>
 
 <main>
     <h1>Carrito de Compras</h1>
