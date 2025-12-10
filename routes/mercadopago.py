@@ -13,10 +13,10 @@ def guardar_pedido_en_bd(cliente_id, total, preference_id):
         conexion = conectar_bd()
         cursor = conexion.cursor()
         cursor.execute("""
-            INSERT INTO pedidos (cliente_id, total, estado, preference_id, fecha)
-            VALUES (%s, %s, %s, %s, CURRENT_TIMESTAMP)
+            INSERT INTO pedidos (cliente_id, total, estado, fecha)
+            VALUES (%s, %s, %s, CURRENT_TIMESTAMP)
             RETURNING id
-        """, (cliente_id, total, 'Pendiente', preference_id))
+        """, (cliente_id, total, 'Pendiente'))
         pedido_id = cursor.fetchone()[0]
         conexion.commit()
         cursor.close()

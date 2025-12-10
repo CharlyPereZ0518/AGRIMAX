@@ -202,6 +202,16 @@
                 <textarea id="direccion-fiscal" class="form-control" rows="3" placeholder="Calle, Número, Colonia, CP, Ciudad..."></textarea>
             </div>
         </div>
+
+        <h3 class="section-title"><i class="fas fa-shipping-fast"></i> Dirección de Entrega</h3>
+        <div class="form-group">
+            <label for="direccion-entrega">Dirección de Entrega *</label>
+            <textarea id="direccion-entrega" class="form-control" rows="3" placeholder="Calle, Número, Colonia, CP, Ciudad, Estado..." required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="referencias-entrega">Referencias Adicionales</label>
+            <textarea id="referencias-entrega" class="form-control" rows="2" placeholder="Entre calles, puntos de referencia, indicaciones especiales..."></textarea>
+        </div>
         
         <div class="button-group">
             <button type="button" class="btn btn-previous" onclick="anteriorPaso('pedido-section', 1)">
@@ -478,6 +488,16 @@
             telefono: telefono,
             email: email
         };
+
+        // Validar y agregar dirección de entrega
+        const direccionEntrega = document.getElementById('direccion-entrega').value;
+        if (!direccionEntrega || direccionEntrega.trim() === '') {
+            alert('Por favor, ingresa la dirección de entrega');
+            return;
+        }
+        
+        datosPedido.direccionEntrega = direccionEntrega;
+        datosPedido.referenciasEntrega = document.getElementById('referencias-entrega').value;
 
         // Si necesita factura, agregar datos fiscales
         if (datosPedido.factura === 'si') {
